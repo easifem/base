@@ -64,39 +64,23 @@ PUBLIC :: Copy_
 ! date: 2021-02-25
 ! summary: Returns the shape of the active data of [[IntVector_]]
 !
-! The shape is `[obj%tsize]`, the number of active entries. It is
-! `[0]` for an empty or uninitialised vector. Unused capacity is not
-! counted.
+! Returns the shape of the vector as an array with one element.
+! The element is the number of active entries, `obj%tsize`.
+! It is 0 for an empty or uninitialised vector.
+!
+! @note
+! Unused capacity is not counted. See [[obj_Capacity]].
+! @endnote
 !
 ! Changes:
 !   - 2026-11-03: Returns tsize instead of SIZE(obj%val)
 !
 ! Returns:
-!   ans : INTEGER(I4B)(1) - [obj%tsize]
+!   ans : INTEGER(I4B)(1) - `[obj%tsize]`
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE IntVector_Method, ONLY: Shape
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj
-! INTEGER(I4B) :: s(1)
-!
-! s = Shape(obj)
-! CALL OK(s(1) .EQ. 0, "Shape: empty IntVector_")
-!
-! obj = [1_I4B, 2_I4B, 3_I4B]
-! s = Shape(obj)
-! CALL OK(s(1) .EQ. 3, "Shape: [3] after obj = [1, 2, 3]")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 1](|base|IntVector/examples/IntVector_test_1.F90)
 !
 ! See also: [[obj_Size]], [[obj_Capacity]]
 
@@ -105,7 +89,7 @@ INTERFACE Shape
     TYPE(IntVector_), INTENT(IN) :: obj
     !! integer vector
     INTEGER(I4B) :: ans(1)
-    !! shape of the active data, [obj%tsize]
+    !! shape of the active data, `[obj%tsize]`
   END FUNCTION obj_Shape
 END INTERFACE Shape
 
@@ -117,36 +101,23 @@ END INTERFACE Shape
 ! date: 2021-02-25
 ! summary: Returns the number of active entries in [[IntVector_]]
 !
-! Returns `obj%tsize`, the number of entries of `obj%val` that hold
-! data. It is 0 for an empty or uninitialised vector. The allocated
-! length of `obj%val` can be larger; see [[obj_Capacity]].
+! Returns the number of active entries of the vector, `obj%tsize`.
+! It is 0 for an empty or uninitialised vector.
+!
+! @note
+! The allocated length of `obj%val` can be larger than the size.
+! See [[obj_Capacity]].
+! @endnote
 !
 ! Changes:
 !   - 2026-11-03: Returns tsize instead of SIZE(obj%val)
 !
 ! Returns:
-!   ans : INTEGER(I4B) - obj%tsize
+!   ans : INTEGER(I4B) - number of active entries, `obj%tsize`
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj
-!
-! CALL OK(Size(obj) .EQ. 0, "Size: empty IntVector_")
-!
-! obj = [1_I4B, 2_I4B, 3_I4B]
-! CALL OK(Size(obj) .EQ. 3, "Size: 3 after obj = [1, 2, 3]")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 2](|base|IntVector/examples/IntVector_test_2.F90)
 !
 ! See also: [[obj_Capacity]], [[obj_Shape]]
 
@@ -155,9 +126,9 @@ INTERFACE Size
     TYPE(IntVector_), INTENT(IN) :: obj
     !! integer vector
     INTEGER(I4B), INTENT(IN), OPTIONAL :: dims
-    !! not used; IntVector_ is always rank 1
+    !! not used; the vector always has rank 1
     INTEGER(I4B) :: ans
-    !! number of active entries, obj%tsize
+    !! number of active entries, `obj%tsize`
   END FUNCTION obj_Size
 END INTERFACE Size
 
@@ -169,35 +140,17 @@ END INTERFACE Size
 ! date: 2026-11-03
 ! summary: Returns the capacity of [[IntVector_]]
 !
-! Returns `obj%capacity`, the number of entries `obj%val` can hold
-! without reallocation. `Capacity(obj) >= Size(obj)` always holds.
+! Returns the number of entries that `obj%val` can hold without
+! reallocation, `obj%capacity`.
 ! It is 0 for an empty or uninitialised vector.
+! The capacity is never smaller than the size.
 !
 ! Returns:
-!   ans : INTEGER(I4B) - obj%capacity
+!   ans : INTEGER(I4B) - capacity, `obj%capacity`
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: Capacity
-! USE IntVector_Method, ONLY: Initiate
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj
-!
-! CALL OK(Capacity(obj) .EQ. 0, "Capacity: empty IntVector_")
-!
-! CALL Initiate(obj=obj, tSize=5_I4B)
-! CALL OK(Capacity(obj) .EQ. 5, "Capacity: 5 after Initiate")
-! CALL OK(Capacity(obj) .GE. Size(obj), "Capacity: not less than Size")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 3](|base|IntVector/examples/IntVector_test_3.F90)
 !
 ! See also: [[obj_Size]]
 
@@ -206,7 +159,7 @@ INTERFACE Capacity
     TYPE(IntVector_), INTENT(IN) :: obj
     !! integer vector
     INTEGER(I4B) :: ans
-    !! capacity of obj%val, obj%capacity
+    !! capacity of `obj%val`, `obj%capacity`
   END FUNCTION obj_Capacity
 END INTERFACE Capacity
 
@@ -218,37 +171,23 @@ END INTERFACE Capacity
 ! date: 2021-02-23
 ! summary: Returns the total dimension (rank) of [[IntVector_]]
 !
-! Returns `obj%tDimension`. All constructors set it to 1, and
-! [[obj_Deallocate]] resets it to 0.
+! Returns the rank of the vector, stored in `obj%tDimension`.
+! An initiated vector has rank 1.
+! After `DEALLOCATE`, the rank is 0.
 !
 ! Returns:
-!   ans : INTEGER(I4B) - obj%tDimension
+!   ans : INTEGER(I4B) - total dimension, `obj%tDimension`
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: GetTotalDimension
-! USE IntVector_Method, ONLY: Initiate
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj
-!
-! CALL Initiate(obj=obj, tSize=4_I4B)
-! CALL OK(GetTotalDimension(obj) .EQ. 1, "GetTotalDimension: rank 1")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 4](|base|IntVector/examples/IntVector_test_4.F90)
 
 INTERFACE GetTotalDimension
   MODULE PURE FUNCTION obj_GetTotalDimension(obj) RESULT(ans)
     TYPE(IntVector_), INTENT(IN) :: obj
     !! integer vector
     INTEGER(I4B) :: ans
-    !! total dimension, obj%tDimension
+    !! total dimension, `obj%tDimension`
   END FUNCTION obj_GetTotalDimension
 END INTERFACE GetTotalDimension
 
@@ -260,40 +199,20 @@ END INTERFACE GetTotalDimension
 ! date: 2021-02-25
 ! summary: Allocates [[IntVector_]] with dims entries set to zero
 !
-! `obj%val` is reallocated to exactly `dims` entries and filled with
-! zeros. Afterwards `Size(obj) = Capacity(obj) = dims` and the total
-! dimension is 1. Previous data is lost.
+! Allocates `obj%val` with exactly `dims` entries and sets them to zero.
+! Afterwards the size and the capacity both equal `dims`.
+! The total dimension is set to 1.
+!
+! @warning
+! Any previous data in `obj` is lost.
+! @endwarning
 !
 ! Changes:
 !   - 2026-11-03: Sets tsize and capacity to dims
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ALLOCATE
-! USE IntVector_Method, ONLY: Capacity
-! USE IntVector_Method, ONLY: DEALLOCATE
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj
-!
-! CALL ALLOCATE(obj=obj, dims=4_I4B)
-! CALL OK(Size(obj) .EQ. 4, "ALLOCATE: Size is 4")
-! CALL OK(Capacity(obj) .EQ. 4, "ALLOCATE: Capacity is 4")
-! CALL OK(ALL(obj%val .EQ. 0), "ALLOCATE: entries are zero")
-!
-! CALL DEALLOCATE(obj)
-! CALL OK(Size(obj) .EQ. 0, "DEALLOCATE: Size is 0")
-! CALL OK(Capacity(obj) .EQ. 0, "DEALLOCATE: Capacity is 0")
-! CALL OK(.NOT. ALLOCATED(obj%val), "DEALLOCATE: val is deallocated")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 5](|base|IntVector/examples/IntVector_test_5.F90)
 !
 ! See also: [[obj_Deallocate]], [[obj_Initiate1]]
 
@@ -302,7 +221,7 @@ INTERFACE ALLOCATE
     TYPE(IntVector_), INTENT(INOUT) :: obj
     !! integer vector; previous data is discarded
     INTEGER(I4B), INTENT(IN) :: dims
-    !! number of entries, dims >= 0
+    !! number of entries, `dims >= 0`
   END SUBROUTINE obj_AllocateData
 END INTERFACE ALLOCATE
 
@@ -314,33 +233,17 @@ END INTERFACE ALLOCATE
 ! date: 2021-02-25
 ! summary: Reallocates an array of [[IntVector_]] to row entries
 !
-! If `obj` is not allocated, or `SIZE(obj) /= row`, `obj` is
-! (re)allocated with `row` empty [[IntVector_]] entries. If
-! `SIZE(obj) == row`, `obj` is left unchanged, including the data in
-! each entry.
+! Makes the array `obj` hold `row` empty vectors.
+!
+! 1. If `obj` is not allocated, it is allocated with `row` entries.
+! 2. If `SIZE(obj)` differs from `row`, it is allocated again with
+!    `row` entries. The old entries are lost.
+! 3. If `SIZE(obj)` equals `row`, nothing changes. Each entry keeps
+!    its data.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: Reallocate
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_), ALLOCATABLE :: obj(:)
-!
-! CALL Reallocate(obj=obj, row=3_I4B)
-! CALL OK(SIZE(obj) .EQ. 3, "Reallocate: 3 IntVector_ entries")
-! CALL OK(Size(obj(1)) .EQ. 0, "Reallocate: each entry is empty")
-!
-! CALL Reallocate(obj=obj, row=5_I4B)
-! CALL OK(SIZE(obj) .EQ. 5, "Reallocate: resized to 5 entries")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 6](|base|IntVector/examples/IntVector_test_6.F90)
 !
 ! See also: [[obj_Initiate2]]
 
@@ -361,15 +264,17 @@ END INTERFACE Reallocate
 ! date: 2021-02-25
 ! summary: Deallocates the memory of [[IntVector_]]
 !
-! Deallocates `obj%val` and sets `tsize`, `capacity` and `tDimension`
-! to 0.
+! Frees `obj%val` if it is allocated.
+! The size, the capacity and the total dimension are set to 0.
 !
 ! Changes:
 !   - 2026-11-03: Also resets tsize and capacity
 !
 ! Examples
 !
-! See the example of [[obj_AllocateData]].
+! - [IntVector test 5](|base|IntVector/examples/IntVector_test_5.F90)
+!
+! See also: [[obj_AllocateData]]
 
 INTERFACE DEALLOCATE
   MODULE PURE SUBROUTINE obj_Deallocate(obj)
@@ -386,28 +291,20 @@ END INTERFACE DEALLOCATE
 ! date: 2021-02-25
 ! summary: Initiates [[IntVector_]] with tSize entries set to zero
 !
-! Same as [[obj_AllocateData]]: `obj%val` is reallocated to `tSize`
-! entries set to zero, and `Size(obj) = Capacity(obj) = tSize`.
+! Allocates `obj%val` with `tSize` entries and sets them to zero.
+! Afterwards the size and the capacity both equal `tSize`.
+! The total dimension is set to 1.
+! This works like [[obj_AllocateData]].
+!
+! @warning
+! Any previous data in `obj` is lost.
+! @endwarning
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: Initiate
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj
-!
-! CALL Initiate(obj=obj, tSize=5_I4B)
-! CALL OK(Size(obj) .EQ. 5, "Initiate: Size is 5")
-! CALL OK(ALL(obj%val(1:5) .EQ. 0), "Initiate: entries are zero")
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|IntVector/examples/Initiate_test_1.F90) shows
+!   `Initiate` on a vector that holds data
+! - [IntVector test 7](|base|IntVector/examples/IntVector_test_7.F90)
 !
 ! See also: [[obj_AllocateData]], [[obj_Initiate2]]
 
@@ -416,7 +313,7 @@ INTERFACE Initiate
     TYPE(IntVector_), INTENT(INOUT) :: obj
     !! integer vector; previous data is discarded
     INTEGER(I4B), INTENT(IN) :: tSize
-    !! number of entries, tSize >= 0
+    !! number of entries, `tSize >= 0`
   END SUBROUTINE obj_Initiate1
 END INTERFACE Initiate
 
@@ -428,40 +325,27 @@ END INTERFACE Initiate
 ! date: 2021-02-25
 ! summary: Initiates an array of [[IntVector_]]
 !
-! `obj` is (re)allocated to `SIZE(tSize)` entries if needed, and each
-! `obj(i)` is initiated with `tSize(i)` zero entries as in
-! [[obj_Initiate1]].
+! Initiates each vector of the array `obj` with zero entries.
+! Entry `obj(i)` gets `tSize(i)` entries.
+!
+! 1. If `obj` is not allocated, or `SIZE(obj)` differs from
+!    `SIZE(tSize)`, it is allocated with `SIZE(tSize)` entries.
+! 2. Each `obj(i)` is initiated as in [[obj_Initiate1]].
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: Initiate
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_), ALLOCATABLE :: obj(:)
-!
-! CALL Initiate(obj=obj, tSize=[2_I4B, 0_I4B, 3_I4B])
-! CALL OK(SIZE(obj) .EQ. 3, "Initiate: 3 IntVector_ entries")
-! CALL OK(Size(obj(1)) .EQ. 2, "Initiate: Size(obj(1)) is 2")
-! CALL OK(Size(obj(2)) .EQ. 0, "Initiate: Size(obj(2)) is 0")
-! CALL OK(Size(obj(3)) .EQ. 3, "Initiate: Size(obj(3)) is 3")
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|IntVector/examples/Initiate_test_1.F90) shows
+!   arrays of the same and of another size
+! - [IntVector test 8](|base|IntVector/examples/IntVector_test_8.F90)
 !
 ! See also: [[obj_Initiate1]], [[obj_Reallocate]]
 
 INTERFACE Initiate
   MODULE PURE SUBROUTINE obj_Initiate2(obj, tSize)
     TYPE(IntVector_), ALLOCATABLE, INTENT(INOUT) :: obj(:)
-    !! array of integer vectors, SIZE(obj) = SIZE(tSize) on return
+    !! array of integer vectors, `SIZE(obj) = SIZE(tSize)` on return
     INTEGER(I4B), INTENT(IN) :: tSize(:)
-    !! tSize(i) is the number of entries of obj(i)
+    !! `tSize(i)` is the number of entries of `obj(i)`
   END SUBROUTINE obj_Initiate2
 END INTERFACE Initiate
 
@@ -473,39 +357,26 @@ END INTERFACE Initiate
 ! date: 2021-11-11
 ! summary: Initiates [[IntVector_]] from a vector of integers
 !
-! `obj%val` is reallocated to `SIZE(val)` entries and `val` is copied
-! into it, converted to `INTEGER(I4B)`. Afterwards
-! `Size(obj) = Capacity(obj) = SIZE(val)`. The same routines define
-! the assignment `obj = val` for integer kinds INT8, INT16, INT32 and
-! INT64.
+! Copies the integer array `val` into `obj`.
+! Afterwards the size and the capacity both equal `SIZE(val)`.
+! The total dimension is set to 1.
+!
+! The specific routines accept `val` of kind `INT8`, `INT16`, `INT32`
+! or `INT64`. The values are converted to `INTEGER(I4B)`.
+! The assignment `obj = val` calls the same routines.
+!
+! @warning
+! Any previous data in `obj` is lost.
+! @endwarning
 !
 ! Changes:
 !   - 2026-11-03: Sets tsize and capacity to SIZE(val)
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE IntVector_Method, ONLY: Initiate
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj
-!
-! CALL Initiate(obj=obj, val=[1_I4B, 2_I4B, 3_I4B])
-! CALL OK(Size(obj) .EQ. 3, "Initiate: Size is 3")
-! CALL OK(ALL(obj%val(1:3) .EQ. [1, 2, 3]), "Initiate: values")
-!
-! obj = [4_I4B, 5_I4B]
-! CALL OK(Size(obj) .EQ. 2, "obj = val: Size is 2")
-! CALL OK(ALL(obj%val(1:2) .EQ. [4, 5]), "obj = val: values")
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|IntVector/examples/Initiate_test_1.F90) shows
+!   `obj = val` with an empty array
+! - [IntVector test 9](|base|IntVector/examples/IntVector_test_9.F90)
 !
 ! See also: [[obj_Initiate5a]], [[obj_Constructor2]]
 
@@ -535,7 +406,7 @@ INTERFACE Initiate
     TYPE(IntVector_), INTENT(INOUT) :: obj
     !! integer vector; previous data is discarded
     INTEGER(INT64), INTENT(IN) :: val(:)
-    !! values to copy; each value must fit in INTEGER(I4B)
+    !! values to copy; each value must fit in `INTEGER(I4B)`
   END SUBROUTINE obj_Initiate4d
 END INTERFACE Initiate
 
@@ -552,36 +423,21 @@ END INTERFACE ASSIGNMENT(=)
 ! date: 2021-11-11
 ! summary: Initiates [[IntVector_]] from a vector of reals
 !
-! `obj%val` is reallocated to `SIZE(val)` entries and each value is
-! converted with `INT`, which truncates toward zero (1.7 gives 1, -1.7
-! gives -1). Afterwards `Size(obj) = Capacity(obj) = SIZE(val)`. The
-! same routines define the assignment `obj = val` for REAL32 and
-! REAL64.
+! Copies the real vector `val` into `obj`, discarding the old data.
+! Each value is converted with `INT`, which truncates toward zero.
+! For example, 1.7 gives 1 and -1.7 gives -1.
+! Afterwards `Size(obj) = Capacity(obj) = SIZE(val)`.
+! The total dimension is set to 1.
+!
+! This routine also defines the assignment `obj = val` for `REAL32`
+! and `REAL64` vectors.
 !
 ! Changes:
 !   - 2026-11-03: Sets tsize and capacity to SIZE(val)
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj
-!
-! obj = [1.7_DFP, -1.7_DFP, 3.0_DFP]
-! CALL OK(Size(obj) .EQ. 3, "obj = real val: Size is 3")
-! CALL OK(ALL(obj%val(1:3) .EQ. [1, -1, 3]), &
-!         "obj = real val: truncated toward zero")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 10](|base|IntVector/examples/IntVector_test_10.F90)
 !
 ! See also: [[obj_Initiate4a]], [[obj_Constructor3]]
 
@@ -613,10 +469,13 @@ END INTERFACE ASSIGNMENT(=)
 ! date: 2025-07-25
 ! summary: Initiates [[IntVector_]] by copying another IntVector_
 !
-! Only the active data `obj2%val(1:obj2%tsize)` is copied. `obj%val` is
-! reallocated to exactly `obj2%tsize` entries, so after the call
-! `Size(obj) = Capacity(obj) = Size(obj2)`. If `obj2%val` is not
-! allocated, `obj%val` is deallocated and `obj` becomes empty.
+! Copies the active entries `obj2%val(1:obj2%tsize)` into `obj`.
+! The old data of `obj` is discarded.
+! Afterwards `Size(obj) = Capacity(obj) = Size(obj2)`.
+! The total dimension of `obj` is the one of `obj2`.
+!
+! If `obj2%val` is not allocated, `obj%val` is deallocated.
+! Then `obj` is empty.
 !
 ! This routine also defines the assignment `obj = obj2` and
 ! `Copy(obj, obj2)`.
@@ -627,39 +486,16 @@ END INTERFACE ASSIGNMENT(=)
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE IntVector_Method, ONLY: Capacity
-! USE IntVector_Method, ONLY: Copy
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj, obj2, empty
-!
-! obj2 = [1_I4B, 2_I4B, 3_I4B]
-!
-! obj = obj2
-! CALL OK(Size(obj) .EQ. 3, "obj = obj2: Size is 3")
-! CALL OK(Capacity(obj) .EQ. 3, "obj = obj2: Capacity is 3")
-! CALL OK(ALL(obj%val(1:3) .EQ. [1, 2, 3]), "obj = obj2: values")
-!
-! CALL Copy(obj, empty)
-! CALL OK(Size(obj) .EQ. 0, "Copy from empty: Size is 0")
-! CALL OK(.NOT. ALLOCATED(obj%val), "Copy from empty: val deallocated")
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|IntVector/examples/Copy_test_1.F90) copies a vector
+!   with spare capacity and an empty vector
+! - [IntVector test 11](|base|IntVector/examples/IntVector_test_11.F90)
 
 INTERFACE Initiate
   MODULE PURE SUBROUTINE obj_Initiate6(obj, obj2)
     TYPE(IntVector_), INTENT(INOUT) :: obj
     !! destination; its previous data is discarded
     TYPE(IntVector_), INTENT(IN) :: obj2
-    !! source; only obj2%val(1:obj2%tsize) is copied
+    !! source; only `obj2%val(1:obj2%tsize)` is copied
   END SUBROUTINE obj_Initiate6
 END INTERFACE Initiate
 
@@ -679,39 +515,24 @@ END INTERFACE COPY
 ! date: 2021-11-11
 ! summary: Returns an [[IntVector_]] with tSize entries set to zero
 !
-! Function form of [[obj_Initiate1]].
+! Returns an [[IntVector_]] with `tSize` entries, all set to zero.
+! It is the function form of [[obj_Initiate1]].
 !
 ! Returns:
-!   obj : TYPE(IntVector_) - Size(obj) = Capacity(obj) = tSize
+!   obj : TYPE(IntVector_) - `Size(obj) = Capacity(obj) = tSize`
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: IntVector
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj
-!
-! obj = IntVector(tSize=4_I4B)
-! CALL OK(Size(obj) .EQ. 4, "IntVector(tSize): Size is 4")
-! CALL OK(ALL(obj%val(1:4) .EQ. 0), "IntVector(tSize): entries are zero")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 12](|base|IntVector/examples/IntVector_test_12.F90)
 !
 ! See also: [[obj_Initiate1]], [[obj_Constructor_1]]
 
 INTERFACE IntVector
   MODULE PURE FUNCTION obj_Constructor1(tSize) RESULT(obj)
     TYPE(IntVector_) :: obj
-    !! integer vector with tSize zero entries
+    !! integer vector with `tSize` zero entries
     INTEGER(I4B), INTENT(IN) :: tSize
-    !! number of entries, tSize >= 0
+    !! number of entries, `tSize >= 0`
   END FUNCTION obj_Constructor1
 END INTERFACE IntVector
 
@@ -723,37 +544,22 @@ END INTERFACE IntVector
 ! date: 2021-11-11
 ! summary: Converts an integer vector into [[IntVector_]]
 !
-! Function form of [[obj_Initiate4c]].
+! Returns an [[IntVector_]] that holds a copy of the integer vector
+! `val`, as in [[obj_Initiate4c]].
 !
 ! Returns:
-!   obj : TYPE(IntVector_) - copy of val, Size(obj) = SIZE(val)
+!   obj : TYPE(IntVector_) - copy of `val`, with `Size(obj) = SIZE(val)`
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: IntVector
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj
-!
-! obj = IntVector([3_I4B, 1_I4B, 2_I4B])
-! CALL OK(Size(obj) .EQ. 3, "IntVector(val): Size is 3")
-! CALL OK(ALL(obj%val(1:3) .EQ. [3, 1, 2]), "IntVector(val): values")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 13](|base|IntVector/examples/IntVector_test_13.F90)
 !
 ! See also: [[obj_Initiate4c]], [[obj_Constructor_2]]
 
 INTERFACE IntVector
   MODULE PURE FUNCTION obj_Constructor2(val) RESULT(obj)
     TYPE(IntVector_) :: obj
-    !! integer vector holding a copy of val
+    !! integer vector holding a copy of `val`
     INTEGER(I4B), INTENT(IN) :: val(:)
     !! values to copy
   END FUNCTION obj_Constructor2
@@ -767,39 +573,22 @@ END INTERFACE IntVector
 ! date: 2021-11-11
 ! summary: Converts a real vector into [[IntVector_]]
 !
-! Function form of [[obj_Initiate5b]]; values are truncated toward
-! zero.
+! Returns an [[IntVector_]] that holds the values of the real vector
+! `val`. Each value is truncated toward zero, as in [[obj_Initiate5b]].
 !
 ! Returns:
-!   obj : TYPE(IntVector_) - INT(val), Size(obj) = SIZE(val)
+!   obj : TYPE(IntVector_) - `INT(val)`, with `Size(obj) = SIZE(val)`
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: DFP
-! USE IntVector_Method, ONLY: IntVector
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj
-!
-! obj = IntVector([2.9_DFP, -0.5_DFP])
-! CALL OK(Size(obj) .EQ. 2, "IntVector(real val): Size is 2")
-! CALL OK(ALL(obj%val(1:2) .EQ. [2, 0]), &
-!         "IntVector(real val): truncated toward zero")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 14](|base|IntVector/examples/IntVector_test_14.F90)
 !
 ! See also: [[obj_Initiate5b]], [[obj_Constructor_3]]
 
 INTERFACE IntVector
   MODULE PURE FUNCTION obj_Constructor3(val) RESULT(obj)
     TYPE(IntVector_) :: obj
-    !! integer vector holding INT(val)
+    !! integer vector holding `INT(val)`
     REAL(DFP), INTENT(IN) :: val(:)
     !! values to convert, truncated toward zero
   END FUNCTION obj_Constructor3
@@ -813,42 +602,28 @@ END INTERFACE IntVector
 ! date: 2021-11-11
 ! summary: Returns a pointer to a new [[IntVector_]] of tSize entries
 !
-! Allocates a new [[IntVector_]] and initiates it as in
-! [[obj_Initiate1]]. The caller owns the result and must
-! `DEALLOCATE` it.
+! Allocates a new [[IntVector_]] with `tSize` entries set to zero,
+! as in [[obj_Initiate1]].
+!
+! @note
+! The caller owns the result and must `DEALLOCATE` it.
+! @endnote
 !
 ! Returns:
-!   obj : TYPE(IntVector_), POINTER - new vector with tSize zero entries
+!   obj : TYPE(IntVector_), POINTER - new vector with `tSize` zero entries
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: IntVector_Pointer
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_), POINTER :: obj
-!
-! obj => IntVector_Pointer(tSize=4_I4B)
-! CALL OK(ASSOCIATED(obj), "IntVector_Pointer(tSize): associated")
-! CALL OK(Size(obj) .EQ. 4, "IntVector_Pointer(tSize): Size is 4")
-! DEALLOCATE (obj)
-!
-! END PROGRAM main
-!```
+! - [IntVector test 15](|base|IntVector/examples/IntVector_test_15.F90)
 !
 ! See also: [[obj_Constructor1]]
 
 INTERFACE IntVector_Pointer
   MODULE PURE FUNCTION obj_Constructor_1(tSize) RESULT(obj)
     TYPE(IntVector_), POINTER :: obj
-    !! newly allocated integer vector with tSize zero entries
+    !! newly allocated integer vector with `tSize` zero entries
     INTEGER(I4B), INTENT(IN) :: tSize
-    !! number of entries, tSize >= 0
+    !! number of entries, `tSize >= 0`
   END FUNCTION obj_Constructor_1
 END INTERFACE IntVector_Pointer
 
@@ -860,40 +635,26 @@ END INTERFACE IntVector_Pointer
 ! date: 2021-11-11
 ! summary: Returns a pointer to a new [[IntVector_]] copied from val
 !
-! Allocates a new [[IntVector_]] and initiates it from `val` as in
-! [[obj_Initiate4c]]. The caller owns the result and must
-! `DEALLOCATE` it.
+! Allocates a new [[IntVector_]] and copies the integer vector `val`
+! into it, as in [[obj_Initiate4c]].
+!
+! @note
+! The caller owns the result and must `DEALLOCATE` it.
+! @endnote
 !
 ! Returns:
-!   obj : TYPE(IntVector_), POINTER - new vector holding a copy of val
+!   obj : TYPE(IntVector_), POINTER - new vector holding a copy of `val`
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: IntVector_Pointer
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_), POINTER :: obj
-!
-! obj => IntVector_Pointer([1_I4B, 2_I4B])
-! CALL OK(Size(obj) .EQ. 2, "IntVector_Pointer(val): Size is 2")
-! CALL OK(ALL(obj%val(1:2) .EQ. [1, 2]), "IntVector_Pointer(val): values")
-! DEALLOCATE (obj)
-!
-! END PROGRAM main
-!```
+! - [IntVector test 16](|base|IntVector/examples/IntVector_test_16.F90)
 !
 ! See also: [[obj_Constructor2]]
 
 INTERFACE IntVector_Pointer
   MODULE PURE FUNCTION obj_Constructor_2(val) RESULT(obj)
     TYPE(IntVector_), POINTER :: obj
-    !! newly allocated integer vector holding a copy of val
+    !! newly allocated integer vector holding a copy of `val`
     INTEGER(I4B), INTENT(IN) :: val(:)
     !! values to copy
   END FUNCTION obj_Constructor_2
@@ -907,41 +668,26 @@ END INTERFACE IntVector_Pointer
 ! date: 2021-11-11
 ! summary: Returns a pointer to a new [[IntVector_]] converted from reals
 !
-! Allocates a new [[IntVector_]] and initiates it from `val` as in
-! [[obj_Initiate5b]]; values are truncated toward zero. The caller
-! owns the result and must `DEALLOCATE` it.
+! Allocates a new [[IntVector_]] and fills it from the real vector
+! `val`. Each value is truncated toward zero, as in [[obj_Initiate5b]].
+!
+! @note
+! The caller owns the result and must `DEALLOCATE` it.
+! @endnote
 !
 ! Returns:
-!   obj : TYPE(IntVector_), POINTER - new vector holding INT(val)
+!   obj : TYPE(IntVector_), POINTER - new vector holding `INT(val)`
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: DFP
-! USE IntVector_Method, ONLY: IntVector_Pointer
-! USE IntVector_Method, ONLY: Size
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_), POINTER :: obj
-!
-! obj => IntVector_Pointer([1.5_DFP, 2.5_DFP])
-! CALL OK(Size(obj) .EQ. 2, "IntVector_Pointer(real val): Size is 2")
-! CALL OK(ALL(obj%val(1:2) .EQ. [1, 2]), &
-!         "IntVector_Pointer(real val): truncated toward zero")
-! DEALLOCATE (obj)
-!
-! END PROGRAM main
-!```
+! - [IntVector test 17](|base|IntVector/examples/IntVector_test_17.F90)
 !
 ! See also: [[obj_Constructor3]]
 
 INTERFACE IntVector_Pointer
   MODULE PURE FUNCTION obj_Constructor_3(val) RESULT(obj)
     TYPE(IntVector_), POINTER :: obj
-    !! newly allocated integer vector holding INT(val)
+    !! newly allocated integer vector holding `INT(val)`
     REAL(DFP), INTENT(IN) :: val(:)
     !! values to convert, truncated toward zero
   END FUNCTION obj_Constructor_3
@@ -955,9 +701,10 @@ END INTERFACE IntVector_Pointer
 ! date: 2021-11-11
 ! summary: Assigns the active data of [[IntVector_]] to an integer array
 !
-! Defines `val = obj`. `val` is reallocated to `Size(obj)` entries and
-! receives `obj%val(1:obj%tsize)`. If `obj%val` is not allocated, `val`
-! becomes a zero-size array.
+! Defines the assignment `val = obj`.
+! It reallocates `val` to `Size(obj)` entries.
+! Then it copies the active entries `obj%val(1:obj%tsize)` into `val`.
+! If `obj%val` is not allocated, `val` becomes a zero-size array.
 !
 ! Changes:
 !   - 2026-11-03: Copies only obj%val(1:obj%tsize); an empty obj gives
@@ -965,34 +712,14 @@ END INTERFACE IntVector_Pointer
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj, empty
-! INTEGER(I4B), ALLOCATABLE :: val(:)
-!
-! obj = [1_I4B, 2_I4B, 3_I4B]
-! val = obj
-! CALL OK(SIZE(val) .EQ. 3, "val = obj: SIZE(val) is 3")
-! CALL OK(ALL(val .EQ. [1, 2, 3]), "val = obj: values")
-!
-! val = empty
-! CALL OK(SIZE(val) .EQ. 0, "val = empty obj: SIZE(val) is 0")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 18](|base|IntVector/examples/IntVector_test_18.F90)
 !
 ! See also: [[obj_Convert1]]
 
 INTERFACE ASSIGNMENT(=)
   MODULE PURE SUBROUTINE obj_Assign1(val, obj)
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: val(:)
-    !! destination, SIZE(val) = Size(obj) on return
+    !! destination, `SIZE(val) = Size(obj)` on return
     TYPE(IntVector_), INTENT(IN) :: obj
     !! source integer vector
   END SUBROUTINE obj_Assign1
@@ -1006,28 +733,12 @@ END INTERFACE ASSIGNMENT(=)
 ! date: 2021-11-11
 ! summary: Converts [[IntVector_]] into an integer array
 !
-! Same as `to = from`; see [[obj_Assign1]].
+! Copies the active entries of `from` into the integer array `to`.
+! This does the same as the assignment `to = from`.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: IntVector_
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: ASSIGNMENT(=)
-! USE IntVector_Method, ONLY: Convert
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! TYPE(IntVector_) :: obj
-! INTEGER(I4B), ALLOCATABLE :: val(:)
-!
-! obj = [5_I4B, 6_I4B]
-! CALL Convert(from=obj, to=val)
-! CALL OK(ALL(val .EQ. [5, 6]), "Convert: values")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 19](|base|IntVector/examples/IntVector_test_19.F90)
 !
 ! See also: [[obj_Assign1]]
 
@@ -1036,7 +747,7 @@ INTERFACE Convert
     TYPE(IntVector_), INTENT(IN) :: from
     !! source integer vector
     INTEGER(I4B), ALLOCATABLE, INTENT(INOUT) :: to(:)
-    !! destination, SIZE(to) = Size(from) on return
+    !! destination, `SIZE(to) = Size(from)` on return
   END SUBROUTINE obj_Convert1
 END INTERFACE Convert
 
@@ -1048,28 +759,14 @@ END INTERFACE Convert
 ! date: 2025-06-22
 ! summary: Copies y into x, reallocating x to SIZE(y)
 !
-! `x` is reallocated to exactly `SIZE(y)` entries (also when it is
-! already allocated with a different size), then `x = y`. Available
-! for integer kinds INT8, INT16, INT32 and INT64.
+! Allocates `x` with exactly `SIZE(y)` entries, then sets `x = y`.
+! This also holds when `x` is already allocated with another size.
+! The routine exists for the integer kinds `INT8`, `INT16`, `INT32` and
+! `INT64`. Both arguments must have the same kind.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: Copy
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! INTEGER(I4B), ALLOCATABLE :: x(:)
-!
-! ALLOCATE (x(10))
-! CALL Copy(x=x, y=[1_I4B, 2_I4B, 3_I4B])
-! CALL OK(SIZE(x) .EQ. 3, "Copy: x reallocated to SIZE(y)")
-! CALL OK(ALL(x .EQ. [1, 2, 3]), "Copy: values")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 20](|base|IntVector/examples/IntVector_test_20.F90)
 !
 ! See also: [[obj_Copy2_]], [[obj_Initiate6]]
 
@@ -1112,41 +809,29 @@ END INTERFACE Copy
 ! summary: Copies y(y_start:y_end) into x starting at x_start
 !
 ! Sets `x(x_start + i - y_start) = y(i)` for `i = y_start, ..., y_end`.
-! `x` is not reallocated; it must have at least
-! `x_start + y_end - y_start` entries. Nothing is copied when
-! `y_end < y_start`.
+! Nothing is copied when `y_end < y_start`.
+!
+! @note
+! `x` is not reallocated.
+! It must have at least `x_start + y_end - y_start` entries.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: Copy_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! INTEGER(I4B) :: x(5)
-!
-! x = 0
-! CALL Copy_(x=x, x_start=2_I4B, y=[10_I4B, 20_I4B, 30_I4B, 40_I4B], &
-!            y_start=2_I4B, y_end=3_I4B)
-! CALL OK(ALL(x .EQ. [0, 20, 30, 0, 0]), "Copy_: x(2:3) = y(2:3)")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 21](|base|IntVector/examples/IntVector_test_21.F90)
 !
 ! See also: [[obj_Copy2_]]
 
 INTERFACE Copy_
   MODULE PURE SUBROUTINE obj_Copy1_(x, x_start, y, y_start, y_end)
     INTEGER(I4B), INTENT(INOUT) :: x(:)
-    !! destination, SIZE(x) >= x_start + y_end - y_start
+    !! destination, `SIZE(x) >= x_start + y_end - y_start`
     INTEGER(I4B), INTENT(IN) :: y(:)
     !! source
     INTEGER(I4B), INTENT(IN) :: x_start
     !! index in x where copying starts
     INTEGER(I4B), INTENT(IN) :: y_start, y_end
-    !! range y(y_start:y_end) to copy
+    !! range `y(y_start:y_end)` to copy
   END SUBROUTINE obj_Copy1_
 END INTERFACE Copy_
 
@@ -1158,26 +843,15 @@ END INTERFACE Copy_
 ! date: 2025-06-22
 ! summary: Copies y into the first SIZE(y) entries of x
 !
-! Sets `x(1:SIZE(y)) = y`; the rest of `x` is unchanged. `x` is not
-! reallocated; it must have at least `SIZE(y)` entries.
+! Sets `x(1:SIZE(y)) = y`. The other entries of `x` do not change.
+!
+! @note
+! `x` is not reallocated. It must have at least `SIZE(y)` entries.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: I4B
-! USE IntVector_Method, ONLY: Copy_
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-!
-! INTEGER(I4B) :: x(4)
-!
-! x = 0
-! CALL Copy_(x=x, y=[7_I4B, 8_I4B])
-! CALL OK(ALL(x .EQ. [7, 8, 0, 0]), "Copy_: x(1:2) = y")
-!
-! END PROGRAM main
-!```
+! - [IntVector test 22](|base|IntVector/examples/IntVector_test_22.F90)
 !
 ! See also: [[obj_Copy1_]], [[obj_Copy1]]
 

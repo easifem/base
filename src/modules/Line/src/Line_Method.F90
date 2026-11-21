@@ -79,47 +79,34 @@ PUBLIC :: line_exp_is_degenerate_nd, &
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Finds if an explicit line is degenerate in ND.
+! summary: Checks if an explicit line is degenerate in N dimensions.
 !
-!
-! Arguments:
-!   dim_num : INTEGER(I4B), INTENT(IN). Use the declaration and description
-! for this overload.
-!   p1 : REAL(dfp), INTENT(IN)(dim_num). First explicit line endpoint.
-!   p2 : REAL(dfp), INTENT(IN)(dim_num). Second explicit line endpoint.
+! An explicit line is given by two points, `p1` and `p2`.
+! The line is degenerate when the two points are equal.
+! The comparison is exact, with no tolerance.
 !
 ! Returns:
-!   ans : LOGICAL(lgt).
+!   ans : LOGICAL(lgt) - `.TRUE.` if `p1` equals `p2`
 !
 ! Formula:
-! $$\mathrm{degenerate}\iff p_1=p_2$$
+!   $$\mathrm{degenerate}\iff p_1=p_2$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: LGT
-! USE Line_Method, ONLY: line_exp_is_degenerate_nd
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: p1(2), p2(2)
-! LOGICAL(LGT) :: deg
+! - [test 1](|base|Line/examples/line_exp_is_degenerate_nd_test_1.F90)
 !
-! p1 = [0.0_DFP, 0.0_DFP]
-! p2 = [2.0_DFP, 0.0_DFP]
-! deg = line_exp_is_degenerate_nd(2_I4B, p1, p1)
-! CALL OK(deg, "Coincident endpoints are degenerate")
-! END PROGRAM main
-!```
+! See also: [[line_exp2imp_2d]], [[line_imp_is_degenerate_2d]]
 
 INTERFACE
   MODULE PURE FUNCTION line_exp_is_degenerate_nd(dim_num, p1, p2) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: dim_num
+    !! number of space dimensions
     REAL(dfp), INTENT(IN) :: p1(dim_num)
+    !! first point of the line
     REAL(dfp), INTENT(IN) :: p2(dim_num)
+    !! second point of the line
     LOGICAL(lgt) :: ans
+    !! `.TRUE.` if the line is degenerate
   END FUNCTION
 END INTERFACE
 
@@ -131,46 +118,36 @@ END INTERFACE
 ! date: 2026-10-30
 ! summary: Converts an explicit line to implicit form in 2D.
 !
+! The explicit line passes through `p1` and `p2`.
+! The routine returns `a`, `b` and `c` of the implicit equation
+! `a*x + b*y + c = 0`.
 !
-! Arguments:
-!   a : REAL(kind=8), INTENT(out). Implicit line coefficient of x, or scalar
-! output as declared.
-!   b : REAL(kind=8), INTENT(out). Implicit line coefficient of y.
-!   c : REAL(kind=8), INTENT(out). Implicit line constant coefficient.
-!   p1 : REAL(kind=8), INTENT(in)(:). First explicit line endpoint.
-!   p2 : REAL(kind=8), INTENT(in)(:). Second explicit line endpoint.
+! The routine divides the coefficients by `a**2 + b**2 + c**2`.
+! If that gives `a < 0`, it flips all three signs.
+! Hence `a` is never negative.
 !
-! Returns:
-!   Updates a, b, c.
+! @warning
+! If `p1` equals `p2`, the routine returns without setting `a`, `b`
+! and `c`. Check the line with [[line_exp_is_degenerate_nd]] first.
+! @endwarning
 !
 ! Formula:
-! $$ax+by+c=0$$
+!   $$ax+by+c=0$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE Line_Method, ONLY: line_exp2imp_2d
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: p1(2), p2(2)
-! REAL(DFP) :: a, b, c
+! - [test 1](|base|Line/examples/line_exp2imp_2d_test_1.F90)
 !
-! p1 = [0.0_DFP, 0.0_DFP]
-! p2 = [2.0_DFP, 0.0_DFP]
-! CALL line_exp2imp_2d(p1, p2, a, b, c)
-! CALL OK(ABS(a*p1(1)+b*p1(2)+c) < 1.0E-12_DFP .AND. &
-!   ABS(a*p2(1)+b*p2(2)+c) < 1.0E-12_DFP, "Both endpoints lie on line")
-! END PROGRAM main
-!```
+! See also: [[line_exp_is_degenerate_nd]], [[lines_exp_int_2d]]
 
 INTERFACE
   MODULE PURE SUBROUTINE line_exp2imp_2d(p1, p2, a, b, c)
     REAL(kind=8), INTENT(out) :: a, b, c
+    !! coefficients of the implicit line equation
     REAL(kind=8), INTENT(in) :: p1(:)
+    !! first point of the line, the first two entries are used
     REAL(kind=8), INTENT(in) :: p2(:)
+    !! second point of the line, the first two entries are used
   END SUBROUTINE
 END INTERFACE
 
@@ -180,45 +157,31 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Finds if an implicit point is degenerate in 2D.
+! summary: Checks if an implicit line is degenerate in 2D.
 !
-!
-! Arguments:
-!   a : REAL(dfp), INTENT(in). Implicit line coefficient of x, or scalar
-! output as declared.
-!   b : REAL(dfp), INTENT(in). Implicit line coefficient of y.
-!   c : REAL(dfp), INTENT(in). Implicit line constant coefficient.
+! The implicit line is `a*x + b*y + c = 0`.
+! The line is degenerate when `a` and `b` are both zero.
+! The value of `c` does not matter.
+! The comparison is exact, with no tolerance.
 !
 ! Returns:
-!   ans : LOGICAL(lgt).
+!   ans : LOGICAL(lgt) - `.TRUE.` if the line is degenerate
 !
 ! Formula:
-! $$\mathrm{degenerate}\iff a=b=0$$
+!   $$\mathrm{degenerate}\iff a=b=0$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: LGT
-! USE Line_Method, ONLY: line_imp_is_degenerate_2d
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: p1(2), p2(2)
-! LOGICAL(LGT) :: deg
+! - [test 1](|base|Line/examples/line_imp_is_degenerate_2d_test_1.F90)
 !
-! p1 = [0.0_DFP, 0.0_DFP]
-! p2 = [2.0_DFP, 0.0_DFP]
-! deg = line_imp_is_degenerate_2d(0.0_DFP, 0.0_DFP, 1.0_DFP)
-! CALL OK(deg, "Zero normal is degenerate")
-! END PROGRAM main
-!```
+! See also: [[line_exp_is_degenerate_nd]], [[lines_imp_int_2d]]
 
 INTERFACE
   MODULE PURE FUNCTION line_imp_is_degenerate_2d(a, b, c) RESULT(ans)
     REAL(dfp), INTENT(in) :: a, b, c
+    !! coefficients of the implicit line equation
     LOGICAL(lgt) :: ans
+    !! `.TRUE.` if the line is degenerate
   END FUNCTION
 END INTERFACE
 
@@ -228,62 +191,43 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Determines where two implicit lines intersect in 2D.
+! summary: Finds where two implicit lines intersect in 2D.
 !
+! The lines are `a1*x + b1*y + c1 = 0` and `a2*x + b2*y + c2 = 0`.
+! The routine returns a status code `ival` and, for a unique
+! intersection, the point `p`.
 !
-! Arguments:
-!   a1 : REAL(dfp), INTENT(in). Use the declaration and description for this
-! overload.
-!   b1 : REAL(dfp), INTENT(in). Use the declaration and description for this
-! overload.
-!   c1 : REAL(dfp), INTENT(in). Use the declaration and description for this
-! overload.
-!   a2 : REAL(dfp), INTENT(in). Use the declaration and description for this
-! overload.
-!   b2 : REAL(dfp), INTENT(in). Use the declaration and description for this
-! overload.
-!   c2 : REAL(dfp), INTENT(in). Use the declaration and description for this
-! overload.
-!   p : REAL(dfp), INTENT(out)(2). Query point or output point as indicated by
-! INTENT.
-!   ival : INTEGER(i4b), INTENT(out). Intersection status: see the line
-! intersection convention.
+! The values of `ival` are:
 !
-! Returns:
-!   Updates p(2), ival.
+! - `-1`: the first line is degenerate.
+! - `-2`: the second line is degenerate.
+! - `0`: the lines are parallel and distinct, so there is no intersection.
+! - `1`: the lines meet in one point, returned in `p`.
+! - `2`: the lines are coincident.
+!
+! Unless `ival` is 1, `p` is set to zero.
+! The parallel and coincident checks use exact comparisons.
 !
 ! Formula:
-! $$a_i x+b_i y+c_i=0,\quad i=1,2$$
+!   $$a_i x+b_i y+c_i=0,\quad i=1,2$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE Line_Method, ONLY: lines_imp_int_2d
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: p1(2), p2(2)
-! REAL(DFP) :: p(2)
-! INTEGER(I4B) :: status
+! - [test 1](|base|Line/examples/lines_imp_int_2d_test_1.F90)
+! - [test 2](|base|Line/examples/lines_imp_int_2d_test_2.F90)
 !
-! p1 = [0.0_DFP, 0.0_DFP]
-! p2 = [2.0_DFP, 0.0_DFP]
-! CALL lines_imp_int_2d(1.0_DFP, 0.0_DFP, -1.0_DFP, &
-!   0.0_DFP, 1.0_DFP, -2.0_DFP, status, p)
-! CALL OK(status == 1, "Unique intersection")
-! CALL OK(MAXVAL(ABS(p-[1.0_DFP, 2.0_DFP])) < 1.0E-12_DFP, &
-!   "Intersection solves both line equations")
-! END PROGRAM main
-!```
+! See also: [[line_imp_is_degenerate_2d]], [[lines_exp_int_2d]]
 
 INTERFACE
   MODULE PURE SUBROUTINE lines_imp_int_2d(a1, b1, c1, a2, b2, c2, ival, p)
     IMPLICIT NONE
     REAL(dfp), INTENT(in) :: a1, b1, c1, a2, b2, c2
+    !! coefficients of the first line (`a1`, `b1`, `c1`) and
+    !! of the second line (`a2`, `b2`, `c2`)
     REAL(dfp), INTENT(out) :: p(2)
+    !! intersection point, valid only when `ival` is 1
     INTEGER(i4b), INTENT(out) :: ival
+    !! status code: -1, -2, 0, 1 or 2, see the description
   END SUBROUTINE
 END INTERFACE
 
@@ -293,55 +237,39 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Computes a line perpendicular to a line and through a point.
+! summary: Projects a point onto an explicit line in 2D.
 !
+! The line passes through `p1` and `p2` and is infinite.
+! The routine returns the foot `p4` of the perpendicular from `p3`
+! to the line.
+! The foot can lie outside the segment from `p1` to `p2`.
 !
-! Arguments:
-!   p1 : REAL(dfp), INTENT(in)(2). First explicit line endpoint.
-!   p2 : REAL(dfp), INTENT(in)(2). Second explicit line endpoint.
-!   p3 : REAL(dfp), INTENT(in)(2). Use the declaration and description for
-! this overload.
-!   p4 : REAL(dfp), INTENT(out)(2). Use the declaration and description for
-! this overload.
-!   flag : LOGICAL(lgt), INTENT(out). Failure flag; .TRUE. indicates a
-! degenerate line.
-!
-! Returns:
-!   Updates p4(2), flag.
+! If `p1` equals `p2`, the line is degenerate.
+! Then `flag` is `.TRUE.` and every entry of `p4` is `1.0E+30`.
+! Otherwise `flag` is `.FALSE.`.
 !
 ! Formula:
-! $$q=p_1+\frac{(p-p_1)\cdot d}{d\cdot d}d$$
+!   $$p_4=p_1+t(p_2-p_1),\quad
+!   t=\frac{(p_3-p_1)\cdot(p_2-p_1)}{(p_2-p_1)\cdot(p_2-p_1)}$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: LGT
-! USE Line_Method, ONLY: line_exp_perp_2d
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: p1(2), p2(2)
-! REAL(DFP) :: foot(2)
-! LOGICAL(LGT) :: failed
+! - [test 1](|base|Line/examples/line_exp_perp_2d_test_1.F90)
 !
-! p1 = [0.0_DFP, 0.0_DFP]
-! p2 = [2.0_DFP, 0.0_DFP]
-! CALL line_exp_perp_2d(p1, p2, [1.0_DFP, 1.0_DFP], foot, failed)
-! CALL OK(.NOT. failed, "Projection succeeds")
-! CALL OK(MAXVAL(ABS(foot-[1.0_DFP, 0.0_DFP])) < 1.0E-12_DFP, &
-!   "Orthogonal projection onto infinite line")
-! END PROGRAM main
-!```
+! See also: [[segment_point_near_2d]], [[line_exp_point_dist_signed_2d]]
 
 INTERFACE
   MODULE PURE SUBROUTINE line_exp_perp_2d(p1, p2, p3, p4, flag)
     REAL(dfp), INTENT(in) :: p1(2)
+    !! first point of the line
     REAL(dfp), INTENT(in) :: p2(2)
+    !! second point of the line
     REAL(dfp), INTENT(in) :: p3(2)
+    !! point to project
     REAL(dfp), INTENT(out) :: p4(2)
+    !! foot of the perpendicular from `p3`
     LOGICAL(lgt), INTENT(out) :: flag
+    !! `.TRUE.` if the line is degenerate
   END SUBROUTINE
 END INTERFACE
 
@@ -351,58 +279,56 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Determines where two explicit lines intersect in 2D.
+! summary: Finds where two explicit lines intersect in 2D.
 !
+! The first line passes through `p1` and `p2`.
+! The second line passes through `q1` and `q2`.
+! Both lines are infinite.
+! The routine returns a status code `ival` and, for an intersection,
+! the point `p`.
 !
-! Arguments:
-!   p1 : REAL(kind=8), INTENT(in)(2). First explicit line endpoint.
-!   p2 : REAL(kind=8), INTENT(in)(2). Second explicit line endpoint.
-!   q1 : REAL(kind=8), INTENT(in)(2). Use the declaration and description for
-! this overload.
-!   q2 : REAL(kind=8), INTENT(in)(2). Use the declaration and description for
-! this overload.
-!   p : REAL(kind=8), INTENT(out)(2). Query point or output point as indicated
-! by INTENT.
-!   ival : INTEGER(i4b), INTENT(out). Intersection status: see the line
-! intersection convention.
+! A line whose two points are equal is treated as a single point.
+! Such a point intersects the other line only if it lies on it.
 !
-! Returns:
-!   Updates p(2), ival.
+! The values of `ival` are:
+!
+! - `0`: no intersection, or the lines are parallel and distinct.
+! - `1`: the lines meet in one point, returned in `p`.
+! - `2`: the lines are coincident.
+!
+! Unless `ival` is 1, `p` is set to zero.
+! Two lines that are both points give `ival` 1 when the points are equal.
+!
+! @note
+! Two lines given as implicit equations are handled by
+! [[lines_imp_int_2d]]. That routine also returns `-1` and `-2` for
+! degenerate lines. This routine never does.
+! @endnote
 !
 ! Formula:
-! $$p=p_1+s(p_2-p_1)=q_1+t(q_2-q_1)$$
+!   $$p=p_1+s(p_2-p_1)=q_1+t(q_2-q_1)$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE Line_Method, ONLY: lines_exp_int_2d
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: p1(2), p2(2)
-! REAL(DFP) :: p(2)
-! INTEGER(I4B) :: status
+! - [test 1](|base|Line/examples/lines_exp_int_2d_test_1.F90)
+! - [test 2](|base|Line/examples/lines_exp_int_2d_test_2.F90)
 !
-! p1 = [0.0_DFP, 0.0_DFP]
-! p2 = [2.0_DFP, 0.0_DFP]
-! CALL lines_exp_int_2d(p1, p2, [1.0_DFP, -1.0_DFP], &
-!   [1.0_DFP, 1.0_DFP], status, p)
-! CALL OK(status == 1, "Unique intersection")
-! CALL OK(MAXVAL(ABS(p-[1.0_DFP, 0.0_DFP])) < 1.0E-12_DFP, &
-!   "Horizontal and vertical lines intersect")
-! END PROGRAM main
-!```
+! See also: [[lines_imp_int_2d]], [[line_exp2imp_2d]]
 
 INTERFACE
   MODULE PURE SUBROUTINE lines_exp_int_2d(p1, p2, q1, q2, ival, p)
     REAL(kind=8), INTENT(in) :: p1(2)
+    !! first point of the first line
     REAL(kind=8), INTENT(in) :: p2(2)
+    !! second point of the first line
     REAL(kind=8), INTENT(in) :: q1(2)
+    !! first point of the second line
     REAL(kind=8), INTENT(in) :: q2(2)
+    !! second point of the second line
     REAL(kind=8), INTENT(out) :: p(2)
+    !! intersection point, valid only when `ival` is 1
     INTEGER(i4b), INTENT(out) :: ival
+    !! status code: 0, 1 or 2, see the description
   END SUBROUTINE
 END INTERFACE
 
@@ -412,46 +338,36 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Distance ( line segment, point ) in 2D.
+! summary: Distance between a line segment and a point in 2D.
 !
-!
-! Arguments:
-!   p1 : REAL(dfp), INTENT(in)(2). First explicit line endpoint.
-!   p2 : REAL(dfp), INTENT(in)(2). Second explicit line endpoint.
-!   p : REAL(dfp), INTENT(in)(2). Query point or output point as indicated by
-! INTENT.
+! The segment runs from `p1` to `p2`.
+! The routine returns the distance from `p` to the closest point of
+! the segment.
+! That point can be an endpoint.
+! If `p1` equals `p2`, the result is the distance from `p` to `p1`.
 !
 ! Returns:
-!   dist : REAL(dfp).
+!   dist : REAL(dfp) - distance from `p` to the segment
 !
 ! Formula:
-! $$d=\min_{0\le t\le1}\|p-p_1-t(p_2-p_1)\|$$
+!   $$d=\min_{0\le t\le1}\|p-p_1-t(p_2-p_1)\|$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE Line_Method, ONLY: segment_point_dist_2d
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: p1(2), p2(2)
-! REAL(DFP) :: d
+! - [test 1](|base|Line/examples/segment_point_dist_2d_test_1.F90)
 !
-! p1 = [0.0_DFP, 0.0_DFP]
-! p2 = [2.0_DFP, 0.0_DFP]
-! d = segment_point_dist_2d(p1, p2, [3.0_DFP, 0.0_DFP])
-! CALL OK(ABS(d-1.0_DFP) < 1.0E-12_DFP, "Nearest endpoint distance")
-! END PROGRAM main
-!```
+! See also: [[segment_point_dist_3d]], [[segment_point_near_2d]]
 
 INTERFACE
   MODULE PURE FUNCTION segment_point_dist_2d(p1, p2, p) RESULT(dist)
     REAL(dfp), INTENT(in) :: p1(2)
+    !! first endpoint of the segment
     REAL(dfp), INTENT(in) :: p2(2)
+    !! second endpoint of the segment
     REAL(dfp), INTENT(in) :: p(2)
+    !! query point
     REAL(dfp) :: dist
+    !! distance from `p` to the segment
   END FUNCTION
 END INTERFACE
 
@@ -461,47 +377,36 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Distance ( line segment, point ) in 3D.
+! summary: Distance between a line segment and a point in 3D.
 !
-!
-! Arguments:
-!   p1 : REAL(dfp), INTENT(in)(3). First explicit line endpoint.
-!   p2 : REAL(dfp), INTENT(in)(3). Second explicit line endpoint.
-!   p : REAL(dfp), INTENT(in)(3). Query point or output point as indicated by
-! INTENT.
+! The segment runs from `p1` to `p2`.
+! The routine returns the distance from `p` to the closest point of
+! the segment.
+! That point can be an endpoint.
+! If `p1` equals `p2`, the result is the distance from `p` to `p1`.
 !
 ! Returns:
-!   dist : REAL(dfp).
+!   dist : REAL(dfp) - distance from `p` to the segment
 !
 ! Formula:
-! $$d=\min_{0\le t\le1}\|p-p_1-t(p_2-p_1)\|$$
+!   $$d=\min_{0\le t\le1}\|p-p_1-t(p_2-p_1)\|$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE Line_Method, ONLY: segment_point_dist_3d
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: p1(2), p2(2)
-! REAL(DFP) :: d
+! - [test 1](|base|Line/examples/segment_point_dist_3d_test_1.F90)
 !
-! p1 = [0.0_DFP, 0.0_DFP]
-! p2 = [2.0_DFP, 0.0_DFP]
-! d = segment_point_dist_3d([0.0_DFP, 0.0_DFP, 0.0_DFP], &
-!   [2.0_DFP, 0.0_DFP, 0.0_DFP], [1.0_DFP, 0.0_DFP, 1.0_DFP])
-! CALL OK(ABS(d-1.0_DFP) < 1.0E-12_DFP, "Spatial segment distance")
-! END PROGRAM main
-!```
+! See also: [[segment_point_dist_2d]]
 
 INTERFACE
   MODULE PURE FUNCTION segment_point_dist_3d(p1, p2, p) RESULT(dist)
     REAL(dfp), INTENT(in) :: p1(3)
+    !! first endpoint of the segment
     REAL(dfp), INTENT(in) :: p2(3)
+    !! second endpoint of the segment
     REAL(dfp), INTENT(in) :: p(3)
+    !! query point
     REAL(dfp) :: dist
+    !! distance from `p` to the segment
   END FUNCTION
 END INTERFACE
 
@@ -511,48 +416,42 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Signed distance ( exp line, point ) in 2D.
+! summary: Signed distance between an explicit line and a point in 2D.
 !
+! The line is infinite and passes through `p1` and `p2`.
+! It is oriented from `p1` to `p2`.
+! The result is negative if `p` is to the left of the line.
+! It is positive if `p` is to the right.
+! It is zero if `p` is on the line.
 !
-! Arguments:
-!   p : REAL(dfp), INTENT(in)(2). Query point or output point as indicated by
-! INTENT.
-!   p1 : REAL(dfp), INTENT(in)(2). First explicit line endpoint.
-!   p2 : REAL(dfp), INTENT(in)(2). Second explicit line endpoint.
+! If `p1` equals `p2`, the line is degenerate.
+! Then the result is the plain distance from `p` to `p1`.
+! It is never negative in this case.
 !
 ! Returns:
-!   dist_signed : REAL(dfp).
+!   `dist_signed` : REAL(dfp) - signed distance from `p` to the line
 !
 ! Formula:
-! $$d=\frac{ax+by+c}{\sqrt{a^2+b^2}}$$
+!   $$d=\frac{ax+by+c}{\sqrt{a^2+b^2}}$$
+!   with $a=y_2-y_1$, $b=x_1-x_2$ and $c=x_2y_1-x_1y_2$.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE Line_Method, ONLY: line_exp_point_dist_signed_2d
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: p1(2), p2(2)
-! REAL(DFP) :: d
+! - [test 1](|base|Line/examples/line_exp_point_dist_signed_2d_test_1.F90)
 !
-! p1 = [0.0_DFP, 0.0_DFP]
-! p2 = [2.0_DFP, 0.0_DFP]
-! d = line_exp_point_dist_signed_2d(p1, p2, [1.0_DFP, 1.0_DFP])
-! CALL OK(ABS(d+1.0_DFP) < 1.0E-12_DFP, &
-!   "Left side of the oriented horizontal line is negative")
-! END PROGRAM main
-!```
+! See also: [[segment_point_dist_2d]], [[line_exp_perp_2d]]
 
 INTERFACE
   MODULE PURE FUNCTION line_exp_point_dist_signed_2d(p1, p2, p) &
     & RESULT(dist_signed)
     REAL(dfp), INTENT(in) :: p(2)
+    !! query point
     REAL(dfp), INTENT(in) :: p1(2)
+    !! first point of the line
     REAL(dfp), INTENT(in) :: p2(2)
+    !! second point of the line
     REAL(dfp) :: dist_signed
+    !! signed distance from `p` to the line
   END FUNCTION
 END INTERFACE
 
@@ -562,57 +461,41 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Nearest point on line segment to point in 2D.
+! summary: Finds the point of a line segment nearest to a point in 2D.
 !
+! The segment runs from `p1` to `p2`.
+! The routine returns the nearest point `pn` on the segment.
+! It also returns the distance `dist` from `p` to `pn`.
+! The parameter `t` locates `pn` on the segment, with `pn = p1` at
+! `t = 0` and `pn = p2` at `t = 1`.
 !
-! Arguments:
-!   p1 : REAL(dfp), INTENT(in)(2). First explicit line endpoint.
-!   p2 : REAL(dfp), INTENT(in)(2). Second explicit line endpoint.
-!   p : REAL(dfp), INTENT(in)(2). Query point or output point as indicated by
-! INTENT.
-!   pn : REAL(dfp), INTENT(out)(2). Nearest point on the segment.
-!   dist : REAL(dfp), INTENT(out). Distance from the query point to the
-! segment or triangle boundary.
-!   t : REAL(dfp), INTENT(out). Clamped segment interpolation parameter in
-! [0,1].
-!
-! Returns:
-!   Updates pn(2), dist, t.
+! If the projection of `p` falls outside the segment, `t` is clamped
+! to 0 or 1. Then `pn` is an endpoint.
+! If `p1` equals `p2`, then `t` is 0 and `pn` is `p1`.
 !
 ! Formula:
-! $$q=p_1+t(p_2-p_1),\quad0\le t\le1,\quad d=\|p-q\|$$
+!   $$q=p_1+t(p_2-p_1),\quad0\le t\le1,\quad d=\|p-q\|$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE Line_Method, ONLY: segment_point_near_2d
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: p1(2), p2(2)
-! REAL(DFP) :: nearest(2), d, parameter
+! - [test 1](|base|Line/examples/segment_point_near_2d_test_1.F90)
 !
-! p1 = [0.0_DFP, 0.0_DFP]
-! p2 = [2.0_DFP, 0.0_DFP]
-! CALL segment_point_near_2d(p1, p2, [3.0_DFP, 1.0_DFP], &
-!   nearest, d, parameter)
-! CALL OK(ABS(parameter-1.0_DFP) < 1.0E-12_DFP, "Parameter clamped")
-! CALL OK(MAXVAL(ABS(nearest-p2)) < 1.0E-12_DFP, &
-!   "Nearest point is the right endpoint")
-! CALL OK(ABS(d-SQRT(2.0_DFP)) < 1.0E-12_DFP, "Euclidean distance")
-! END PROGRAM main
-!```
+! See also: [[segment_point_dist_2d]], [[line_exp_perp_2d]]
 
 INTERFACE
   MODULE PURE SUBROUTINE segment_point_near_2d(p1, p2, p, pn, dist, t)
     REAL(dfp), INTENT(in) :: p1(2)
+    !! first endpoint of the segment
     REAL(dfp), INTENT(in) :: p2(2)
+    !! second endpoint of the segment
     REAL(dfp), INTENT(in) :: p(2)
+    !! query point
     REAL(dfp), INTENT(out) :: pn(2)
+    !! nearest point on the segment
     REAL(dfp), INTENT(out) :: dist
+    !! distance from `p` to `pn`
     REAL(dfp), INTENT(out) :: t
+    !! position of `pn` on the segment, between 0 and 1
   END SUBROUTINE
 END INTERFACE
 

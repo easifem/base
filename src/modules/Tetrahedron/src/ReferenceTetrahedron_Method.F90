@@ -17,50 +17,37 @@
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: ReferenceTetrahedron geometry and interpolation utilities.
+! summary: Reference tetrahedron: construction, topology and geometry.
 !
-! Construct reference tetrahedra with nsd=3 and UNIT or BIUNIT coordinates.
-! Node, edge, face and cell metadata are distinct from polynomial order.
-! Volume is unsigned. Quality routines currently return a placeholder zero.
-! Higher order face connectivity is implemented only through quadratic order,
-! despite metadata for additional element types.
+! This module builds the reference tetrahedron `ReferenceTetrahedron_`.
+! The tetrahedron has `nsd = 3`. Its vertex coordinates are either
+! `"UNIT"` or `"BIUNIT"`.
 !
-! Arguments:
-!   None at module scope; see individual public interfaces.
+! The module also answers questions about the element. It gives the
+! number of nodes, edges, faces and cells of an element type. It gives
+! the node numbers of edges and faces. It gives the volume of a
+! tetrahedron.
 !
-! Returns:
-!   Geometry, reference element and interpolation procedures.
+! The constant `MaxOrder_Tetrahedron` is the highest order the module
+! supports. Its default is 2.
+!
+! @note
+! `Tetrahedron_Quality` and `Quality_Tetrahedron` are placeholders.
+! They always return 0.
+! @endnote
 !
 ! Formula:
-! $$V=|\det[v_2-v_1,v_3-v_1,v_4-v_1]|/6$$
+!   $$ V = |\det[v_2-v_1, v_3-v_1, v_4-v_1]| / 6 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTetrahedron_
-! USE ReferenceTetrahedron_Method, ONLY: Initiate
-! USE ReferenceTetrahedron_Method, ONLY: ReferenceTetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ReferenceTetrahedron_Pointer
-! USE ReferenceTetrahedron_Method, ONLY: RefCoord_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! TYPE(ReferenceTetrahedron_) :: a,b
-! CLASS(ReferenceTetrahedron_), POINTER :: p
-! REAL(DFP) :: x(3,4)
+! - [test 1](|base|Tetrahedron/examples/ReferenceTetrahedron_test_1.F90)
+! - [constructors](|base|Tetrahedron/examples/ReferenceTetrahedronConstructors_test_1.F90)
+! - [connectivity](|base|Tetrahedron/examples/ReferenceTetrahedronConnectivity_test_1.F90)
+! - [measure](|base|Tetrahedron/examples/ReferenceTetrahedronMeasure_test_1.F90)
+! - [metadata](|base|Tetrahedron/examples/ReferenceTetrahedronMetadata_test_1.F90)
 !
-! CALL Initiate(obj=a,nsd=3_I4B,domainName="UNIT")
-! b = ReferenceTetrahedron(nsd=3_I4B,domainName="UNIT")
-! p => ReferenceTetrahedron_Pointer(nsd=3_I4B,domainName="UNIT")
-! x = RefCoord_Tetrahedron("UNIT")
-! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
-! CALL OK(ASSOCIATED(p), "Pointer constructor allocates a target")
-! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Reference coordinate rows")
-! DEALLOCATE(p)
-! END PROGRAM main
-!```
+! See also: [[TetrahedronInterpolationUtility]]
 
 MODULE ReferenceTetrahedron_Method
 USE GlobalData
@@ -100,54 +87,24 @@ INTEGER(I4B), PARAMETER :: MaxOrder_Tetrahedron = 2_I4B
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query element identifiers, polynomial order and entity counts.
+! summary: Get the name of a tetrahedron element type.
 !
-! Name lookup strings are case sensitive. Entity counts include all higher
-! order nodes, not just geometric vertices. MaxOrder is a build time limit;
-! individual metadata tables can have smaller supported ranges.
-!
-! Arguments:
-!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
-! the element type lookup.
+! Converts an element type such as `Tetrahedron10` to its name, here
+! `"Tetrahedron10"`. The valid names are `"Tetrahedron4"`,
+! `"Tetrahedron10"`, `"Tetrahedron20"`, `"Tetrahedron35"` and
+! `"Tetrahedron56"`. Any other `elemType` gives `"NONE"`.
 !
 ! Returns:
-!   ans : CHARACTER(:), ALLOCATABLE.
+!   ans : CHARACTER(:), ALLOCATABLE - element name
 !
-! Formula:
-! $$N_Q=(p+1)^2,\quad N_T=(p+1)(p+2)(p+3)/6$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTetrahedron_Method, ONLY: ElementName_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ElementType_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ElementOrder_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: TotalNodesInElement_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: TotalEntities_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: MaxOrder_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B) :: kind,counts(4)
-!
-! kind = ElementType_Tetrahedron("Tetrahedron4")
-! CALL OK(ElementName_Tetrahedron(kind) == "Tetrahedron4", &
-!   "Element name round trip")
-! CALL OK(ElementOrder_Tetrahedron(kind) == 1, "First order element")
-! CALL OK(TotalNodesInElement_Tetrahedron(kind) == 4, "Four vertices")
-! counts = TotalEntities_Tetrahedron(kind)
-! CALL OK(ALL(counts == [4_I4B,6_I4B,4_I4B,1_I4B]), &
-!   "Node, edge, face and cell counts")
-! CALL OK(MaxOrder_Tetrahedron >= 1, "Configured maximum order")
-! END PROGRAM main
-!```
+! See also: [[ElementType_Tetrahedron]]
 
 INTERFACE
   MODULE PURE FUNCTION ElementName_Tetrahedron(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type, for example `Tetrahedron4`
     CHARACTER(:), ALLOCATABLE :: ans
+    !! element name
   END FUNCTION ElementName_Tetrahedron
 END INTERFACE
 
@@ -157,69 +114,41 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Build reference facet topology and connectivity.
+! summary: Get the topology of the four triangular facets of a tetrahedron.
 !
-! Caller allocates output buffers. Quadrangle face connectivity always forces
-! option 2, independent of opt. Tetrahedron face connectivity fills all nodes
-! only for order 1 and 2; higher order face interiors are not implemented. The
-! example uses first order topology.
+! Fills `ans(1:4)` with one entry per face. For each face, it sets:
 !
-! Arguments:
-!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
-! the element type lookup.
-!   nptrs : INTEGER(I4B), INTENT(IN)(:). Element node identifiers to select
-! into facet topology.
-!   ans : TYPE(ReferenceTopology_), INTENT(INOUT)(:). Result buffer; allocate
-! the full active shape before the call.
+! 1. `nptrs`, the node numbers of the face, taken from `nptrs`;
+! 2. `xiDimension`, which is 2;
+! 3. `name`, the triangle element type of the face.
 !
-! Returns:
-!   Updates ans(:).
+! The face type and node order follow the order of the tetrahedron.
 !
-! Formula:
-! $$\partial Q=\bigcup_{e=1}^4 e,\quad\partial T=\bigcup_{f=1}^4 f$$
+! @note
+! The caller must size `ans` to at least 4 before the call.
+! @endnote
+!
+! @note
+! `nptrs` must hold one node number for each node of the element.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Tetrahedron4
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTetrahedron_Method, ONLY: GetEdgeConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceElemType_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetTopology_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Tetrahedron4
-! INTEGER(I4B) :: edge(2,6), face(3,4), nr,nc
-! INTEGER(I4B) :: types(4),counts(4)
-! TYPE(ReferenceTopology_) :: topology(4)
-! TYPE(ReferenceElement_) :: facets(4)
+! - [test 1](|base|Tetrahedron/examples/FacetTopology_Tetrahedron_test_1.F90)
+!   for a quadratic tetrahedron
+! - [test 2](|base|Tetrahedron/examples/FacetTopology_Tetrahedron_test_2.F90)
+!   for a cubic tetrahedron
 !
-! CALL GetEdgeConnectivity_Tetrahedron(con=edge,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 6, "Edge connectivity dimensions")
-! CALL GetFaceConnectivity_Tetrahedron(con=face,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 3 .AND. nc == 4, "Facet dimensions")
-! CALL GetFaceElemType_Tetrahedron(elemType=kind, &
-!   faceElemType=types,tFaceNodes=counts)
-! CALL OK(ALL(counts == 3), "Linear facet node count")
-! CALL FacetTopology_Tetrahedron(elemType=kind, &
-!   nptrs=[1_I4B,2_I4B,3_I4B,4_I4B],ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:,1)), "First facet pointers")
-! CALL FacetElements_Tetrahedron(elemType=kind,nsd=3_I4B,ans=facets)
-! CALL OK(ALL(facets%order == 1), "Linear reference facets")
-! END PROGRAM main
-!```
+! See also: [[FacetElements_Tetrahedron1]], [[FacetElements_Tetrahedron2]]
 
 INTERFACE
   MODULE PURE SUBROUTINE FacetTopology_Tetrahedron(elemType, nptrs, ans)
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! tetrahedron element type, for example `Tetrahedron10`
     INTEGER(I4B), INTENT(IN) :: nptrs(:)
+    !! node numbers of the element, one for each node
     TYPE(ReferenceTopology_), INTENT(INOUT) :: ans(:)
+    !! topology of the four faces, `SIZE(ans) >= 4`
   END SUBROUTINE FacetTopology_Tetrahedron
 END INTERFACE
 
@@ -229,54 +158,25 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query element identifiers, polynomial order and entity counts.
+! summary: Get the number of nodes, edges, faces and cells of a tetrahedron.
 !
-! Name lookup strings are case sensitive. Entity counts include all higher
-! order nodes, not just geometric vertices. MaxOrder is a build time limit;
-! individual metadata tables can have smaller supported ranges.
+! Returns four counts in this order: nodes, edges, faces and cells.
+! The edge, face and cell counts are always 6, 4 and 1.
+! The node count includes the higher order nodes.
 !
-! Arguments:
-!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
-! the element type lookup.
+! For an unknown `elemType`, the node count is 0.
 !
 ! Returns:
-!   ans : INTEGER(I4B)(4).
+!   ans : INTEGER(I4B)(4) - counts of nodes, edges, faces and cells
 !
-! Formula:
-! $$N_Q=(p+1)^2,\quad N_T=(p+1)(p+2)(p+3)/6$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTetrahedron_Method, ONLY: ElementName_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ElementType_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ElementOrder_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: TotalNodesInElement_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: TotalEntities_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: MaxOrder_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B) :: kind,counts(4)
-!
-! kind = ElementType_Tetrahedron("Tetrahedron4")
-! CALL OK(ElementName_Tetrahedron(kind) == "Tetrahedron4", &
-!   "Element name round trip")
-! CALL OK(ElementOrder_Tetrahedron(kind) == 1, "First order element")
-! CALL OK(TotalNodesInElement_Tetrahedron(kind) == 4, "Four vertices")
-! counts = TotalEntities_Tetrahedron(kind)
-! CALL OK(ALL(counts == [4_I4B,6_I4B,4_I4B,1_I4B]), &
-!   "Node, edge, face and cell counts")
-! CALL OK(MaxOrder_Tetrahedron >= 1, "Configured maximum order")
-! END PROGRAM main
-!```
+! See also: [[TotalNodesInElement_Tetrahedron]]
 
 INTERFACE
   MODULE PURE FUNCTION TotalEntities_Tetrahedron(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type, for example `Tetrahedron4`
     INTEGER(I4B) :: ans(4)
+    !! counts of nodes, edges, faces and cells
   END FUNCTION TotalEntities_Tetrahedron
 END INTERFACE
 
@@ -286,54 +186,23 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query element identifiers, polynomial order and entity counts.
+! summary: Get the number of nodes of a tetrahedron element type.
 !
-! Name lookup strings are case sensitive. Entity counts include all higher
-! order nodes, not just geometric vertices. MaxOrder is a build time limit;
-! individual metadata tables can have smaller supported ranges.
-!
-! Arguments:
-!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
-! the element type lookup.
+! Returns 4 for `Tetrahedron4`, 10 for `Tetrahedron10`, 20 for
+! `Tetrahedron20`, 35 for `Tetrahedron35` and 56 for `Tetrahedron56`.
+! Any other value of `elemType` gives 0.
 !
 ! Returns:
-!   ans : INTEGER(I4B).
+!   ans : INTEGER(I4B) - number of nodes, or 0 for an unknown type
 !
-! Formula:
-! $$N_Q=(p+1)^2,\quad N_T=(p+1)(p+2)(p+3)/6$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTetrahedron_Method, ONLY: ElementName_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ElementType_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ElementOrder_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: TotalNodesInElement_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: TotalEntities_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: MaxOrder_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B) :: kind,counts(4)
-!
-! kind = ElementType_Tetrahedron("Tetrahedron4")
-! CALL OK(ElementName_Tetrahedron(kind) == "Tetrahedron4", &
-!   "Element name round trip")
-! CALL OK(ElementOrder_Tetrahedron(kind) == 1, "First order element")
-! CALL OK(TotalNodesInElement_Tetrahedron(kind) == 4, "Four vertices")
-! counts = TotalEntities_Tetrahedron(kind)
-! CALL OK(ALL(counts == [4_I4B,6_I4B,4_I4B,1_I4B]), &
-!   "Node, edge, face and cell counts")
-! CALL OK(MaxOrder_Tetrahedron >= 1, "Configured maximum order")
-! END PROGRAM main
-!```
+! See also: [[TotalEntities_Tetrahedron]], [[ElementOrder_Tetrahedron]]
 
 INTERFACE
   MODULE PURE FUNCTION TotalNodesInElement_Tetrahedron(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type, for example `Tetrahedron4`
     INTEGER(I4B) :: ans
+    !! number of nodes
   END FUNCTION TotalNodesInElement_Tetrahedron
 END INTERFACE
 
@@ -343,53 +212,30 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query element identifiers, polynomial order and entity counts.
+! summary: Get the element type of a tetrahedron from its name.
 !
-! Name lookup strings are case sensitive. Entity counts include all higher
-! order nodes, not just geometric vertices. MaxOrder is a build time limit;
-! individual metadata tables can have smaller supported ranges.
+! Converts a name such as `"Tetrahedron10"` to the matching element type.
+! The names are `"Tetrahedron4"`, `"Tetrahedron10"`, `"Tetrahedron20"`,
+! `"Tetrahedron35"` and `"Tetrahedron56"`. The name `"Tetrahedron"` is an
+! alias of `"Tetrahedron4"`.
 !
-! Arguments:
-!   elemName : CHARACTER(*), INTENT(IN). Case sensitive element name string.
+! The name is case sensitive. An unknown name gives 0.
 !
 ! Returns:
-!   ans : INTEGER(I4B).
-!
-! Formula:
-! $$N_Q=(p+1)^2,\quad N_T=(p+1)(p+2)(p+3)/6$$
+!   ans : INTEGER(I4B) - element type, or 0 for an unknown name
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTetrahedron_Method, ONLY: ElementName_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ElementType_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ElementOrder_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: TotalNodesInElement_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: TotalEntities_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: MaxOrder_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B) :: kind,counts(4)
+! - [test 1](|base|Tetrahedron/examples/ElementType_Tetrahedron_test_1.F90)
 !
-! kind = ElementType_Tetrahedron("Tetrahedron4")
-! CALL OK(ElementName_Tetrahedron(kind) == "Tetrahedron4", &
-!   "Element name round trip")
-! CALL OK(ElementOrder_Tetrahedron(kind) == 1, "First order element")
-! CALL OK(TotalNodesInElement_Tetrahedron(kind) == 4, "Four vertices")
-! counts = TotalEntities_Tetrahedron(kind)
-! CALL OK(ALL(counts == [4_I4B,6_I4B,4_I4B,1_I4B]), &
-!   "Node, edge, face and cell counts")
-! CALL OK(MaxOrder_Tetrahedron >= 1, "Configured maximum order")
-! END PROGRAM main
-!```
+! See also: [[ElementName_Tetrahedron]]
 
 INTERFACE
   MODULE PURE FUNCTION ElementType_Tetrahedron(elemName) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: elemName
+    !! element name, case sensitive
     INTEGER(I4B) :: ans
+    !! element type
   END FUNCTION ElementType_Tetrahedron
 END INTERFACE
 
@@ -399,54 +245,23 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Query element identifiers, polynomial order and entity counts.
+! summary: Get the polynomial order of a tetrahedron element type.
 !
-! Name lookup strings are case sensitive. Entity counts include all higher
-! order nodes, not just geometric vertices. MaxOrder is a build time limit;
-! individual metadata tables can have smaller supported ranges.
-!
-! Arguments:
-!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
-! the element type lookup.
+! Returns 1 for `Tetrahedron4`, 2 for `Tetrahedron10`, 3 for
+! `Tetrahedron20`, 4 for `Tetrahedron35` and 5 for `Tetrahedron56`.
+! Any other value of `elemType` gives 0.
 !
 ! Returns:
-!   ans : INTEGER(I4B).
+!   ans : INTEGER(I4B) - polynomial order, or 0 for an unknown type
 !
-! Formula:
-! $$N_Q=(p+1)^2,\quad N_T=(p+1)(p+2)(p+3)/6$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTetrahedron_Method, ONLY: ElementName_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ElementType_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ElementOrder_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: TotalNodesInElement_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: TotalEntities_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: MaxOrder_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B) :: kind,counts(4)
-!
-! kind = ElementType_Tetrahedron("Tetrahedron4")
-! CALL OK(ElementName_Tetrahedron(kind) == "Tetrahedron4", &
-!   "Element name round trip")
-! CALL OK(ElementOrder_Tetrahedron(kind) == 1, "First order element")
-! CALL OK(TotalNodesInElement_Tetrahedron(kind) == 4, "Four vertices")
-! counts = TotalEntities_Tetrahedron(kind)
-! CALL OK(ALL(counts == [4_I4B,6_I4B,4_I4B,1_I4B]), &
-!   "Node, edge, face and cell counts")
-! CALL OK(MaxOrder_Tetrahedron >= 1, "Configured maximum order")
-! END PROGRAM main
-!```
+! See also: [[ElementType_Tetrahedron]], [[TotalNodesInElement_Tetrahedron]]
 
 INTERFACE
   MODULE PURE FUNCTION ElementOrder_Tetrahedron(elemType) RESULT(ans)
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! element type, for example `Tetrahedron4`
     INTEGER(I4B) :: ans
+    !! polynomial order
   END FUNCTION ElementOrder_Tetrahedron
 END INTERFACE
 
@@ -456,66 +271,29 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Build reference facet topology and connectivity.
+! summary: Get the four triangular facets from a reference tetrahedron.
 !
-! Caller allocates output buffers. Quadrangle face connectivity always forces
-! option 2, independent of opt. Tetrahedron face connectivity fills all nodes
-! only for order 1 and 2; higher order face interiors are not implemented. The
-! example uses first order topology.
+! Fills `ans(1:4)` with the reference triangles that bound `refelem`.
+! Each facet copies `nsd` and the interpolation point type of `refelem`.
+! Its element type, order and node numbers come from the topology of
+! `refelem`.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   ans : TYPE(ReferenceElement_), INTENT(INOUT)(:). Result buffer; allocate
-! the full active shape before the call.
-!
-! Returns:
-!   Updates ans(:).
-!
-! Formula:
-! $$\partial Q=\bigcup_{e=1}^4 e,\quad\partial T=\bigcup_{f=1}^4 f$$
+! @note
+! The caller must size `ans` to at least 4 before the call.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Tetrahedron4
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTetrahedron_Method, ONLY: GetEdgeConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceElemType_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetTopology_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Tetrahedron4
-! INTEGER(I4B) :: edge(2,6), face(3,4), nr,nc
-! INTEGER(I4B) :: types(4),counts(4)
-! TYPE(ReferenceTopology_) :: topology(4)
-! TYPE(ReferenceElement_) :: facets(4)
+! - [test 1](|base|Tetrahedron/examples/FacetElements_Tetrahedron_test_1.F90)
 !
-! CALL GetEdgeConnectivity_Tetrahedron(con=edge,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 6, "Edge connectivity dimensions")
-! CALL GetFaceConnectivity_Tetrahedron(con=face,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 3 .AND. nc == 4, "Facet dimensions")
-! CALL GetFaceElemType_Tetrahedron(elemType=kind, &
-!   faceElemType=types,tFaceNodes=counts)
-! CALL OK(ALL(counts == 3), "Linear facet node count")
-! CALL FacetTopology_Tetrahedron(elemType=kind, &
-!   nptrs=[1_I4B,2_I4B,3_I4B,4_I4B],ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:,1)), "First facet pointers")
-! CALL FacetElements_Tetrahedron(elemType=kind,nsd=3_I4B,ans=facets)
-! CALL OK(ALL(facets%order == 1), "Linear reference facets")
-! END PROGRAM main
-!```
+! See also: [[FacetElements_Tetrahedron2]], [[FacetTopology_Tetrahedron]]
 
 INTERFACE FacetElements_Tetrahedron
   MODULE SUBROUTINE FacetElements_Tetrahedron1(refelem, ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! the reference tetrahedron
     TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+    !! the four facets, `SIZE(ans) >= 4`
   END SUBROUTINE FacetElements_Tetrahedron1
 END INTERFACE FacetElements_Tetrahedron
 
@@ -525,69 +303,36 @@ END INTERFACE FacetElements_Tetrahedron
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Build reference facet topology and connectivity.
+! summary: Get the four triangular facets from an element type.
 !
-! Caller allocates output buffers. Quadrangle face connectivity always forces
-! option 2, independent of opt. Tetrahedron face connectivity fills all nodes
-! only for order 1 and 2; higher order face interiors are not implemented. The
-! example uses first order topology.
+! Fills `ans(1:4)` with the reference triangles that bound the
+! tetrahedron. Each facet has the same order as the tetrahedron.
+! Its points use equidistant interpolation.
 !
-! Arguments:
-!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
-! the element type lookup.
-!   nsd : INTEGER(I4B), INTENT(IN). Physical embedding dimension; does not
-! change intrinsic coordinate row count.
-!   ans : TYPE(ReferenceElement_), INTENT(INOUT)(:). Result buffer; allocate
-! the full active shape before the call.
+! Each facet stores its points, edges and face. The node numbers come
+! from the face connectivity of the tetrahedron.
 !
-! Returns:
-!   Updates ans(:).
-!
-! Formula:
-! $$\partial Q=\bigcup_{e=1}^4 e,\quad\partial T=\bigcup_{f=1}^4 f$$
+! @note
+! The caller must size `ans` to at least 4 before the call.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Tetrahedron4
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTetrahedron_Method, ONLY: GetEdgeConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceElemType_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetTopology_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Tetrahedron4
-! INTEGER(I4B) :: edge(2,6), face(3,4), nr,nc
-! INTEGER(I4B) :: types(4),counts(4)
-! TYPE(ReferenceTopology_) :: topology(4)
-! TYPE(ReferenceElement_) :: facets(4)
+! - [test 1](|base|Tetrahedron/examples/FacetElements_Tetrahedron_test_1.F90)
+!   also calls this form
+! - [test 2](|base|Tetrahedron/examples/FacetElements_Tetrahedron_test_2.F90)
+!   for a cubic tetrahedron
 !
-! CALL GetEdgeConnectivity_Tetrahedron(con=edge,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 6, "Edge connectivity dimensions")
-! CALL GetFaceConnectivity_Tetrahedron(con=face,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 3 .AND. nc == 4, "Facet dimensions")
-! CALL GetFaceElemType_Tetrahedron(elemType=kind, &
-!   faceElemType=types,tFaceNodes=counts)
-! CALL OK(ALL(counts == 3), "Linear facet node count")
-! CALL FacetTopology_Tetrahedron(elemType=kind, &
-!   nptrs=[1_I4B,2_I4B,3_I4B,4_I4B],ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:,1)), "First facet pointers")
-! CALL FacetElements_Tetrahedron(elemType=kind,nsd=3_I4B,ans=facets)
-! CALL OK(ALL(facets%order == 1), "Linear reference facets")
-! END PROGRAM main
-!```
+! See also: [[FacetElements_Tetrahedron1]], [[FacetTopology_Tetrahedron]]
 
 INTERFACE FacetElements_Tetrahedron
   MODULE SUBROUTINE FacetElements_Tetrahedron2(elemType, nsd, ans)
     INTEGER(I4B), INTENT(IN) :: elemType
+    !! tetrahedron element type, for example `Tetrahedron10`
     INTEGER(I4B), INTENT(IN) :: nsd
+    !! spatial dimension stored in each facet
     TYPE(ReferenceElement_), INTENT(INOUT) :: ans(:)
+    !! the four facets, `SIZE(ans) >= 4`
   END SUBROUTINE FacetElements_Tetrahedron2
 END INTERFACE FacetElements_Tetrahedron
 
@@ -597,62 +342,40 @@ END INTERFACE FacetElements_Tetrahedron
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct a reference element or return its vertex coordinates.
+! summary: Initiate a reference tetrahedron with four vertices.
 !
-! Use UNIT or BIUNIT explicitly. Quadrangle defaults to BIUNIT and stores two
-! intrinsic coordinate rows; Tetrahedron defaults to UNIT and requires nsd=3.
-! Pointer constructors allocate new targets owned by the caller.
+! Resets `obj` and builds a linear reference tetrahedron. The result has
+! order 1, element type `Tetrahedron4` and `xidimension` equal to `nsd`.
+! It stores the topology of 4 points, 6 edges, 4 faces and 1 cell.
 !
-! Arguments:
-!   obj : CLASS(ReferenceTetrahedron_), INTENT(INOUT). Reference element
-! result; pointer constructors allocate a new target.
-!   nsd : INTEGER(I4B), INTENT(IN). Physical embedding dimension; does not
-! change intrinsic coordinate row count.
-!   xij : REAL(DFP), INTENT(IN), OPTIONAL(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   domainName : CHARACTER(*), OPTIONAL, INTENT(IN). Reference domain name;
-! use UNIT or BIUNIT explicitly.
+! If `xij` is present, it gives the vertices. The `domainName` of `obj` is
+! then `"UNIT"`, `"BIUNIT"` or `"GENERAL"`, whichever matches `xij`.
 !
-! Returns:
-!   Updates obj.
+! If `xij` is absent, `domainName` selects the vertices. The default is
+! `"UNIT"`. The name is not case sensitive.
 !
-! Formula:
-! $$T=\{(x,y,z):x,y,z\ge0,\ x+y+z\le1\}$$
+! @note
+! `nsd` must be 3. The vertex array has three rows.
+! @endnote
 !
-! Examples
+! @note
+! If `domainName` is neither `"UNIT"` nor `"BIUNIT"`, and `xij` is
+! absent, the vertex coordinates `obj%xij` stay unset.
+! @endnote
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTetrahedron_
-! USE ReferenceTetrahedron_Method, ONLY: Initiate
-! USE ReferenceTetrahedron_Method, ONLY: ReferenceTetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ReferenceTetrahedron_Pointer
-! USE ReferenceTetrahedron_Method, ONLY: RefCoord_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! TYPE(ReferenceTetrahedron_) :: a,b
-! CLASS(ReferenceTetrahedron_), POINTER :: p
-! REAL(DFP) :: x(3,4)
-!
-! CALL Initiate(obj=a,nsd=3_I4B,domainName="UNIT")
-! b = ReferenceTetrahedron(nsd=3_I4B,domainName="UNIT")
-! p => ReferenceTetrahedron_Pointer(nsd=3_I4B,domainName="UNIT")
-! x = RefCoord_Tetrahedron("UNIT")
-! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
-! CALL OK(ASSOCIATED(p), "Pointer constructor allocates a target")
-! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Reference coordinate rows")
-! DEALLOCATE(p)
-! END PROGRAM main
-!```
+! See also: [[reference_Tetrahedron]]
 
 INTERFACE Initiate
   MODULE PURE SUBROUTINE Initiate_Ref_Tetrahedron(obj, nsd, xij, domainName)
     CLASS(ReferenceTetrahedron_), INTENT(INOUT) :: obj
+    !! the reference tetrahedron to initiate
     INTEGER(I4B), INTENT(IN) :: nsd
+    !! spatial dimension, must be 3
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    !! vertex coordinates, one vertex per column; the routine reads only
+    !! `xij(1:3, 1:4)`. It takes precedence over `domainName`
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
+    !! reference domain, `"UNIT"` or `"BIUNIT"`; default `"UNIT"`
   END SUBROUTINE Initiate_Ref_Tetrahedron
 END INTERFACE Initiate
 
@@ -662,61 +385,47 @@ END INTERFACE Initiate
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct a reference element or return its vertex coordinates.
+! summary: Return a reference tetrahedron as a function result.
 !
-! Use UNIT or BIUNIT explicitly. Quadrangle defaults to BIUNIT and stores two
-! intrinsic coordinate rows; Tetrahedron defaults to UNIT and requires nsd=3.
-! Pointer constructors allocate new targets owned by the caller.
+! Returns a `ReferenceTetrahedron_` object with order 1 and four vertices.
+! It behaves like the subroutine [[Initiate_Ref_Tetrahedron]].
 !
-! Arguments:
-!   nsd : INTEGER(I4B), INTENT(IN). Physical embedding dimension; does not
-! change intrinsic coordinate row count.
-!   xij : REAL(DFP), INTENT(IN), OPTIONAL(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   domainName : CHARACTER(*), OPTIONAL, INTENT(IN). Reference domain name;
-! use UNIT or BIUNIT explicitly.
+! If `xij` is present, it gives the vertices. The result `domainName` is
+! then `"UNIT"`, `"BIUNIT"` or `"GENERAL"`, whichever matches `xij`.
+!
+! If `xij` is absent, `domainName` selects the vertices. The default is
+! `"UNIT"`. The name is not case sensitive.
+!
+! @note
+! `nsd` must be 3. The vertex array has three rows.
+! @endnote
+!
+! @note
+! If `domainName` is neither `"UNIT"` nor `"BIUNIT"`, and `xij` is
+! absent, the vertex coordinates `obj%xij` stay unset.
+! @endnote
 !
 ! Returns:
-!   obj : TYPE(ReferenceTetrahedron_).
-!
-! Formula:
-! $$T=\{(x,y,z):x,y,z\ge0,\ x+y+z\le1\}$$
+!   obj : `TYPE(ReferenceTetrahedron_)` - the reference tetrahedron
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTetrahedron_
-! USE ReferenceTetrahedron_Method, ONLY: Initiate
-! USE ReferenceTetrahedron_Method, ONLY: ReferenceTetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ReferenceTetrahedron_Pointer
-! USE ReferenceTetrahedron_Method, ONLY: RefCoord_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! TYPE(ReferenceTetrahedron_) :: a,b
-! CLASS(ReferenceTetrahedron_), POINTER :: p
-! REAL(DFP) :: x(3,4)
+! - [test 1](|base|Tetrahedron/examples/ReferenceTetrahedron_test_1.F90)
 !
-! CALL Initiate(obj=a,nsd=3_I4B,domainName="UNIT")
-! b = ReferenceTetrahedron(nsd=3_I4B,domainName="UNIT")
-! p => ReferenceTetrahedron_Pointer(nsd=3_I4B,domainName="UNIT")
-! x = RefCoord_Tetrahedron("UNIT")
-! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
-! CALL OK(ASSOCIATED(p), "Pointer constructor allocates a target")
-! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Reference coordinate rows")
-! DEALLOCATE(p)
-! END PROGRAM main
-!```
+! See also: [[Initiate_Ref_Tetrahedron]]
 
 INTERFACE ReferenceTetrahedron
   MODULE PURE FUNCTION reference_Tetrahedron(nsd, xij, domainName)  &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
+    !! spatial dimension, must be 3
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    !! vertex coordinates, one vertex per column; the function reads only
+    !! `xij(1:3, 1:4)`. It takes precedence over `domainName`
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
+    !! reference domain, `"UNIT"` or `"BIUNIT"`; default `"UNIT"`
     TYPE(ReferenceTetrahedron_) :: obj
+    !! the reference tetrahedron
   END FUNCTION reference_Tetrahedron
 END INTERFACE ReferenceTetrahedron
 
@@ -726,61 +435,37 @@ END INTERFACE ReferenceTetrahedron
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct a reference element or return its vertex coordinates.
+! summary: Return a pointer to a new reference tetrahedron.
 !
-! Use UNIT or BIUNIT explicitly. Quadrangle defaults to BIUNIT and stores two
-! intrinsic coordinate rows; Tetrahedron defaults to UNIT and requires nsd=3.
-! Pointer constructors allocate new targets owned by the caller.
+! Allocates a new `ReferenceTetrahedron_` object with order 1 and four
+! vertices. It returns a pointer to the object. The vertices follow the
+! same rules as [[Initiate_Ref_Tetrahedron]].
 !
-! Arguments:
-!   nsd : INTEGER(I4B), INTENT(IN). Physical embedding dimension; does not
-! change intrinsic coordinate row count.
-!   xij : REAL(DFP), INTENT(IN), OPTIONAL(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   domainName : CHARACTER(*), OPTIONAL, INTENT(IN). Reference domain name;
-! use UNIT or BIUNIT explicitly.
+! @note
+! The caller owns the target and releases it with `DEALLOCATE`.
+! @endnote
 !
 ! Returns:
-!   obj : CLASS(ReferenceTetrahedron_), POINTER.
-!
-! Formula:
-! $$T=\{(x,y,z):x,y,z\ge0,\ x+y+z\le1\}$$
+!   obj : `CLASS(ReferenceTetrahedron_), POINTER` - the new object
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTetrahedron_
-! USE ReferenceTetrahedron_Method, ONLY: Initiate
-! USE ReferenceTetrahedron_Method, ONLY: ReferenceTetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ReferenceTetrahedron_Pointer
-! USE ReferenceTetrahedron_Method, ONLY: RefCoord_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! TYPE(ReferenceTetrahedron_) :: a,b
-! CLASS(ReferenceTetrahedron_), POINTER :: p
-! REAL(DFP) :: x(3,4)
+! - [test 1](|base|Tetrahedron/examples/ReferenceTetrahedronConstructors_test_1.F90)
 !
-! CALL Initiate(obj=a,nsd=3_I4B,domainName="UNIT")
-! b = ReferenceTetrahedron(nsd=3_I4B,domainName="UNIT")
-! p => ReferenceTetrahedron_Pointer(nsd=3_I4B,domainName="UNIT")
-! x = RefCoord_Tetrahedron("UNIT")
-! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
-! CALL OK(ASSOCIATED(p), "Pointer constructor allocates a target")
-! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Reference coordinate rows")
-! DEALLOCATE(p)
-! END PROGRAM main
-!```
+! See also: [[Initiate_Ref_Tetrahedron]], [[reference_Tetrahedron]]
 
 INTERFACE ReferenceTetrahedron_Pointer
   MODULE FUNCTION reference_Tetrahedron_Pointer(nsd, xij, domainName)  &
     & RESULT(obj)
     INTEGER(I4B), INTENT(IN) :: nsd
+    !! spatial dimension, must be 3
     REAL(DFP), INTENT(IN), OPTIONAL :: xij(:, :)
+    !! vertex coordinates, one vertex per column; it takes precedence
+    !! over `domainName`
     CHARACTER(*), OPTIONAL, INTENT(IN) :: domainName
+    !! reference domain, `"UNIT"` or `"BIUNIT"`; default `"UNIT"`
     CLASS(ReferenceTetrahedron_), POINTER :: obj
+    !! the new reference tetrahedron
   END FUNCTION reference_Tetrahedron_Pointer
 END INTERFACE ReferenceTetrahedron_Pointer
 
@@ -790,57 +475,43 @@ END INTERFACE ReferenceTetrahedron_Pointer
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct a quadratic reference element from a linear element.
+! summary: Build a high order tetrahedron from a linear tetrahedron.
 !
-! The example uses a fresh output object. For Tetrahedron, use orders 1 or 2
-! until higher order face connectivity is implemented; metadata lookup of
-! higher orders alone does not make the topology complete.
+! Builds the Lagrange tetrahedron of the given `order` on the four
+! vertices of `refelem`. The result goes in `obj`. The routine first
+! clears `obj`.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   order : INTEGER(I4B), INTENT(IN). Polynomial degree, except quadrature
-! where it is requested exactness degree.
-!   obj : CLASS(ReferenceElement_), INTENT(INOUT). Reference element result;
-! pointer constructors allocate a new target.
-!   ipType : INTEGER(I4B), INTENT(IN). Interpolation node family selector.
+! The result has these parts.
 !
-! Returns:
-!   Updates obj.
+! 1. Interpolation points of family `ipType` in `obj%xij`.
+! 2. The element type, such as `Tetrahedron10` for order 2.
+! 3. The topology of its points, edges, faces and cell.
 !
-! Formula:
-! $$N_Q=9,\quad N_T=10\quad(p=2)$$
+! The domain name, the spatial dimension and the `highOrderElement`
+! pointer come from `refelem`.
+!
+! @warning
+! The face topology is complete only for orders 1 and 2. See
+! [[GetFaceConnectivity_Tetrahedron]].
+! @endwarning
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Equidistance
-! USE BaseType, ONLY: ReferenceTetrahedron_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTetrahedron_Method, ONLY: HighOrderElement_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ReferenceTetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! TYPE(ReferenceTetrahedron_) :: ref
-! TYPE(ReferenceElement_) :: high
+! - [test 1](|base|Tetrahedron/examples/HighOrderElement_Tetrahedron_test_1.F90)
+! - [test 2](|base|Tetrahedron/examples/HighOrderElement_Tetrahedron_test_2.F90)
 !
-! ref = ReferenceTetrahedron(nsd=3_I4B,domainName="UNIT")
-! CALL HighOrderElement_Tetrahedron(refelem=ref,order=2_I4B, &
-!   obj=high,ipType=Equidistance)
-! CALL OK(SIZE(high%xij,2) == 10, "Quadratic node count")
-! CALL OK(high%order == 2, "Stored interpolation order")
-! END PROGRAM main
-!```
+! See also: [[GetEdgeConnectivity_Tetrahedron]]
 
 INTERFACE
   MODULE SUBROUTINE HighOrderElement_Tetrahedron(refelem, order, obj, ipType)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! the linear reference tetrahedron
     INTEGER(I4B), INTENT(IN) :: order
+    !! polynomial order of the new element
     CLASS(ReferenceElement_), INTENT(INOUT) :: obj
+    !! the high order element; the routine clears it first
     INTEGER(I4B), INTENT(IN) :: ipType
+    !! interpolation point family, such as `Equidistance`
   END SUBROUTINE HighOrderElement_Tetrahedron
 END INTERFACE
 
@@ -850,54 +521,31 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Measure a reference element and expose current quality behavior.
+! summary: Compute the volume of a tetrahedron from its vertex columns.
 !
-! The quality routines are placeholders that always return zero, not
-! implemented mesh quality measures. Quadrangle planar area is signed; spatial
-! area and Tetrahedron volume are nonnegative.
+! Returns the volume of the tetrahedron whose vertices are the first four
+! columns of `XiJ`. The routine uses only the first three rows. The volume
+! is never negative. The routine does not use `RefElem`.
 !
-! Arguments:
-!   RefElem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   XiJ : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
+! The unit reference tetrahedron has volume 1/6.
 !
 ! Returns:
-!   ans : REAL(DFP).
-!
-! Formula:
-! $$|Q_{\mathrm{unit}}|=1,\quad|T_{\mathrm{unit}}|=1/6$$
+!   ans : REAL(DFP) - the volume
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTetrahedron_
-! USE ReferenceTetrahedron_Method, ONLY: Tetrahedron_Quality
-! USE ReferenceTetrahedron_Method, ONLY: Quality_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: Measure_Simplex_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ReferenceTetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! TYPE(ReferenceTetrahedron_) :: ref
-! REAL(DFP) :: y,q
+! - [test 1](|base|Tetrahedron/examples/ReferenceTetrahedronMeasure_test_1.F90)
 !
-! ref = ReferenceTetrahedron(nsd=3_I4B,domainName="UNIT")
-! y = Measure_Simplex_Tetrahedron(ref,ref%xij)
-! CALL OK(ABS(y-(1.0_DFP/6.0_DFP)) < 1.0E-11_DFP, "Reference measure")
-! q = Tetrahedron_Quality(ref,ref%xij,measure=1_I4B)
-! CALL OK(q == 0.0_DFP .AND. Quality_Tetrahedron(ref,ref%xij,1_I4B) == q, &
-!   "Quality aliases currently return a placeholder zero")
-! END PROGRAM main
-!```
+! See also: [[TetrahedronVolume3D]]
 
 INTERFACE
   MODULE PURE FUNCTION Measure_Simplex_Tetrahedron(RefElem, XiJ) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: RefElem
+    !! the reference tetrahedron; not used
     REAL(DFP), INTENT(IN) :: XiJ(:, :)
+    !! vertex coordinates, one vertex per column, at least 3 by 4
     REAL(DFP) :: ans
+    !! the volume
   END FUNCTION Measure_Simplex_Tetrahedron
 END INTERFACE
 
@@ -907,57 +555,34 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Measure a reference element and expose current quality behavior.
+! summary: Quality measure of a tetrahedron, not implemented yet.
 !
-! The quality routines are placeholders that always return zero, not
-! implemented mesh quality measures. Quadrangle planar area is signed; spatial
-! area and Tetrahedron volume are nonnegative.
+! This routine will return a quality measure of the tetrahedron with the
+! vertices `xij`. Today it is a placeholder that always returns 0.
 !
-! Arguments:
-!   refelem : CLASS(ReferenceElement_), INTENT(IN). Reference element carrying
-! topology and embedding dimension.
-!   xij : REAL(DFP), INTENT(IN)(:, :). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   measure : INTEGER(I4B), INTENT(IN). Quality measure selector; Line quality
-! currently returns a placeholder zero.
+! @warning
+! Do not use the result. The routine ignores `refelem`, `xij` and `measure`.
+! @endwarning
 !
 ! Returns:
-!   ans : REAL(DFP).
-!
-! Formula:
-! $$|Q_{\mathrm{unit}}|=1,\quad|T_{\mathrm{unit}}|=1/6$$
+!   ans : REAL(DFP) - always 0
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTetrahedron_
-! USE ReferenceTetrahedron_Method, ONLY: Tetrahedron_Quality
-! USE ReferenceTetrahedron_Method, ONLY: Quality_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: Measure_Simplex_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ReferenceTetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! TYPE(ReferenceTetrahedron_) :: ref
-! REAL(DFP) :: y,q
+! - [test 1](|base|Tetrahedron/examples/ReferenceTetrahedronMeasure_test_1.F90)
 !
-! ref = ReferenceTetrahedron(nsd=3_I4B,domainName="UNIT")
-! y = Measure_Simplex_Tetrahedron(ref,ref%xij)
-! CALL OK(ABS(y-(1.0_DFP/6.0_DFP)) < 1.0E-11_DFP, "Reference measure")
-! q = Tetrahedron_Quality(ref,ref%xij,measure=1_I4B)
-! CALL OK(q == 0.0_DFP .AND. Quality_Tetrahedron(ref,ref%xij,1_I4B) == q, &
-!   "Quality aliases currently return a placeholder zero")
-! END PROGRAM main
-!```
+! See also: [[Measure_Simplex_Tetrahedron]]
 
 INTERFACE Quality_Tetrahedron
   MODULE FUNCTION Tetrahedron_Quality(refelem, xij, measure) RESULT(ans)
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! the reference tetrahedron; not used
     REAL(DFP), INTENT(IN) :: xij(:, :)
+    !! vertex coordinates, one vertex per column; not used
     INTEGER(I4B), INTENT(IN) :: measure
+    !! quality measure selector; not used
     REAL(DFP) :: ans
+    !! quality value, always 0
   END FUNCTION Tetrahedron_Quality
 END INTERFACE Quality_Tetrahedron
 
@@ -967,49 +592,26 @@ END INTERFACE Quality_Tetrahedron
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Compute unsigned tetrahedron volume from vertex columns.
+! summary: Compute the volume of a tetrahedron from its four vertices.
 !
-!
-! Arguments:
-!   xij : REAL(DFP), INTENT(IN)(3, 4). Point columns; vertices or
-! interpolation nodes according to the interface.
-!   ans : REAL(DFP), INTENT(OUT). Result buffer; allocate the full active
-! shape before the call.
-!
-! Returns:
-!   Updates ans.
+! Computes the volume of the tetrahedron with the vertices in `xij`. The
+! volume is never negative. It does not depend on the vertex order.
 !
 ! Formula:
-! $$V=|\det[v_2-v_1,v_3-v_1,v_4-v_1]|/6$$
+!   $$ V = |\det[v_2-v_1,\, v_3-v_1,\, v_4-v_1]| / 6 $$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE ReferenceTetrahedron_Method, ONLY: TetrahedronVolume3D
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! REAL(DFP) :: x(3,4),v
+! - [test 1](|base|Tetrahedron/examples/TetrahedronVolume3D_test_1.F90)
 !
-! x = 0.0_DFP
-! x(1,2) = 1.0_DFP
-! x(2,3) = 1.0_DFP
-! x(3,4) = 1.0_DFP
-! CALL TetrahedronVolume3D(x,v)
-! CALL OK(ABS(v-1.0_DFP/6.0_DFP) < 1.0E-11_DFP, "Unit simplex volume")
-! x(:,[2,3]) = x(:,[3,2])
-! CALL TetrahedronVolume3D(x,v)
-! CALL OK(ABS(v-1.0_DFP/6.0_DFP) < 1.0E-11_DFP, &
-!   "Volume is independent of orientation")
-! END PROGRAM main
-!```
+! See also: [[Measure_Simplex_Tetrahedron]]
 
 INTERFACE
   MODULE PURE SUBROUTINE TetrahedronVolume3D(xij, ans)
     REAL(DFP), INTENT(IN) :: xij(3, 4)
+    !! vertex coordinates, one vertex per column
     REAL(DFP), INTENT(OUT) :: ans
+    !! the volume
   END SUBROUTINE TetrahedronVolume3D
 END INTERFACE
 
@@ -1019,85 +621,44 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Build reference facet topology and connectivity.
+! summary: Get the node numbers of the six edges of a tetrahedron.
 !
-! Caller allocates output buffers. Quadrangle face connectivity always forces
-! option 2, independent of opt. Tetrahedron face connectivity fills all nodes
-! only for order 1 and 2; higher order face interiors are not implemented. The
-! example uses first order topology.
+! Fills `con` with the local node numbers of the six edges. Each column
+! is one edge. The first two rows hold the end vertices. The edges are
+! `1-2`, `1-3`, `1-4`, `2-3`, `2-4` and `3-4`, in this order.
 !
-! Arguments:
-!   con : INTEGER(I4B), INTENT(INOUT)(:, :). Caller supplied connectivity
-! storage, with entities in columns.
-!   opt : INTEGER(I4B), OPTIONAL, INTENT(IN). Connectivity or entity selector;
-! see the routine description.
-!   order : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial degree, except
-! quadrature where it is requested exactness degree.
-!   nrow : INTEGER(I4B), OPTIONAL, INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), OPTIONAL, INTENT(OUT). Number of active output
-! columns.
+! For `order` above 1, each edge has `order - 1` more nodes. The
+! element numbers them after the four vertices. They go in rows 3 to
+! `order + 1`.
 !
-! Returns:
-!   Updates con(:, :), nrow, ncol.
+! The routine sets `nrow` to `order + 1` and `ncol` to 6. The default
+! `order` is 1.
 !
-! Formula:
-! $$\partial Q=\bigcup_{e=1}^4 e,\quad\partial T=\bigcup_{f=1}^4 f$$
+! @note
+! The caller allocates `con` with `order + 1` rows and 6 columns. The
+! argument `opt` is not used.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Tetrahedron4
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTetrahedron_Method, ONLY: GetEdgeConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceElemType_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetTopology_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Tetrahedron4
-! INTEGER(I4B) :: edge(2,6), face(3,4), nr,nc
-! INTEGER(I4B) :: types(4),counts(4)
-! TYPE(ReferenceTopology_) :: topology(4)
-! TYPE(ReferenceElement_) :: facets(4)
+! - [test 1](|base|Tetrahedron/examples/GetEdgeConnectivity_Tetrahedron_test_1.F90)
 !
-! CALL GetEdgeConnectivity_Tetrahedron(con=edge,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 6, "Edge connectivity dimensions")
-! CALL GetFaceConnectivity_Tetrahedron(con=face,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 3 .AND. nc == 4, "Facet dimensions")
-! CALL GetFaceElemType_Tetrahedron(elemType=kind, &
-!   faceElemType=types,tFaceNodes=counts)
-! CALL OK(ALL(counts == 3), "Linear facet node count")
-! CALL FacetTopology_Tetrahedron(elemType=kind, &
-!   nptrs=[1_I4B,2_I4B,3_I4B,4_I4B],ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:,1)), "First facet pointers")
-! CALL FacetElements_Tetrahedron(elemType=kind,nsd=3_I4B,ans=facets)
-! CALL OK(ALL(facets%order == 1), "Linear reference facets")
-! END PROGRAM main
-!```
+! See also: [[GetFaceConnectivity_Tetrahedron]]
 
 INTERFACE
   MODULE PURE SUBROUTINE GetEdgeConnectivity_Tetrahedron(con, opt,  &
     & order, nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
-    !! Connectivity
-    !! The columns represents the edge number
-    !! The row represents a edge
-    !! con should be allocated by the user
+    !! edge connectivity, one edge per column
+    !! the caller allocates it
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then edge connectivity for hierarchial approximation
-    !! If opt =2, then edge connectivity for Lagrangian approximation
-    !! opt=1 is default
+    !! not used
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
-    !! Order of the edge
+    !! polynomial order of the edge; default 1
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
-    !! Number of rows written in con
+    !! number of rows written in `con`, equal to `order + 1`
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
-    !! Numbers of cols written in con
+    !! number of columns written in `con`, always 6
   END SUBROUTINE GetEdgeConnectivity_Tetrahedron
 END INTERFACE
 
@@ -1107,85 +668,45 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Build reference facet topology and connectivity.
+! summary: Get the node numbers of the four faces of a tetrahedron.
 !
-! Caller allocates output buffers. Quadrangle face connectivity always forces
-! option 2, independent of opt. Tetrahedron face connectivity fills all nodes
-! only for order 1 and 2; higher order face interiors are not implemented. The
-! example uses first order topology.
+! Fills `con` with the local node numbers of the four faces. Each column
+! is one face. The rows hold the three vertices of the face. For order 2,
+! they also hold the three edge nodes.
 !
-! Arguments:
-!   con : INTEGER(I4B), INTENT(INOUT)(:, :). Caller supplied connectivity
-! storage, with entities in columns.
-!   opt : INTEGER(I4B), OPTIONAL, INTENT(IN). Connectivity or entity selector;
-! see the routine description.
-!   order : INTEGER(I4B), OPTIONAL, INTENT(IN). Polynomial degree, except
-! quadrature where it is requested exactness degree.
-!   nrow : INTEGER(I4B), OPTIONAL, INTENT(OUT). Number of active output rows.
-!   ncol : INTEGER(I4B), OPTIONAL, INTENT(OUT). Number of active output
-! columns.
+! The routine sets `nrow` to 3 for order 1 and to 6 for order 2. It sets
+! `ncol` to 4. The default `order` is 1.
 !
-! Returns:
-!   Updates con(:, :), nrow, ncol.
+! @note
+! The caller allocates `con` with 3 rows for order 1, or 6 rows for
+! order 2, and 4 columns. The argument `opt` is not used.
+! @endnote
 !
-! Formula:
-! $$\partial Q=\bigcup_{e=1}^4 e,\quad\partial T=\bigcup_{f=1}^4 f$$
+! @warning
+! The routine handles only orders 1 and 2. For a higher `order`, it
+! writes only the three vertex rows and sets `nrow` to 3.
+! @endwarning
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Tetrahedron4
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTetrahedron_Method, ONLY: GetEdgeConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceElemType_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetTopology_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Tetrahedron4
-! INTEGER(I4B) :: edge(2,6), face(3,4), nr,nc
-! INTEGER(I4B) :: types(4),counts(4)
-! TYPE(ReferenceTopology_) :: topology(4)
-! TYPE(ReferenceElement_) :: facets(4)
+! - [test 1](|base|Tetrahedron/examples/GetFaceConnectivity_Tetrahedron_test_1.F90)
 !
-! CALL GetEdgeConnectivity_Tetrahedron(con=edge,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 6, "Edge connectivity dimensions")
-! CALL GetFaceConnectivity_Tetrahedron(con=face,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 3 .AND. nc == 4, "Facet dimensions")
-! CALL GetFaceElemType_Tetrahedron(elemType=kind, &
-!   faceElemType=types,tFaceNodes=counts)
-! CALL OK(ALL(counts == 3), "Linear facet node count")
-! CALL FacetTopology_Tetrahedron(elemType=kind, &
-!   nptrs=[1_I4B,2_I4B,3_I4B,4_I4B],ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:,1)), "First facet pointers")
-! CALL FacetElements_Tetrahedron(elemType=kind,nsd=3_I4B,ans=facets)
-! CALL OK(ALL(facets%order == 1), "Linear reference facets")
-! END PROGRAM main
-!```
+! See also: [[GetEdgeConnectivity_Tetrahedron]]
 
 INTERFACE
   MODULE PURE SUBROUTINE GetFaceConnectivity_Tetrahedron(con, opt, order, &
                                                          nrow, ncol)
     INTEGER(I4B), INTENT(INOUT) :: con(:, :)
-    !! Connectivity
-    !! The columns represents the face number
-    !! The row represents a face
-    !! con should be allocated by the user
+    !! face connectivity, one face per column
+    !! the caller allocates it
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then face connectivity for hierarchial approximation
-    !! If opt =2, then face connectivity for Lagrangian approximation
-    !! opt=1 is default
+    !! not used
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: order
-    !! order
+    !! polynomial order, 1 or 2; default 1
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: nrow
-    !! Number of rows written in con
+    !! number of rows written in `con`
     INTEGER(I4B), OPTIONAL, INTENT(OUT) :: ncol
-    !! Numbers of cols written in con
+    !! number of columns written in `con`, always 4
   END SUBROUTINE GetFaceConnectivity_Tetrahedron
 END INTERFACE
 
@@ -1195,54 +716,32 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Construct a reference element or return its vertex coordinates.
+! summary: Return the vertex coordinates of a reference tetrahedron.
 !
-! Use UNIT or BIUNIT explicitly. Quadrangle defaults to BIUNIT and stores two
-! intrinsic coordinate rows; Tetrahedron defaults to UNIT and requires nsd=3.
-! Pointer constructors allocate new targets owned by the caller.
+! Returns the four vertices of the reference tetrahedron, one vertex per
+! column. Only the first letter of `refTetrahedron` counts. It is not
+! case sensitive.
 !
-! Arguments:
-!   refTetrahedron : CHARACTER(*), INTENT(IN). Reference tetrahedron domain,
-! UNIT or BIUNIT.
+! - `"UNIT"` gives the vertices `(0,0,0)`, `(1,0,0)`, `(0,1,0)` and
+!   `(0,0,1)`.
+! - `"BIUNIT"` gives the vertices `(-1,-1,-1)`, `(1,-1,-1)`, `(-1,1,-1)`
+!   and `(-1,-1,1)`.
+!
+! @warning
+! If the first letter is neither `U` nor `B`, `ans` stays unset.
+! @endwarning
 !
 ! Returns:
-!   ans : REAL(DFP)(3, 4).
+!   ans : REAL(DFP)(3, 4) - vertex coordinates, one vertex per column
 !
-! Formula:
-! $$T=\{(x,y,z):x,y,z\ge0,\ x+y+z\le1\}$$
-!
-! Examples
-!
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE BaseType, ONLY: ReferenceTetrahedron_
-! USE ReferenceTetrahedron_Method, ONLY: Initiate
-! USE ReferenceTetrahedron_Method, ONLY: ReferenceTetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: ReferenceTetrahedron_Pointer
-! USE ReferenceTetrahedron_Method, ONLY: RefCoord_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! TYPE(ReferenceTetrahedron_) :: a,b
-! CLASS(ReferenceTetrahedron_), POINTER :: p
-! REAL(DFP) :: x(3,4)
-!
-! CALL Initiate(obj=a,nsd=3_I4B,domainName="UNIT")
-! b = ReferenceTetrahedron(nsd=3_I4B,domainName="UNIT")
-! p => ReferenceTetrahedron_Pointer(nsd=3_I4B,domainName="UNIT")
-! x = RefCoord_Tetrahedron("UNIT")
-! CALL OK(a%order == 1 .AND. b%order == 1, "Linear reference objects")
-! CALL OK(ASSOCIATED(p), "Pointer constructor allocates a target")
-! CALL OK(MAXVAL(ABS(a%xij-x)) < 1.0E-12_DFP, "Reference coordinate rows")
-! DEALLOCATE(p)
-! END PROGRAM main
-!```
+! See also: [[ReferenceTetrahedron]]
 
 INTERFACE
   MODULE PURE FUNCTION RefCoord_Tetrahedron(refTetrahedron) RESULT(ans)
     CHARACTER(*), INTENT(IN) :: refTetrahedron
+    !! `"UNIT"` or `"BIUNIT"`; only the first letter counts
     REAL(DFP) :: ans(3, 4)
+    !! vertex coordinates, one vertex per column
   END FUNCTION RefCoord_Tetrahedron
 END INTERFACE
 
@@ -1252,80 +751,39 @@ END INTERFACE
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Build reference facet topology and connectivity.
+! summary: Get the element type and node count of the faces of a tetrahedron.
 !
-! Caller allocates output buffers. Quadrangle face connectivity always forces
-! option 2, independent of opt. Tetrahedron face connectivity fills all nodes
-! only for order 1 and 2; higher order face interiors are not implemented. The
-! example uses first order topology.
+! Returns the face element type and the number of nodes of the four faces
+! of a tetrahedron. All four faces have the same type. The routine writes
+! the first four entries of each output array.
 !
-! Arguments:
-!   elemType : INTEGER(I4B), OPTIONAL, INTENT(IN). Element identifier from
-! GlobalData or the element type lookup.
-!   faceElemType : INTEGER(I4B), OPTIONAL, INTENT(INOUT)(:). Output facet
-! element identifier(s).
-!   tFaceNodes : INTEGER(I4B), OPTIONAL, INTENT(INOUT)(:). Output facet node
-! count(s).
-!   opt : INTEGER(I4B), OPTIONAL, INTENT(IN). Connectivity or entity selector;
-! see the routine description.
+! The face type is `Triangle3` for `Tetrahedron4`, `Triangle6` for
+! `Tetrahedron10`, and so on up to `Triangle21` for `Tetrahedron56`.
 !
-! Returns:
-!   Updates faceElemType(:), tFaceNodes(:).
+! If `elemType` is absent, it is `Tetrahedron4`. Each output array is
+! optional. The routine fills only the arrays that are present.
 !
-! Formula:
-! $$\partial Q=\bigcup_{e=1}^4 e,\quad\partial T=\bigcup_{f=1}^4 f$$
+! @note
+! For any other `elemType`, the arrays stay unchanged.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Tetrahedron4
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTetrahedron_Method, ONLY: GetEdgeConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceElemType_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetTopology_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Tetrahedron4
-! INTEGER(I4B) :: edge(2,6), face(3,4), nr,nc
-! INTEGER(I4B) :: types(4),counts(4)
-! TYPE(ReferenceTopology_) :: topology(4)
-! TYPE(ReferenceElement_) :: facets(4)
+! - [test 1](|base|Tetrahedron/examples/GetFaceElemType_Tetrahedron_test_1.F90)
 !
-! CALL GetEdgeConnectivity_Tetrahedron(con=edge,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 6, "Edge connectivity dimensions")
-! CALL GetFaceConnectivity_Tetrahedron(con=face,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 3 .AND. nc == 4, "Facet dimensions")
-! CALL GetFaceElemType_Tetrahedron(elemType=kind, &
-!   faceElemType=types,tFaceNodes=counts)
-! CALL OK(ALL(counts == 3), "Linear facet node count")
-! CALL FacetTopology_Tetrahedron(elemType=kind, &
-!   nptrs=[1_I4B,2_I4B,3_I4B,4_I4B],ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:,1)), "First facet pointers")
-! CALL FacetElements_Tetrahedron(elemType=kind,nsd=3_I4B,ans=facets)
-! CALL OK(ALL(facets%order == 1), "Linear reference facets")
-! END PROGRAM main
-!```
+! See also: [[GetFaceElemType_Tetrahedron2]]
 
 INTERFACE GetFaceElemType_Tetrahedron
  MODULE PURE SUBROUTINE GetFaceElemType_Tetrahedron1(elemType, faceElemType, &
                                                       tFaceNodes, opt)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: elemType
-    !! element type for Tetrahedron
-    !! default is Tetrahedron4
+    !! tetrahedron element type; default `Tetrahedron4`
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: faceElemType(:)
-    !! Face element type
+    !! face element type of each face, at least 4 entries
     INTEGER(I4B), OPTIONAL, INTENT(INOUT) :: tFaceNodes(:)
-    !! total nodes in each face
+    !! number of nodes in each face, at least 4 entries
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then edge connectivity for hierarchial approximation
-    !! If opt = 2, then edge connectivity for Lagrangian approximation
-    !! opt = 1 is default
+    !! not used
   END SUBROUTINE GetFaceElemType_Tetrahedron1
 END INTERFACE GetFaceElemType_Tetrahedron
 
@@ -1335,81 +793,39 @@ END INTERFACE GetFaceElemType_Tetrahedron
 
 !> author: Vikas Sharma, Ph.D.
 ! date: 2026-10-30
-! summary: Build reference facet topology and connectivity.
+! summary: Get the element type and node count of one face of a tetrahedron.
 !
-! Caller allocates output buffers. Quadrangle face connectivity always forces
-! option 2, independent of opt. Tetrahedron face connectivity fills all nodes
-! only for order 1 and 2; higher order face interiors are not implemented. The
-! example uses first order topology.
+! Returns the element type of local face `localFaceNumber` of the
+! tetrahedron `elemType`. It also returns the number of nodes of that face.
+! The face type is `Triangle3` for `Tetrahedron4`, `Triangle6` for
+! `Tetrahedron10`, and so on up to `Triangle21` for `Tetrahedron56`.
 !
-! Arguments:
-!   elemType : INTEGER(I4B), INTENT(IN). Element identifier from GlobalData or
-! the element type lookup.
-!   localFaceNumber : INTEGER(I4B), INTENT(IN). One based local facet index.
-!   faceElemType : INTEGER(I4B), INTENT(OUT). Output facet element
-! identifier(s).
-!   tFaceNodes : INTEGER(I4B), INTENT(OUT). Output facet node count(s).
-!   opt : INTEGER(I4B), OPTIONAL, INTENT(IN). Connectivity or entity selector;
-! see the routine description.
+! All four faces of a tetrahedron have the same type. So
+! `localFaceNumber` does not change the result.
 !
-! Returns:
-!   Updates faceElemType, tFaceNodes.
-!
-! Formula:
-! $$\partial Q=\bigcup_{e=1}^4 e,\quad\partial T=\bigcup_{f=1}^4 f$$
+! @note
+! For any other `elemType`, `faceElemType` and `tFaceNodes` stay unset.
+! @endnote
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: Tetrahedron4
-! USE BaseType, ONLY: ReferenceTopology_
-! USE BaseType, ONLY: ReferenceElement_
-! USE ReferenceTetrahedron_Method, ONLY: GetEdgeConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceConnectivity_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: GetFaceElemType_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetTopology_Tetrahedron
-! USE ReferenceTetrahedron_Method, ONLY: FacetElements_Tetrahedron
-! USE Test_Method, ONLY: OK
-! IMPLICIT NONE
-! INTEGER(I4B), PARAMETER :: kind = Tetrahedron4
-! INTEGER(I4B) :: edge(2,6), face(3,4), nr,nc
-! INTEGER(I4B) :: types(4),counts(4)
-! TYPE(ReferenceTopology_) :: topology(4)
-! TYPE(ReferenceElement_) :: facets(4)
+! - [test 1](|base|Tetrahedron/examples/GetFaceElemType_Tetrahedron_test_1.F90)
 !
-! CALL GetEdgeConnectivity_Tetrahedron(con=edge,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 2 .AND. nc == 6, "Edge connectivity dimensions")
-! CALL GetFaceConnectivity_Tetrahedron(con=face,order=1_I4B,nrow=nr,ncol=nc)
-! CALL OK(nr == 3 .AND. nc == 4, "Facet dimensions")
-! CALL GetFaceElemType_Tetrahedron(elemType=kind, &
-!   faceElemType=types,tFaceNodes=counts)
-! CALL OK(ALL(counts == 3), "Linear facet node count")
-! CALL FacetTopology_Tetrahedron(elemType=kind, &
-!   nptrs=[1_I4B,2_I4B,3_I4B,4_I4B],ans=topology)
-! CALL OK(ALL(topology(1)%nptrs == face(:,1)), "First facet pointers")
-! CALL FacetElements_Tetrahedron(elemType=kind,nsd=3_I4B,ans=facets)
-! CALL OK(ALL(facets%order == 1), "Linear reference facets")
-! END PROGRAM main
-!```
+! See also: [[GetFaceElemType_Tetrahedron1]]
 
 INTERFACE GetFaceElemType_Tetrahedron
   MODULE PURE SUBROUTINE GetFaceElemType_Tetrahedron2( &
     elemType, localFaceNumber, faceElemType, tFaceNodes, opt)
     INTEGER(I4B), INTENT(IN) :: elemType
-    !! element type for Tetrahedron
+    !! tetrahedron element type
     INTEGER(I4B), INTENT(IN) :: localFaceNumber
-    !! local face number
+    !! local face number, 1 to 4; not used
     INTEGER(I4B), INTENT(OUT) :: faceElemType
-    !! Face element type
+    !! face element type
     INTEGER(I4B), INTENT(OUT) :: tFaceNodes
-    !! total nodes in each face
+    !! number of nodes in the face
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-    !! If opt = 1, then edge connectivity for hierarchial approximation
-    !! If opt = 2, then edge connectivity for Lagrangian approximation
-    !! opt = 1 is default
+    !! not used
   END SUBROUTINE GetFaceElemType_Tetrahedron2
 END INTERFACE GetFaceElemType_Tetrahedron
 

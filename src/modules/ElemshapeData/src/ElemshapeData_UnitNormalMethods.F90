@@ -15,38 +15,57 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_UnitNormalMethods
-USE BaseType
-USE GlobalData
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-03-04
+! summary: Unit normal from the gradient of a field
+!
+! Compute a unit vector at the quadrature points.
+! It comes from the gradient of a scalar or vector field.
+! An example is the normal of a level set.
+
+MODULE ElemshapeData_UnitNormalMethods
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: FEVariable_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: GetUnitNormal
 
 !----------------------------------------------------------------------------
-!                                                    GetUnitNormal@getMethod
+!                                                       GetUnitNormal@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! update: 2021-11-26
-! summary: This subroutine can be used in SUPG formulation
+! summary: Unit normal from the gradient of a scalar field
 !
-!# Introduction
+! Returns the unit vector along the gradient of a scalar field `p`.
+! It interpolates `p` from the nodal values `val`.
+! It reallocates `R(nsd, nips)`. Where `grad(p)` is zero, `R` is zero.
 !
-! This routine can be used in the SUPG formulation:
+! Formula:
+!   $$ R = \operatorname{sign}(p) \frac{\nabla p}{|\nabla p|} $$
 !
-! $$
-! \frac{\nabla \vert \phi \vert}{\Vert \nabla \vert \phi \vert \Vert}
-! $$
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/GetUnitNormal_test_1.F90)
+!   first block, level set `p = y - 1/2`
+! - [test 2](|base|ElemshapeData/examples/GetUnitNormal_test_2.F90)
+!   first and second blocks, constant `p` gives `R = 0`
+!
+! See also: [[GetUnitNormal_2]], [[GetUnitNormal_3]]
 
 INTERFACE
   MODULE PURE SUBROUTINE GetUnitNormal_1(obj, R, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    !! unit vector defined over quadrature points, in xiJ format
+    !! unit vector defined over quadrature points, in `xiJ` format
     REAL(DFP), INTENT(IN) :: val(:)
-    !! spatial nodal values of scalar
+    !! nodal values of a scalar, val(nns)
   END SUBROUTINE GetUnitNormal_1
 END INTERFACE
 
@@ -55,30 +74,41 @@ INTERFACE GetUnitNormal
 END INTERFACE GetUnitNormal
 
 !----------------------------------------------------------------------------
-!                                                    GetUnitNormal@getMethod
+!                                                       GetUnitNormal@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! update: 2021-11-26
-! summary: This subroutine can be used in SUPG formulation
+! summary: Unit normal from the gradient of a vector field
 !
-!# Introduction
+! Returns a unit vector from the gradient of a vector field `p`.
+! It interpolates `p` from the nodal values `val`.
+! It reallocates `R(nsd, nips)`.
 !
-! This routine can be used in the SUPG formulation, here
-! val is spatial nodal values of a vector.
+! Where `|p|` is zero, it takes every component of `p / |p|` as one.
+! Where `m` is zero, `R` is zero.
 !
-! $$
-! {\bf r}=\frac{\nabla\Vert{\bf v}\Vert}{\left|\nabla\Vert{\bf v}\Vert\right|}
-! $$
+! Formula:
+!   $$ m_j = \sum_k \frac{p_k}{|p|} \frac{\partial p_k}{\partial x_j},
+!   \quad R = \frac{m}{|m|} $$
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/GetUnitNormal_test_1.F90)
+!   second block, field `(x, 0)`
+! - [test 2](|base|ElemshapeData/examples/GetUnitNormal_test_2.F90)
+!   third to fifth blocks, fields `(x, y)`, `(x, y, 0)` and zero
+!
+! See also: [[GetUnitNormal_1]]
 
 INTERFACE
   MODULE PURE SUBROUTINE GetUnitNormal_2(obj, R, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    !! unit vector defined over quadrature points, in xiJ format
+    !! unit vector defined over quadrature points, in `xiJ` format
     REAL(DFP), INTENT(IN) :: val(:, :)
-    !! spatial nodal values of velocity (vector field)
+    !! nodal values of a vector, val(nsd, nns)
   END SUBROUTINE GetUnitNormal_2
 END INTERFACE
 
@@ -87,38 +117,39 @@ INTERFACE GetUnitNormal
 END INTERFACE GetUnitNormal
 
 !----------------------------------------------------------------------------
-!                                                    GetUnitNormal@getMethod
+!                                                       GetUnitNormal@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! update: 2021-11-26
-! summary: This subroutine can be used in SUPG formulation
+! summary: Unit normal from a scalar or vector FEVariable
 !
-!# Introduction
+! Returns the unit vector from the nodal values in `val`.
+! For a scalar `val` it works like [[GetUnitNormal_1]].
+! For a vector `val` it works like [[GetUnitNormal_2]].
 !
-! - This routine can be used in the SUPG formulation.
-! - `val` is the [[FEVariable_]], it can be vector or scalar
+! @note
+! `val` must hold nodal values. A matrix `val` is not supported, and
+! then `R` does not change.
+! @endnote
 !
-! $$
-! \frac{\nabla \vert \phi \vert}{\Vert \nabla \vert \phi \vert \Vert}
-! $$
+! Examples
 !
-! $$
-! {\bf r}=\frac{\nabla\Vert{\bf v}\Vert}{\left|\nabla\Vert{\bf v}\Vert\right|}
-! $$
+! - [test 1](|base|ElemshapeData/examples/GetUnitNormal_test_1.F90)
+!   both blocks, with `NodalVariable`
+! - [test 2](|base|ElemshapeData/examples/GetUnitNormal_test_2.F90)
+!   third block (vector) and sixth block (matrix, `R` does not change)
 !
-! TODO: Make implementation simple:
-!  extract scalar or vector values from fevariable val,
-! and call above routines
+! See also: [[GetUnitNormal_1]], [[GetUnitNormal_2]]
 
 INTERFACE
   MODULE PURE SUBROUTINE GetUnitNormal_3(obj, R, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
-    !! unit vector defined over quadrature points, in xiJ format
+    !! unit vector defined over quadrature points, in `xiJ` format
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! it can be scalar or vector fe variable
+    !! scalar or vector nodal FEVariable
   END SUBROUTINE GetUnitNormal_3
 END INTERFACE
 
@@ -126,4 +157,4 @@ INTERFACE GetUnitNormal
   MODULE PROCEDURE GetUnitNormal_3
 END INTERFACE GetUnitNormal
 
-end module ElemshapeData_UnitNormalMethods
+END MODULE ElemshapeData_UnitNormalMethods

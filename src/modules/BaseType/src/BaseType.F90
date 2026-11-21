@@ -1569,10 +1569,42 @@ TYPE(KeyValue_), PARAMETER :: TypeKeyValue = KeyValue_(VALUE=NULL())
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 14 June 2022
+! date: 2022-06-14
 ! summary: Finite element variable
 !
-! {!pages/FEVariable_.md!}
+! A finite element variable stores the values of a scalar, vector or
+! matrix quantity that is constant, or varies in space, in time, or in
+! space and time. The values are given at nodes (`defineOn` is nodal) or
+! at quadrature points (`defineOn` is quadrature).
+!
+! All values are kept in the one dimensional array `val(1:len)` in column
+! major (Fortran) order. The shape of the data is `s(1:tshape)` and
+! `len = PRODUCT(s(1:tshape))`. `capacity` is the allocated size of `val`,
+! which can be larger than `len`.
+!
+! The shape depends on `rank` and `varType`. Here `ncomp` is the number
+! of vector components, `nrow` and `ncol` are the matrix sizes, `ns` is
+! the number of nodes or quadrature points in space, and `nt` is the
+! number of nodes or quadrature points in time.
+!
+!| rank | varType | s | tshape |
+!| --- | --- | --- | --- |
+!| Scalar | Constant | [1] | 1 |
+!| Scalar | Space | [ns] | 1 |
+!| Scalar | Time | [nt] | 1 |
+!| Scalar | SpaceTime | [ns, nt] | 2 |
+!| Vector | Constant | [ncomp] | 1 |
+!| Vector | Space | [ncomp, ns] | 2 |
+!| Vector | Time | [ncomp, nt] | 2 |
+!| Vector | SpaceTime | [ncomp, ns, nt] | 3 |
+!| Matrix | Constant | [nrow, ncol] | 2 |
+!| Matrix | Space | [nrow, ncol, ns] | 3 |
+!| Matrix | Time | [nrow, ncol, nt] | 3 |
+!| Matrix | SpaceTime | [nrow, ncol, ns, nt] | 4 |
+!
+! For example, the value of a vector space-time variable for component
+! `i`, space point `j` and time point `k` is stored at
+! `val(i + (j - 1) * ncomp + (k - 1) * ncomp * ns)`.
 
 TYPE :: FEVariable_
   LOGICAL(LGT) :: isInit = .FALSE.
@@ -1588,7 +1620,7 @@ TYPE :: FEVariable_
   !! Scalar, spaceTime: 2
   !! Vector, constant: 1
   !! Vector, space: 2
-  !! Vector, time: 3
+  !! Vector, time: 2
   !! Vector, spaceTime: 3
   !! Matrix, constant: 2
   !! Matrix, space: 3

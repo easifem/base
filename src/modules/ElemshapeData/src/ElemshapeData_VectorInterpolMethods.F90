@@ -15,11 +15,15 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 !
-! This file contains the interpolation methods interfaces\
+! This file contains the interfaces of the vector interpolation methods
 
 MODULE ElemshapeData_VectorInterpolMethods
-USE GlobalData, ONLY: DFP, I4B, LGT
-USE BaseType, ONLY: ElemShapeData_, STElemShapeData_, FEVariable_
+USE BaseType, ONLY: ElemShapeData_
+USE BaseType, ONLY: STElemShapeData_
+USE BaseType, ONLY: FEVariable_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -33,19 +37,25 @@ PUBLIC :: STInterpolation
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: This subroutine performs interpolation of a vector
+! date: 2021-03-04
+! summary: Interpolation of vector nodal values, with allocation
 !
-!# Introduction
+! Interpolates the vector nodal values `val(ncomp, nns)` at the
+! quadrature points of `obj`. It reallocates `ans(ncomp, nips)`.
 !
-! This subroutine performs interpolation of a vector from its spatial
-! nodal values
+! Formula:
+!   $$ ans(:, ips) = \sum_I N(I, ips) \, val(:, I) $$
 !
-! $$u_{i}=u_{iI}N^{I}$$
+! Examples
+!
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90) first block
+!
+! See also: [[GetInterpolation_1]], [[Interpolation1]]
 
 INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE GetInterpolation1(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
     !! interpolation of vector
     REAL(DFP), INTENT(IN) :: val(:, :)
@@ -59,14 +69,31 @@ END INTERFACE GetInterpolation
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
-! summary: get interpolation of vector without allocation
+! summary: Interpolation of vector nodal values, without allocation
+!
+! Interpolates `val` like [[GetInterpolation1]].
+! It writes into the existing `ans` and returns the used size in
+! `nrow` and `ncol`.
+!
+! Examples
+!
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! first block
+!
+! See also: [[GetInterpolation1]], [[GetInterpolation_1a]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_1(obj, ans, val, nrow, ncol)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! interpolated value
     REAL(DFP), INTENT(IN) :: val(:, :)
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nodal values, val(ncomp, nns)
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written in ans
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of columns written in ans
   END SUBROUTINE GetInterpolation_1
 END INTERFACE GetInterpolation_
 
@@ -76,17 +103,40 @@ END INTERFACE GetInterpolation_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
-! summary:  get interpolation of vector without allocation
+! summary: Interpolation of vector nodal values with scale
+!
+! Interpolates `val` like [[GetInterpolation_1]].
+! It adds `scale` times the interpolated value to `ans`.
+! If `addContribution` is false, it clears `ans` first.
+!
+! It uses only the first `MIN(SIZE(val, 2), obj%nns)` nodes.
+!
+! Examples
+!
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! first block
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90)
+! fifth block
+!
+! See also: [[GetInterpolation_1]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_1a(obj, ans, val, nrow, ncol, &
                                              scale, addContribution)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! interpolated value
     REAL(DFP), INTENT(IN) :: val(:, :)
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! nodal values, val(ncomp, nns)
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written in ans
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of columns written in ans
     REAL(DFP), INTENT(IN) :: scale
+    !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
+    !! if true, add the interpolated value to ans
   END SUBROUTINE GetInterpolation_1a
 END INTERFACE GetInterpolation_
 
@@ -95,21 +145,29 @@ END INTERFACE GetInterpolation_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 1 Nov 2021
-! summary: This subroutine performs interpolation of a vector
+! date: 2021-11-01
+! summary: Interpolation of vector space-time nodal values at one time point
 !
-!# Introduction
+! Interpolates the space-time nodal values `val(ncomp, nns, nnt)` at one
+! time point. `obj` is the shape data at that time quadrature point.
+! It reallocates `ans(ncomp, nips)`.
 !
-! This subroutine performs interpolation of a vector from its space-time
-! nodal values
+! Formula:
+!   $$ ans(:, ips) = \sum_a T(a) \sum_I N(I, ips) \, val(:, I, a) $$
 !
-! $$u_{i}=u^{a}_{iI}N^{I}T_{a}$$
+! Examples
+!
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! second block
+!
+! See also: [[GetInterpolation_2]], [[STInterpolation1]]
 
 INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE GetInterpolation2(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: ans(:, :)
-    !!
+    !! interpolated value, ans(ncomp, nips)
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time nodal values of vector in `xiJa` format
   END SUBROUTINE GetInterpolation2
@@ -119,16 +177,33 @@ END INTERFACE GetInterpolation
 !                                                   GetInterpolation_@Methods
 !----------------------------------------------------------------------------
 
-!> author: Shion Shimizu
-! date:   2025-03-03
-! summary:  get interpolation of vector without allocation
+!> author: Vikas Sharma, Ph. D.
+! date: 2025-03-03
+! summary: Interpolation of vector space-time nodal values, without allocation
+!
+! Interpolates `val` like [[GetInterpolation2]].
+! It writes into the existing `ans` and returns the used size in
+! `nrow` and `ncol`.
+!
+! Examples
+!
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! second block
+!
+! See also: [[GetInterpolation2]], [[GetInterpolation_2a]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_2(obj, ans, val, nrow, ncol)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! interpolated value
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! space-time nodal values, val(ncomp, nns, nnt)
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written in ans
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of columns written in ans
   END SUBROUTINE GetInterpolation_2
 END INTERFACE GetInterpolation_
 
@@ -138,17 +213,37 @@ END INTERFACE GetInterpolation_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
-! summary:  get interpolation of vector without allocation
+! summary: Interpolation of vector space-time nodal values with scale
+!
+! Interpolates `val` like [[GetInterpolation_2]].
+! It adds `scale` times the interpolated value to `ans`.
+! If `addContribution` is false, it clears `ans` first.
+!
+! It uses only the first `MIN(SIZE(val, 3), obj%nnt)` time nodes.
+!
+! Examples
+!
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90) second block
+!
+! See also: [[GetInterpolation_2]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_2a(obj, ans, val, nrow, ncol, &
                                              scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! interpolated value
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! space-time nodal values, val(ncomp, nns, nnt)
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written in ans
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of columns written in ans
     REAL(DFP), INTENT(IN) :: scale
+    !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
+    !! if true, add the interpolated value to ans
   END SUBROUTINE GetInterpolation_2a
 END INTERFACE GetInterpolation_
 
@@ -157,21 +252,28 @@ END INTERFACE GetInterpolation_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 1 Nov 2021
-! summary: This subroutine performs interpolation of a vector
+! date: 2021-11-01
+! summary: Interpolation of vector space-time nodal values at all time points
 !
-!# Introduction
+! Interpolates the space-time nodal values `val(ncomp, nns, nnt)` at all
+! time points. Here `obj(ipt)` is the shape data at time quadrature
+! point `ipt`. It reallocates `ans(ncomp, nips, nipt)`.
 !
-! This subroutine performs interpolation of a vector from its space-time
-! nodal values
+! It fills `ans(:, :, ipt)` like [[GetInterpolation2]] with `obj(ipt)`.
 !
-! $$u_{i}=u^{a}_{iI}N^{I}T_{a}$$
+! Examples
+!
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! second block
+!
+! See also: [[GetInterpolation_3]]
 
 INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE GetInterpolation3(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+    !! space-time shape data at each time point
     REAL(DFP), INTENT(INOUT), ALLOCATABLE :: ans(:, :, :)
-    !!
+    !! interpolated value, ans(ncomp, nips, nipt)
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time nodal values of vector in `xiJa` format
   END SUBROUTINE GetInterpolation3
@@ -183,14 +285,35 @@ END INTERFACE GetInterpolation
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
-! summary:  get interpolation of vector without allocation
+! summary: Interpolation of vector space-time nodal values at all time
+!   points, without allocation
+!
+! Interpolates `val` like [[GetInterpolation3]].
+! It writes into the existing `ans` and returns the used size in
+! `dim1`, `dim2` and `dim3`.
+!
+! Examples
+!
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! third block
+!
+! See also: [[GetInterpolation3]], [[GetInterpolation_3a]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_3(obj, ans, val, dim1, dim2, dim3)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+    !! space-time shape data at each time point
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! interpolated value
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! space-time nodal values, val(ncomp, nns, nnt)
+    INTEGER(I4B), INTENT(OUT) :: dim1
+    !! size of dim1 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim2
+    !! size of dim2 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim3
+    !! size of dim3 written in
+    !! ans
   END SUBROUTINE GetInterpolation_3
 END INTERFACE GetInterpolation_
 
@@ -200,17 +323,40 @@ END INTERFACE GetInterpolation_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
-! summary:  get interpolation of vector without allocation
+! summary: Interpolation of vector space-time nodal values at all time points
+!   with scale
+!
+! Interpolates `val` like [[GetInterpolation_3]].
+! It adds `scale` times the interpolated value to `ans`.
+! If `addContribution` is false, it clears `ans` first.
+!
+! Examples
+!
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! third block
+!
+! See also: [[GetInterpolation_3]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_3a(obj, ans, val, dim1, dim2, &
                                              dim3, scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+    !! space-time shape data at each time point
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! interpolated value
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! space-time nodal values, val(ncomp, nns, nnt)
+    INTEGER(I4B), INTENT(OUT) :: dim1
+    !! size of dim1 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim2
+    !! size of dim2 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim3
+    !! size of dim3 written in ans
     REAL(DFP), INTENT(IN) :: scale
+    !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
+    !! if true, add the interpolated value
+    !! to ans
   END SUBROUTINE GetInterpolation_3a
 END INTERFACE GetInterpolation_
 
@@ -219,24 +365,29 @@ END INTERFACE GetInterpolation_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: returns the interpolation of vector FEVariable
+! date: 2021-03-04
+! summary: Interpolation of vector FEVariable, with allocation
 !
-!# Introduction
+! Interpolates the vector `FEVariable_` `val` at the quadrature points
+! of `obj`. It reallocates `ans(ncomp, nips)`.
 !
-! Returns the interpolation of vector variable
-! The vector variable can be+
+! - For a nodal `val`, it interpolates with `N`.
+! - For a quadrature `val`, it copies the values.
+! - For a constant `val`, it repeats the value at every point.
 !
-! - constant
-! - spatial nodal values
-! - spatial quadrature values
-! - space-time nodal values
+! Examples
 !
-! NOTE This routine calls [[Interpolation]] function from the same module.
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! third block
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90)
+! first block
 !
+! See also: [[GetInterpolation_4]]
+
 INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE GetInterpolation4(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
     !! interpolation of vector
     TYPE(FEVariable_), INTENT(IN) :: val
@@ -250,14 +401,31 @@ END INTERFACE GetInterpolation
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
-! summary:  get interpolation of vector without allocation
+! summary: Interpolation of vector FEVariable, without allocation
+!
+! Interpolates `val` like [[GetInterpolation4]].
+! It writes into the existing `ans` and returns the used size in
+! `nrow` and `ncol`.
+!
+! Examples
+!
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! fourth block
+!
+! See also: [[GetInterpolation4]], [[GetInterpolation_4a]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_4(obj, ans, val, nrow, ncol)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! interpolated value
     TYPE(FEVariable_), INTENT(IN) :: val
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! vector FEVariable
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written in ans
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of columns written in ans
   END SUBROUTINE GetInterpolation_4
 END INTERFACE GetInterpolation_
 
@@ -267,18 +435,50 @@ END INTERFACE GetInterpolation_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
-! summary:  get interpolation of vector without allocation
+! summary: Interpolation of vector FEVariable with scale
+!
+! Interpolates `val` like [[GetInterpolation_4]].
+! It adds `scale` times the interpolated value to `ans`.
+! If `addContribution` is false, it clears `ans` first.
+!
+! A space-time `val` needs `obj` to be a `STElemShapeData_`.
+! For a quadrature `val`, `timeIndx` selects the time point.
+! The default `timeIndx` is 1.
+!
+! @note
+! A time `val` is not supported. A space-time `val` with a plain
+! `ElemShapeData_` is not supported either. In both cases, it writes
+! nothing.
+! @endnote
+!
+! Examples
+!
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! fourth block
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90)
+! second block
+!
+! See also: [[GetInterpolation_4]], [[GetInterpolation_4b]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_4a(obj, ans, val, nrow, ncol, &
                                              scale, addContribution, timeIndx)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
+    !! interpolated value
     TYPE(FEVariable_), INTENT(IN) :: val
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! vector FEVariable
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written in ans
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of columns written in ans
     REAL(DFP), INTENT(IN) :: scale
+    !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
+    !! if true, add the interpolated value to ans
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: timeIndx
+    !! time quadrature point index
   END SUBROUTINE GetInterpolation_4a
 END INTERFACE GetInterpolation_
 
@@ -288,19 +488,45 @@ END INTERFACE GetInterpolation_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
-! summary:  get interpolation of vector without allocation
+! summary: Interpolation of vector FEVariable at one quadrature point
+!
+! Interpolates `val` at the quadrature point `spaceIndx`.
+! It writes the vector in `ans(1:tsize)`.
+! For a space-time `val`, `timeIndx` selects the time point.
+! It adds `scale` times the interpolated value to `ans`.
+! If `addContribution` is false, it clears `ans` first.
+!
+! A space-time `val` needs `obj` to be a `STElemShapeData_`.
+!
+! Examples
+!
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! third block, at `spaceIndx = 1`
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90)
+! fourth block
+!
+! See also: [[GetInterpolation_4a]]
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE GetInterpolation_4b(obj, ans, val, tsize, &
-                                             scale, addContribution, &
-                                             timeIndx, spaceIndx)
+  MODULE PURE SUBROUTINE GetInterpolation_4b(obj, ans, val, tsize, scale, &
+                                             addContribution, timeIndx, &
+                                             spaceIndx)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), INTENT(INOUT) :: ans(:)
+    !! interpolated value
     TYPE(FEVariable_), INTENT(IN) :: val
+    !! vector FEVariable
     INTEGER(I4B), INTENT(OUT) :: tsize
+    !! number of values written in ans
     REAL(DFP), INTENT(IN) :: scale
+    !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    INTEGER(I4B), INTENT(IN) :: spaceIndx, timeIndx
+    !! if true, add the interpolated value to ans
+    INTEGER(I4B), INTENT(IN) :: spaceIndx
+    !! space quadrature point index
+    INTEGER(I4B), INTENT(IN) :: timeIndx
+    !! time quadrature point index
   END SUBROUTINE GetInterpolation_4b
 END INTERFACE GetInterpolation_
 
@@ -309,24 +535,30 @@ END INTERFACE GetInterpolation_
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: returns the interpolation of vector FEVariable
+! date: 2021-03-04
+! summary: Interpolation of vector FEVariable at all time points
 !
-!# Introduction
+! Interpolates the vector `FEVariable_` `val` at all time points.
+! Here `obj(ipt)` is the shape data at time quadrature point `ipt`.
+! It reallocates `ans(ncomp, nips, nipt)`.
 !
-! Returns the interpolation of vector variable
-! The vector variable can be+
+! It fills `ans(:, :, ipt)` like [[GetInterpolation_4a]] with
+! `timeIndx = ipt
+! `.
 !
-! - constant
-! - spatial nodal values
-! - spatial quadrature values
-! - space-time nodal values
+! Examples
 !
-! NOTE This routine calls [[Interpolation]] function from the same module.
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! fifth block
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90)
+! third block
 !
+! See also: [[GetInterpolation_5]]
+
 INTERFACE GetInterpolation
   MODULE PURE SUBROUTINE GetInterpolation5(obj, ans, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+    !! space-time shape data at each time point
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :)
     !! space-time interpolation of vector
     TYPE(FEVariable_), INTENT(IN) :: val
@@ -340,14 +572,34 @@ END INTERFACE GetInterpolation
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
-! summary:  get interpolation of vector without allocation
+! summary: Interpolation of vector FEVariable at all time points, without
+!   allocation
+!
+! Interpolates `val` like [[GetInterpolation5]].
+! It writes into the existing `ans` and returns the used size in
+! `dim1`, `dim2` and `dim3`.
+!
+! Examples
+!
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! fifth block
+!
+! See also: [[GetInterpolation5]], [[GetInterpolation_5a]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_5(obj, ans, val, dim1, dim2, dim3)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+    !! space-time shape data at each time point
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! interpolated value
     TYPE(FEVariable_), INTENT(IN) :: val
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! vector FEVariable
+    INTEGER(I4B), INTENT(OUT) :: dim1
+    !! size of dim1 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim2
+    !! size of dim2 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim3
+    !! size of dim3 written in ans
   END SUBROUTINE GetInterpolation_5
 END INTERFACE GetInterpolation_
 
@@ -357,33 +609,70 @@ END INTERFACE GetInterpolation_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
-! summary:  get interpolation of vector without allocation
+! summary: Interpolation of vector FEVariable at all time points with scale
+!
+! Interpolates `val` like [[GetInterpolation_5]].
+! It adds `scale` times the interpolated value to `ans`.
+! If `addContribution` is false, it clears `ans` first.
+!
+! Examples
+!
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! fifth block
+!
+! See also: [[GetInterpolation_5]]
 
 INTERFACE GetInterpolation_
   MODULE PURE SUBROUTINE GetInterpolation_5a(obj, ans, val, dim1, dim2, &
                                              dim3, scale, addContribution)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+    !! space-time shape data at each time point
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
+    !! interpolated value
     TYPE(FEVariable_), INTENT(IN) :: val
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! vector FEVariable
+    INTEGER(I4B), INTENT(OUT) :: dim1
+    !! size of dim1 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim2
+    !! size of dim2 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim3
+    !! size of dim3 written in ans
     REAL(DFP), INTENT(IN) :: scale
+    !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
+    !! if true, add the interpolated value to ans
   END SUBROUTINE GetInterpolation_5a
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
-!                                              Interpolation@InterpolMethods
+!                                                       Interpolation@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: This function returns the interpolation of vector
+! date: 2021-03-04
+! summary: Function form of the interpolation of vector nodal values
+!
+! Returns the interpolation of the vector nodal values `val` at the
+! quadrature points of `obj`. The result is `ans(ncomp, nips)`.
+!
+! Formula:
+!   $$ ans(:, ips) = \sum_I N(I, ips) \, val(:, I) $$
+!
+! Examples
+!
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! first block
+!
+! See also: [[GetInterpolation1]]
 
 INTERFACE
   MODULE PURE FUNCTION Interpolation1(obj, val) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), INTENT(IN) :: val(:, :)
+    !! nodal values, val(ncomp, nns)
     REAL(DFP), ALLOCATABLE :: ans(:, :)
+    !! interpolated value
   END FUNCTION Interpolation1
 END INTERFACE
 
@@ -392,24 +681,36 @@ INTERFACE Interpolation
 END INTERFACE Interpolation
 
 !----------------------------------------------------------------------------
-!                                            STInterpolation@InterpolMethods
+!                                                     STInterpolation@Methods
 !----------------------------------------------------------------------------
 
-INTERFACE
-!! This function performs interpolations of vector
-
-!> author: Dr. Vikas Sharma
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-03-04
+! summary: Function form of the interpolation of vector space-time nodal
+!   values
 !
-! This function performs interpolation of a vector from its space-time nodal
-! values.
-! $$u=u^{a}_{I}N^{I}T_{a}$$
+! Returns the interpolation of the space-time nodal values `val` at one
+! time point. `obj` is the shape data at that time quadrature point.
+! The result is `ans(ncomp, nips)`.
+!
+! Formula:
+!   $$ ans(:, ips) = \sum_a T(a) \sum_I N(I, ips) \, val(:, I, a) $$
+!
+! Examples
+!
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! second block
+!
+! See also: [[GetInterpolation2]]
 
+INTERFACE
   MODULE PURE FUNCTION STInterpolation1(obj, val) RESULT(ans)
     CLASS(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    !! spatial nodal values of vector
+    !! space-time nodal values, val(ncomp, nns, nnt)
     REAL(DFP), ALLOCATABLE :: ans(:, :)
-    !! Interpolation value of vector
+    !! interpolated value, ans(ncomp, nips)
   END FUNCTION STInterpolation1
 END INTERFACE
 

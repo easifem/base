@@ -20,6 +20,7 @@ t3 = 0.0_DFP
 t3(1:2, :) = t2
 ref = ReferenceTriangle(nsd=2_I4B, domainName="UNIT")
 y = Diameter(ref,t2)
-CALL OK(ABS(y-2.0_DFP) < 1.0E-11_DFP, &
-  "Current backend diameter behavior; see implementation limitation")
+! right triangle: the diameter is the hypotenuse, SQRT(5)
+CALL OK(ABS(y-SQRT(5.0_DFP)) < 1.0E-11_DFP, &
+  "Diameter of a right triangle is its hypotenuse")
 END PROGRAM main

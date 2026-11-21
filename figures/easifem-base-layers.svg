@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="580"
+     viewBox="0 0 960 580" role="img"
+     aria-labelledby="title desc">
+  <title id="title">Where easifemBase fits in EASIFEM</title>
+  <desc id="desc">
+    easifemClasses, the physics kernels and user applications build on
+    easifemBase. easifemBase provides the data types, containers,
+    geometry, interpolation, quadrature, sparse matrices and finite
+    element kernels, and links to optional external packages such as
+    OpenBLAS, LAPACK95, Sparsekit, SuperLU, METIS, HDF5, PLplot, ARPACK,
+    FFTW, LIS and Gmsh.
+  </desc>
+
+  <defs>
+    <!-- gruvbox-dark card and green accent gradients -->
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#32302F"/>
+      <stop offset="1" stop-color="#1D2021"/>
+    </linearGradient>
+    <linearGradient id="hero" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#689D6A"/>
+      <stop offset="0.5" stop-color="#8EC07C"/>
+      <stop offset="1" stop-color="#B8BB26"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#8EC07C" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#8EC07C" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5"
+            markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#FABD2F"/>
+    </marker>
+  </defs>
+
+  <rect x="1" y="1" width="958" height="578" rx="24"
+        fill="url(#bg)" stroke="#3C3836" stroke-width="2"/>
+  <ellipse cx="480" cy="240" rx="440" ry="220" fill="url(#glow)"/>
+
+  <!-- Top: consumers of the library -->
+  <text x="480" y="44" text-anchor="middle" fill="#A89984"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="11.5" font-weight="600" letter-spacing="2.2">
+    EASIFEM CLASSES, PHYSICS KERNELS AND APPLICATIONS
+  </text>
+
+  <rect x="202" y="56" width="140" height="34" rx="17"
+        fill="#3C3836" stroke="#665C54"/>
+  <text x="272" y="78" text-anchor="middle" fill="#EBDBB2"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="13.5" font-weight="500">easifemClasses</text>
+
+  <rect x="354" y="56" width="100" height="34" rx="17"
+        fill="#3C3836" stroke="#665C54"/>
+  <text x="404" y="78" text-anchor="middle" fill="#EBDBB2"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="13.5" font-weight="500">Elasticity</text>
+
+  <rect x="466" y="56" width="80" height="34" rx="17"
+        fill="#3C3836" stroke="#665C54"/>
+  <text x="506" y="78" text-anchor="middle" fill="#EBDBB2"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="13.5" font-weight="500">Seepage</text>
+
+  <rect x="558" y="56" width="94" height="34" rx="17"
+        fill="#3C3836" stroke="#665C54"/>
+  <text x="605" y="78" text-anchor="middle" fill="#EBDBB2"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="13.5" font-weight="500">Diffusion</text>
+
+  <rect x="664" y="56" width="94" height="34" rx="17"
+        fill="#32302F" stroke="#8EC07C" stroke-opacity="0.65"
+        stroke-dasharray="5 4"/>
+  <text x="711" y="78" text-anchor="middle" fill="#8EC07C"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="13.5" font-weight="600">Your code</text>
+
+  <line x1="480" y1="96" x2="480" y2="124" stroke="#FABD2F"
+        stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Middle: easifemBase -->
+  <rect x="124" y="140" width="712" height="216" rx="22"
+        fill="#8EC07C" opacity="0.14"/>
+  <rect x="120" y="132" width="720" height="216" rx="22"
+        fill="url(#hero)" stroke="#B8BB26" stroke-opacity="0.55"
+        stroke-width="1.5"/>
+
+  <text x="480" y="188" text-anchor="middle" fill="#282828"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="42" font-weight="700">easifemBase</text>
+  <text x="480" y="215" text-anchor="middle" fill="#1D2021"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="11.5" font-weight="600" letter-spacing="2.2">
+    THE FOUNDATION LAYER &#183; KINDS &#183; CONTAINERS &#183; NUMERICS
+  </text>
+
+  <line x1="180" y1="233" x2="780" y2="233" stroke="#1D2021"
+        stroke-opacity="0.24"/>
+
+  <rect x="267" y="246" width="80" height="32" rx="8"
+        fill="#282828" fill-opacity="0.85" stroke="#1D2021"
+        stroke-opacity="0.55"/>
+  <text x="307" y="267" text-anchor="middle" fill="#EBDBB2"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="13" font-weight="500">BaseType</text>
+
+  <rect x="359" y="246" width="100" height="32" rx="8"
+        fill="#282828" fill-opacity="0.85" stroke="#1D2021"
+        stroke-opacity="0.55"/>
+  <text x="409" y="267" text-anchor="middle" fill="#EBDBB2"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="13" font-weight="500">BaseMethod</text>
+
+  <rect x="471" y="246" width="90" height="32" rx="8"
+        fill="#282828" fill-opacity="0.85" stroke="#1D2021"
+        stroke-opacity="0.55"/>
+  <text x="516" y="267" text-anchor="middle" fill="#EBDBB2"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="13" font-weight="500">Containers</text>
+
+  <rect x="573" y="246" width="120" height="32" rx="8"
+        fill="#282828" fill-opacity="0.85" stroke="#1D2021"
+        stroke-opacity="0.55"/>
+  <text x="633" y="267" text-anchor="middle" fill="#EBDBB2"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="13" font-weight="500">Sparse algebra</text>
+
+  <rect x="233" y="288" width="92" height="32" rx="8"
+        fill="#282828" fill-opacity="0.85" stroke="#1D2021"
+        stroke-opacity="0.55"/>
+  <text x="279" y="309" text-anchor="middle" fill="#EBDBB2"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="13" font-weight="500">Quadrature</text>
+
+  <rect x="337" y="288" width="92" height="32" rx="8"
+        fill="#282828" fill-opacity="0.85" stroke="#1D2021"
+        stroke-opacity="0.55"/>
+  <text x="383" y="309" text-anchor="middle" fill="#EBDBB2"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="13" font-weight="500">Shape data</text>
+
+  <rect x="441" y="288" width="134" height="32" rx="8"
+        fill="#282828" fill-opacity="0.85" stroke="#1D2021"
+        stroke-opacity="0.55"/>
+  <text x="508" y="309" text-anchor="middle" fill="#EBDBB2"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="13" font-weight="500">Element matrices</text>
+
+  <rect x="587" y="288" width="140" height="32" rx="8"
+        fill="#282828" fill-opacity="0.85" stroke="#1D2021"
+        stroke-opacity="0.55"/>
+  <text x="657" y="309" text-anchor="middle" fill="#EBDBB2"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="13" font-weight="500">Optional bindings</text>
+
+  <line x1="480" y1="348" x2="480" y2="380" stroke="#FABD2F"
+        stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="494" y="370" fill="#A89984"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="10.5" font-weight="600" letter-spacing="1.4">LINKS WITH</text>
+
+  <!-- Foundation: external packages -->
+  <rect x="72" y="384" width="816" height="136" rx="14"
+        fill="#1D2021" stroke="#3C3836" stroke-width="1.5"/>
+
+  <text x="480" y="406" text-anchor="middle" fill="#A89984"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="10.5" font-weight="600" letter-spacing="2.2">
+    EXTERNAL PACKAGES &#183; OPTIONAL
+  </text>
+
+  <rect x="220" y="418" width="90" height="30" rx="15"
+        fill="#3C3836" stroke="#504945"/>
+  <text x="265" y="438" text-anchor="middle" fill="#D5C4A1"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="12.5" font-weight="500">OpenBLAS</text>
+
+  <rect x="320" y="418" width="90" height="30" rx="15"
+        fill="#3C3836" stroke="#504945"/>
+  <text x="365" y="438" text-anchor="middle" fill="#D5C4A1"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="12.5" font-weight="500">LAPACK95</text>
+
+  <rect x="420" y="418" width="88" height="30" rx="15"
+        fill="#3C3836" stroke="#504945"/>
+  <text x="464" y="438" text-anchor="middle" fill="#D5C4A1"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="12.5" font-weight="500">Sparsekit</text>
+
+  <rect x="518" y="418" width="82" height="30" rx="15"
+        fill="#3C3836" stroke="#504945"/>
+  <text x="559" y="438" text-anchor="middle" fill="#D5C4A1"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="12.5" font-weight="500">SuperLU</text>
+
+  <rect x="610" y="418" width="62" height="30" rx="15"
+        fill="#3C3836" stroke="#504945"/>
+  <text x="641" y="438" text-anchor="middle" fill="#D5C4A1"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="12.5" font-weight="500">METIS</text>
+
+  <rect x="682" y="418" width="58" height="30" rx="15"
+        fill="#3C3836" stroke="#504945"/>
+  <text x="711" y="438" text-anchor="middle" fill="#D5C4A1"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="12.5" font-weight="500">HDF5</text>
+
+  <rect x="300" y="458" width="68" height="30" rx="15"
+        fill="#3C3836" stroke="#504945"/>
+  <text x="334" y="478" text-anchor="middle" fill="#D5C4A1"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="12.5" font-weight="500">PLplot</text>
+
+  <rect x="378" y="458" width="78" height="30" rx="15"
+        fill="#3C3836" stroke="#504945"/>
+  <text x="417" y="478" text-anchor="middle" fill="#D5C4A1"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="12.5" font-weight="500">ARPACK</text>
+
+  <rect x="466" y="458" width="62" height="30" rx="15"
+        fill="#3C3836" stroke="#504945"/>
+  <text x="497" y="478" text-anchor="middle" fill="#D5C4A1"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="12.5" font-weight="500">FFTW</text>
+
+  <rect x="538" y="458" width="50" height="30" rx="15"
+        fill="#3C3836" stroke="#504945"/>
+  <text x="563" y="478" text-anchor="middle" fill="#D5C4A1"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="12.5" font-weight="500">LIS</text>
+
+  <rect x="598" y="458" width="62" height="30" rx="15"
+        fill="#3C3836" stroke="#504945"/>
+  <text x="629" y="478" text-anchor="middle" fill="#D5C4A1"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="12.5" font-weight="500">Gmsh</text>
+
+  <text x="480" y="552" text-anchor="middle" fill="#A89984"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif"
+        font-size="12">
+    Fortran 2018 &#183; C &#183; OpenMP &#183; real32/real64 &#183; int32/int64
+  </text>
+</svg>

@@ -216,18 +216,22 @@ END PROCEDURE VectorConstantGetInterpolation_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE VectorConstantGetInterpolation_2
-INTEGER(I4B) :: ii, ansStart, valStart, tsize
+INTEGER(I4B) :: ii, ips, ansStart, nsd, tsize
 
-tsize = ans%s(1) * ans%s(2)
-ansStart = (timeIndx - 1) * tsize
+nsd = obj%s(1)
+tsize = nsd * nips
+ansStart = (timeIndx - 1) * ans%s(1) * ans%s(2)
+
 IF (.NOT. addContribution) ans%val(ansStart + 1:ansStart + tsize) = 0.0_DFP
 
-valStart = 0
-
-DO ii = 1, tsize
-  ans%val(ansStart + ii) = ans%val(ansStart + ii) &
-                           + scale * obj%val(valStart + ii)
+! the constant vector is the same at every quadrature point
+DO ips = 1, nips
+  DO ii = 1, nsd
+    ans%val(ansStart + ii) = ans%val(ansStart + ii) + scale * obj%val(ii)
+  END DO
+  ansStart = ansStart + nsd
 END DO
+
 END PROCEDURE VectorConstantGetInterpolation_2
 
 !----------------------------------------------------------------------------
@@ -417,6 +421,8 @@ nsd = obj%s(1)
 ansStart = (timeIndx - 1) * ans%s(1) * ans%s(2)
 ansEnd = ansStart + ans%s(1) * ans%s(2)
 valStart = 0
+
+IF (.NOT. addContribution) ans%val(1 + ansStart:ansEnd) = 0.0_DFP
 
 SELECT CASE (obj%defineon)
 

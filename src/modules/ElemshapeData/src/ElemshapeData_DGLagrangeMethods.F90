@@ -14,40 +14,51 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-module ElemshapeData_DGLagrangeMethods
-USE BaseType
-USE GlobalData
+MODULE ElemshapeData_DGLagrangeMethods
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: DG_
+USE BaseType, ONLY: LagrangeInterpolation_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
-public :: Initiate
+PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@DGLagrange
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 23 July 2021
-! summary: This routine initiate the shape data
+! date: 2021-07-23
+! summary: Initiates the shape data for DG Lagrange interpolation
 !
-!# Introduction
+! This routine should fill `obj` with the shape function data of a
+! discontinuous Galerkin (DG) Lagrange element.
+! It should evaluate the data at the points of `quad` on `refElem`.
 !
-! This routine initiates the shape function related data inside the element.
-!
-
-INTERFACE
-  MODULE PURE SUBROUTINE DG_Lagrange(obj, quad, refElem, &
-    & continuityType, interpolType)
-    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
-    CLASS(QuadraturePoint_), INTENT(IN) :: quad
-    CLASS(ReferenceElement_), INTENT(IN) :: refElem
-    CLASS(DG_), INTENT(IN) :: continuityType
-    CLASS(LagrangeInterpolation_), INTENT(IN) :: interpolType
-  END SUBROUTINE DG_Lagrange
-END INTERFACE
+! @warning
+! This method has no body. No submodule defines `DG_Lagrange`.
+! The build (`CMakeLists.txt`) does not include this module.
+! @endwarning
 
 INTERFACE Initiate
-  MODULE PROCEDURE DG_Lagrange
+  MODULE PURE SUBROUTINE DG_Lagrange(obj, quad, refElem, &
+                                     continuityType, interpolType)
+    CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! shape data to fill
+    CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    !! quadrature points for the shape data
+    CLASS(ReferenceElement_), INTENT(IN) :: refElem
+    !! reference element
+    CLASS(DG_), INTENT(IN) :: continuityType
+    !! continuity type; `DG_` selects this overload
+    CLASS(LagrangeInterpolation_), INTENT(IN) :: interpolType
+    !! Lagrange interpolation type
+  END SUBROUTINE DG_Lagrange
 END INTERFACE Initiate
 
-end module ElemshapeData_DGLagrangeMethods
+END MODULE ElemshapeData_DGLagrangeMethods

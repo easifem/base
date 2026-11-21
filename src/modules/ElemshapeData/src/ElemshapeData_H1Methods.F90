@@ -15,35 +15,49 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE ElemshapeData_H1Methods
-USE BaseType, ONLY: ElemshapeData_, &
-                    QuadraturePoint_, &
-                    ReferenceElement_, &
-                    H1_, &
-                    LagrangeInterpolation_, &
-                    HierarchyInterpolation_, &
-                    OrthogonalInterpolation_, &
-                    HermitInterpolation_, &
-                    SerendipityInterpolation_
-
-USE GlobalData, ONLY: I4B, DFP, LGT
-
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: H1_
+USE BaseType, ONLY: HermitInterpolation_
+USE BaseType, ONLY: HierarchyInterpolation_
+USE BaseType, ONLY: LagrangeInterpolation_
+USE BaseType, ONLY: OrthogonalInterpolation_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: SerendipityInterpolation_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
-
 PRIVATE
 
 PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@H1Hierarchy
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2023-09-02
-! summary: This routine initiate the shape data
+! summary: Initiate the shape data with hierarchical H1 basis functions
 !
-!# Introduction
+! This routine fills `obj` with the values and the local gradients of
+! hierarchical basis functions at the quadrature points.
 !
-! This routine initiates the shape function related data inside the element.
+! The element type comes from `refelem`. Supported types are `Line`,
+! `Triangle`, `Quadrangle`, `Tetrahedron` and `Hexahedron`. For any other
+! type the routine writes an error message, and `obj` is not valid.
+!
+! The routine first deallocates `obj`. It then allocates `obj` for
+! the given quadrature points and fills it. It copies the quadrature
+! weights to `obj%ws`.
+!
+! @note
+! The arguments `ipType`, `basisType`, `alpha`, `beta` and `lambda` are
+! not used. They exist so that all `Initiate` routines of the H1 family
+! share one signature.
+! @endnote
+!
+! See also: [[ElemshapeData_H1Methods:H1_Orthogonal1]]
 
 INTERFACE Initiate
   MODULE SUBROUTINE H1_Hierarchy1(obj, quad, refelem, baseContinuity, &
@@ -60,31 +74,46 @@ INTERFACE Initiate
     CLASS(HierarchyInterpolation_), INTENT(IN) :: baseInterpolation
     !! Base Interpolation type
     INTEGER(I4B), INTENT(IN) :: order
-    !! Order of polynomials
+    !! Order of the polynomials
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
-    !! Interpolation type
-    !! This argument is not needed
+    !! Interpolation type. Not used.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Basis function type
-    !! This argument is not needed
+    !! Basis function type. Not used.
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-    !! alpha and beta are Jacobi polynomial param
-    !! lambda is Ultraspherical polynomial param
-    !! This argument is not needed
+    !! `alpha` and `beta` are Jacobi polynomial parameters.
+    !! `lambda` is the Ultraspherical polynomial parameter.
+    !! Not used.
   END SUBROUTINE H1_Hierarchy1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@H1Orthogonal
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2023-09-02
-! summary: This routine initiate the shape data
+! summary: Initiate the shape data with orthogonal H1 basis functions
 !
-!# Introduction
+! This routine fills `obj` with the values and the local gradients of
+! orthogonal basis functions at the quadrature points.
 !
-! This routine initiates the shape function related data inside the element.
+! The element type comes from `refelem`. Supported types are `Line`,
+! `Triangle`, `Quadrangle`, `Tetrahedron` and `Hexahedron`. For any other
+! type the routine writes an error message, and `obj` is not valid.
+!
+! The routine first deallocates `obj`. It then allocates `obj` for
+! the given quadrature points and fills it. It copies the quadrature
+! weights to `obj%ws`.
+!
+! If `basisType` is absent, the routine uses `Legendre`.
+!
+! @note
+! `basisType`, `alpha`, `beta` and `lambda` only act on `Line`,
+! `Quadrangle` and `Hexahedron`. The other elements ignore them.
+! The argument `ipType` is never used.
+! @endnote
+!
+! See also: [[ElemshapeData_H1Methods:H1_Hierarchy1]]
 
 INTERFACE Initiate
   MODULE SUBROUTINE H1_Orthogonal1(obj, quad, refelem, baseContinuity, &
@@ -101,28 +130,33 @@ INTERFACE Initiate
     CLASS(OrthogonalInterpolation_), INTENT(IN) :: baseInterpolation
     !! Base Interpolation type
     INTEGER(I4B), INTENT(IN) :: order
-    !! Order of polynomials
+    !! Order of the polynomials
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
-    !! Interpolation type
+    !! Interpolation type. Not used.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
-    !! Basis function type
+    !! Basis function type, default `Legendre`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-    !! alpha and beta are Jacobi polynomial param
-    !! lambda is Ultraspherical polynomial param
+    !! `alpha` and `beta` are Jacobi polynomial parameters.
+    !! `lambda` is the Ultraspherical polynomial parameter.
   END SUBROUTINE H1_Orthogonal1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                          Initiate@H1Hermit
+!                                                          Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 23 July 2021
-! summary: This routine initiate the shape data
+! date: 2021-07-23
+! summary: Initiate the shape data with Hermit H1 basis functions
 !
-!# Introduction
+! This routine is not available yet. A call only writes the message
+! "WORK IN PROGRESS" to `stderr`. It does not change `obj`.
 !
-! This routine initiates the shape function related data inside the element.
+! @note
+! Do not use this routine until the implementation exists.
+! @endnote
+!
+! See also: [[ElemshapeData_H1Methods:H1_Hierarchy1]]
 
 INTERFACE Initiate
   MODULE SUBROUTINE H1_Hermit1(obj, quad, refelem, baseContinuity, &
@@ -151,12 +185,21 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@H1Serendipity
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 23 July 2021
-! summary: This routine initiate the shape data
+! date: 2021-07-23
+! summary: Initiate the shape data with serendipity H1 basis functions
+!
+! This routine is not available yet. A call only writes the message
+! "WORK IN PROGRESS" to `stderr`. It does not change `obj`.
+!
+! @note
+! Do not use this routine until the implementation exists.
+! @endnote
+!
+! See also: [[ElemshapeData_H1Methods:H1_Hierarchy1]]
 
 INTERFACE Initiate
   MODULE SUBROUTINE H1_Serendipity1(obj, quad, refelem, baseContinuity, &

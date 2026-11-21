@@ -15,19 +15,40 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE ElemshapeData_HCurlMethods
-USE BaseType
-USE GlobalData
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: HCurl_
+USE BaseType, ONLY: LagrangeInterpolation_
+USE BaseType, ONLY: HierarchyInterpolation_
+USE BaseType, ONLY: OrthogonalInterpolation_
+USE BaseType, ONLY: HermitInterpolation_
+USE BaseType, ONLY: SerendipityInterpolation_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                          Initiate@Methods
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2023-08-16
-! summary: This routine initiate the shape data
+! summary: Initiates the shape data with Lagrange HCurl basis (not yet
+!   available)
+!
+! This routine will initiate the shape function data of an element.
+! It will use Lagrange interpolation with H(curl) continuity.
+!
+! @warning
+! This method is not implemented yet. It only writes a "work in progress"
+! message to `stderr` and leaves `obj` unchanged.
+! @endwarning
+!
+! See also: [[HCurl_Hierarchy1]], [[HCurl_Orthogonal1]]
 
 INTERFACE Initiate
   MODULE SUBROUTINE HCurl_Lagrange1( &
@@ -45,11 +66,17 @@ INTERFACE Initiate
     & beta, &
     & lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
+    !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
+    !! Quadrature points
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
+    !! Reference element
     CLASS(HCurl_), INTENT(IN) :: baseContinuity
+    !! Base continuity type
     CLASS(LagrangeInterpolation_), INTENT(IN) :: baseInterpolation
+    !! Base interpolation type
     INTEGER(I4B), INTENT(IN) :: order
+    !! Order of polynomials
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
     !! Interpolation point type
     !! Default value is Equidistance
@@ -59,24 +86,33 @@ INTERFACE Initiate
     REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: coeff(:, :)
     !! Coefficient of Lagrange polynomials
     LOGICAL(LGT), OPTIONAL :: firstCall
-    !! If firstCall is true, then coeff will be made
-    !! If firstCall is False, then coeff will be used
-    !! Default value of firstCall is True
+    !! If `.TRUE.`, the routine will compute `coeff`.
+    !! If `.FALSE.`, the routine will use the given `coeff`.
+    !! The default is `.TRUE.`
     REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
+    !! alpha and beta are Jacobi polynomial param
+    !! lambda is Ultraspherical polynomial param
   END SUBROUTINE HCurl_Lagrange1
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@HCurlHierarchy
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2023-09-02
-! summary: This routine initiate the shape data
+! summary: Initiates the shape data with hierarchic HCurl basis (not yet
+!   available)
 !
-!# Introduction
+! This routine will initiate the shape function data of an element.
+! It will use hierarchic interpolation with H(curl) continuity.
 !
-! This routine initiates the shape function related data inside the element.
+! @warning
+! This method is not implemented yet. It only writes a "work in progress"
+! message to `stderr` and leaves `obj` unchanged.
+! @endwarning
+!
+! See also: [[HCurl_Lagrange1]], [[HCurl_Orthogonal1]]
 
 INTERFACE Initiate
   MODULE SUBROUTINE HCurl_Hierarchy1( &
@@ -103,7 +139,7 @@ INTERFACE Initiate
     INTEGER(I4B), INTENT(IN) :: order
     !! Order of polynomials
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: ipType
-    !! Interpolation type 
+    !! Interpolation type
     !! This argument is not needed
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Basis function type
@@ -115,31 +151,29 @@ INTERFACE Initiate
   END SUBROUTINE HCurl_Hierarchy1
 END INTERFACE Initiate
 
-
 !----------------------------------------------------------------------------
-!                                                    Initiate@HCurlOrthogonal
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2023-09-02
-! summary: This routine initiate the shape data
+! summary: Initiates the shape data with orthogonal HCurl basis (not yet
+!   available)
 !
-!# Introduction
+! This routine will initiate the shape function data of an element.
+! It will use orthogonal interpolation with H(curl) continuity.
 !
-! This routine initiates the shape function related data inside the element.
+! @warning
+! This method is not implemented yet. It only writes a "work in progress"
+! message to `stderr` and leaves `obj` unchanged.
+! @endwarning
+!
+! See also: [[HCurl_Lagrange1]], [[HCurl_Hierarchy1]]
 
 INTERFACE Initiate
-  MODULE SUBROUTINE HCurl_Orthogonal1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE HCurl_Orthogonal1(obj, quad, refelem, baseContinuity, &
+                                      baseInterpolation, order, ipType, &
+                                      basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -163,29 +197,28 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                          Initiate@HCurlHermit
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 23 July 2021
-! summary: This routine initiate the shape data
+! date: 2021-07-23
+! summary: Initiates the shape data with Hermit HCurl basis (not yet
+!   available)
 !
-!# Introduction
+! This routine will initiate the shape function data of an element.
+! It will use Hermit interpolation with H(curl) continuity.
 !
-! This routine initiates the shape function related data inside the element.
+! @warning
+! This method is not implemented yet. It only writes a "work in progress"
+! message to `stderr` and leaves `obj` unchanged.
+! @endwarning
+!
+! See also: [[HCurl_Lagrange1]], [[HCurl_Serendipity1]]
 
 INTERFACE Initiate
-  MODULE SUBROUTINE HCurl_Hermit1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE HCurl_Hermit1(obj, quad, refelem, baseContinuity, &
+                                  baseInterpolation, order, ipType, &
+                                  basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -209,25 +242,28 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@HCurlSerendipity
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 23 July 2021
-! summary: This routine initiate the shape data
+! date: 2021-07-23
+! summary: Initiates the shape data with serendipity HCurl basis (not yet
+!   available)
+!
+! This routine will initiate the shape function data of an element.
+! It will use serendipity interpolation with H(curl) continuity.
+!
+! @warning
+! This method is not implemented yet. It only writes a "work in progress"
+! message to `stderr` and leaves `obj` unchanged.
+! @endwarning
+!
+! See also: [[HCurl_Lagrange1]], [[HCurl_Hermit1]]
 
 INTERFACE Initiate
-  MODULE SUBROUTINE HCurl_Serendipity1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE HCurl_Serendipity1(obj, quad, refelem, baseContinuity, &
+                                       baseInterpolation, order, ipType, &
+                                       basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad

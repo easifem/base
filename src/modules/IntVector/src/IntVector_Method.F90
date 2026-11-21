@@ -17,14 +17,23 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 24 Feb 2021
-! summary: This module contains methods of [[IntVector_]] data type.
+! date: 2021-02-24
+! summary: All methods of the [[IntVector_]] data type
 !
-! This module contains methods of [[IntVector_]] data type.
-! This module only contains the definition of the interfaces of these
-! methods. The actual implementation is given inside the submodules. This
-! modules has following submodules:
+! This module gathers the methods of [[IntVector_]]. `USE` it to get
+! all of them at once. It holds no code of its own. Each module below
+! declares the interfaces of one group of methods.
 !
+! - [[IntVector_ConstructorMethod]]: allocate, initiate, copy, size and
+!   capacity
+! - [[IntVector_AppendMethod]]: `Append` and `H_CONCAT`
+! - [[IntVector_EnquireMethod]]: `IsAllocated`, `IsInitiated`,
+!   `IsPresent` and `.IN.`
+! - [[IntVector_GetMethod]]: `Get`, `Get_` and `GetIndex`
+! - [[IntVector_SetMethod]]: `Set`, `SetTotalDimension` and
+!   `RemoveDuplicates`
+! - [[IntVector_IOMethod]]: `Display`
+
 MODULE IntVector_Method
 USE IntVector_AppendMethod
 USE IntVector_ConstructorMethod

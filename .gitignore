@@ -31,3 +31,6 @@ bugs-report/
 claude-assets/
 .rumdl_cache
 .helix
+
+# Batch work queue, results and logs (local only)
+plans/
