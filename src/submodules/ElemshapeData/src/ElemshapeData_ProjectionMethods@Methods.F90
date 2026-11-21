@@ -16,7 +16,6 @@
 !
 
 SUBMODULE(ElemshapeData_ProjectionMethods) Methods
-USE BaseType, ONLY: math => TypeMathOpt
 USE BaseType, ONLY: TypeFEVariableOpt
 USE FEVariable_Method, ONLY: GetInterpolation_
 USE MatmulUtility, ONLY: Matmul_

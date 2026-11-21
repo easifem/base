@@ -30,7 +30,6 @@ USE BaseType, ONLY: FEVariable_
 USE BaseType, ONLY: FEVariableVector_
 USE GlobalData, ONLY: DFP
 USE GlobalData, ONLY: I4B
-USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
