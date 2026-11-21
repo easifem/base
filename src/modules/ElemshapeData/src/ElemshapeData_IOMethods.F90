@@ -22,13 +22,14 @@
 ! Display element shape data, or encode it as markdown.
 
 MODULE ElemshapeData_IOMethods
-USE BaseType, ONLY: ElemshapeData_, STElemShapeData_
-
-USE GlobalData, ONLY: I4B, DFP, LGT
-
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: STElemShapeData_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 USE String_Class, ONLY: String
-
 IMPLICIT NONE
+
 PRIVATE
 
 PUBLIC :: Display
@@ -37,7 +38,8 @@ PUBLIC :: MdEncode
 PUBLIC :: ElemshapeData_ReactEncode
 
 !----------------------------------------------------------------------------
-!                                                         Display@IOMethods
+!                                                             Display@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -77,7 +79,8 @@ INTERFACE Display
 END INTERFACE Display
 
 !----------------------------------------------------------------------------
-!                                          ElemshapeData_MdEncode@IOMethods
+!                                              ElemshapeData_MdEncode@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -107,7 +110,8 @@ INTERFACE MdEncode
 END INTERFACE MdEncode
 
 !----------------------------------------------------------------------------
-!                                       ElemshapeData_ReactEncode@IOMethods
+!                                           ElemshapeData_ReactEncode@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -131,7 +135,8 @@ INTERFACE
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                          Display@IOMethods
+!                                                             Display@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04

@@ -18,8 +18,12 @@
 ! This file contains the interfaces of the vector interpolation methods
 
 MODULE ElemshapeData_VectorInterpolMethods
-USE BaseType, ONLY: ElemShapeData_, STElemShapeData_, FEVariable_
-USE GlobalData, ONLY: DFP, I4B, LGT
+USE BaseType, ONLY: ElemShapeData_
+USE BaseType, ONLY: STElemShapeData_
+USE BaseType, ONLY: FEVariable_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -30,6 +34,7 @@ PUBLIC :: STInterpolation
 
 !----------------------------------------------------------------------------
 !                                                    GetInterpolation@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -60,6 +65,7 @@ END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
 !                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
@@ -71,7 +77,8 @@ END INTERFACE GetInterpolation
 !
 ! Examples
 !
-! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90) first block
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! first block
 !
 ! See also: [[GetInterpolation1]], [[GetInterpolation_1a]]
 
@@ -92,6 +99,7 @@ END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
@@ -105,8 +113,10 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90) first block
-! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90) fifth block
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! first block
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90)
+! fifth block
 !
 ! See also: [[GetInterpolation_1]]
 
@@ -132,6 +142,7 @@ END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                    GetInterpolation@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-01
@@ -146,7 +157,8 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90) second block
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! second block
 !
 ! See also: [[GetInterpolation_2]], [[STInterpolation1]]
 
@@ -163,6 +175,7 @@ END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
 !                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-03-03
@@ -174,7 +187,8 @@ END INTERFACE GetInterpolation
 !
 ! Examples
 !
-! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90) second block
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! second block
 !
 ! See also: [[GetInterpolation2]], [[GetInterpolation_2a]]
 
@@ -195,6 +209,7 @@ END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
@@ -234,6 +249,7 @@ END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                    GetInterpolation@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-01
@@ -247,7 +263,8 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90) second block
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! second block
 !
 ! See also: [[GetInterpolation_3]]
 
@@ -264,6 +281,7 @@ END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
 !                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
@@ -276,7 +294,8 @@ END INTERFACE GetInterpolation
 !
 ! Examples
 !
-! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90) third block
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! third block
 !
 ! See also: [[GetInterpolation3]], [[GetInterpolation_3a]]
 
@@ -293,12 +312,14 @@ INTERFACE GetInterpolation_
     INTEGER(I4B), INTENT(OUT) :: dim2
     !! size of dim2 written in ans
     INTEGER(I4B), INTENT(OUT) :: dim3
-    !! size of dim3 written in ans
+    !! size of dim3 written in
+    !! ans
   END SUBROUTINE GetInterpolation_3
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
@@ -311,7 +332,8 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90) third block
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! third block
 !
 ! See also: [[GetInterpolation_3]]
 
@@ -333,12 +355,14 @@ INTERFACE GetInterpolation_
     REAL(DFP), INTENT(IN) :: scale
     !! scale factor applied to the interpolated value
     LOGICAL(LGT), INTENT(IN) :: addContribution
-    !! if true, add the interpolated value to ans
+    !! if true, add the interpolated value
+    !! to ans
   END SUBROUTINE GetInterpolation_3a
 END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                    GetInterpolation@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -353,8 +377,10 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90) third block
-! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90) first block
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! third block
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90)
+! first block
 !
 ! See also: [[GetInterpolation_4]]
 
@@ -371,6 +397,7 @@ END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
 !                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
@@ -382,7 +409,8 @@ END INTERFACE GetInterpolation
 !
 ! Examples
 !
-! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90) fourth block
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! fourth block
 !
 ! See also: [[GetInterpolation4]], [[GetInterpolation_4a]]
 
@@ -403,6 +431,7 @@ END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
@@ -424,8 +453,10 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90) fourth block
-! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90) second block
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! fourth block
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90)
+! second block
 !
 ! See also: [[GetInterpolation_4]], [[GetInterpolation_4b]]
 
@@ -453,6 +484,7 @@ END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
@@ -468,15 +500,17 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90) third block, at `spaceIndx = 1`
-! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90) fourth block
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! third block, at `spaceIndx = 1`
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90)
+! fourth block
 !
 ! See also: [[GetInterpolation_4a]]
 
 INTERFACE GetInterpolation_
-  MODULE PURE SUBROUTINE GetInterpolation_4b(obj, ans, val, tsize, &
-                                             scale, addContribution, &
-                                             timeIndx, spaceIndx)
+  MODULE PURE SUBROUTINE GetInterpolation_4b(obj, ans, val, tsize, scale, &
+                                             addContribution, timeIndx, &
+                                             spaceIndx)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! element shape data
     REAL(DFP), INTENT(INOUT) :: ans(:)
@@ -498,6 +532,7 @@ END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                    GetInterpolation@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -508,12 +543,15 @@ END INTERFACE GetInterpolation_
 ! It reallocates `ans(ncomp, nips, nipt)`.
 !
 ! It fills `ans(:, :, ipt)` like [[GetInterpolation_4a]] with
-! `timeIndx = ipt`.
+! `timeIndx = ipt
+! `.
 !
 ! Examples
 !
-! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90) fifth block
-! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90) third block
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! fifth block
+! - [test 13](|base|ElemshapeData/examples/GetInterpolation_test_13.F90)
+! third block
 !
 ! See also: [[GetInterpolation_5]]
 
@@ -530,6 +568,7 @@ END INTERFACE GetInterpolation
 
 !----------------------------------------------------------------------------
 !                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
@@ -542,7 +581,8 @@ END INTERFACE GetInterpolation
 !
 ! Examples
 !
-! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90) fifth block
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! fifth block
 !
 ! See also: [[GetInterpolation5]], [[GetInterpolation_5a]]
 
@@ -565,6 +605,7 @@ END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                   GetInterpolation_@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2025-08-30
@@ -576,7 +617,8 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90) fifth block
+! - [test 7](|base|ElemshapeData/examples/GetInterpolation_test_7.F90)
+! fifth block
 !
 ! See also: [[GetInterpolation_5]]
 
@@ -604,6 +646,7 @@ END INTERFACE GetInterpolation_
 
 !----------------------------------------------------------------------------
 !                                                       Interpolation@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -617,7 +660,8 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90) first block
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! first block
 !
 ! See also: [[GetInterpolation1]]
 
@@ -638,6 +682,7 @@ END INTERFACE Interpolation
 
 !----------------------------------------------------------------------------
 !                                                     STInterpolation@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -653,7 +698,8 @@ END INTERFACE Interpolation
 !
 ! Examples
 !
-! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90) second block
+! - [test 3](|base|ElemshapeData/examples/GetInterpolation_test_3.F90)
+! second block
 !
 ! See also: [[GetInterpolation2]]
 

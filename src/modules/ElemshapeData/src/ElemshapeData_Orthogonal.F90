@@ -15,17 +15,15 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE ElemshapeData_Orthogonal
-
-USE BaseType, ONLY: ElemshapeData_, &
-                    QuadraturePoint_, &
-                    ReferenceElement_, &
-                    OrthogonalInterpolation_, &
-                    H1_
-
-USE GlobalData, ONLY: I4B, DFP, LGT
-
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: OrthogonalInterpolation_
+USE BaseType, ONLY: H1_
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
-
 PRIVATE
 
 PUBLIC :: OrthogonalElemShapeData
@@ -65,7 +63,8 @@ PUBLIC :: Initiate
 
 INTERFACE OrthogonalElemShapeData
   MODULE SUBROUTINE OrthogonalElemShapeData1(obj, quad, nsd, xidim, &
-                       elemType, refelemCoord, domainName, order, basisType, &
+                                             elemType, refelemCoord, &
+                                             domainName, order, basisType, &
                                              alpha, beta, lambda)
     TYPE(ElemshapeData_), INTENT(INOUT) :: obj
     !! element shape data
@@ -154,7 +153,9 @@ END INTERFACE OrthogonalElemShapeData
 
 INTERFACE OrthogonalElemShapeData
   MODULE SUBROUTINE OrthogonalElemShapeData3(obj, quad, refelem, &
-     baseContinuity, baseInterpolation, order, basisType, alpha, beta, lambda)
+                                             baseContinuity, &
+                                             baseInterpolation, order, &
+                                             basisType, alpha, beta, lambda)
     TYPE(ElemshapeData_), INTENT(INOUT) :: obj
     !! element shape data
     TYPE(QuadraturePoint_), INTENT(IN) :: quad

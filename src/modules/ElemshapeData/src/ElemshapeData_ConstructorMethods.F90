@@ -1,5 +1,6 @@
 ! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+! Expandable And Scalable Infrastructure for Finite Element Methods
+! htttps://www.easifem.com
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -14,7 +15,6 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
 ! summary: Constructor methods of ElemShapeData_ and STElemShapeData_
@@ -39,7 +39,7 @@ PUBLIC :: ALLOCATE
 PUBLIC :: ASSIGNMENT(=)
 
 !----------------------------------------------------------------------------
-!                                                 Allocate@ConstructorMethods
+!                                                           Allocate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -91,7 +91,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                 Initiate@ConstructorMethods
+!                                                          Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -130,7 +130,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                 Initiate@ConstructorMethods
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -174,7 +174,7 @@ INTERFACE ASSIGNMENT(=)
 END INTERFACE
 
 !----------------------------------------------------------------------------
-!                                                 Initiate@ConstructorMethods
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -212,7 +212,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                               Deallocate@ConstructorMethods
+!                                                         Deallocate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.

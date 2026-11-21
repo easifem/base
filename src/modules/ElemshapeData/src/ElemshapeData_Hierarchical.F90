@@ -15,14 +15,14 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE ElemshapeData_Hierarchical
-USE BaseType, ONLY: ElemshapeData_, &
-                    QuadraturePoint_, &
-                    ReferenceElement_, &
-                    H1_, &
-                    HierarchyInterpolation_
-
-USE GlobalData, ONLY: I4B, DFP, LGT
-
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: H1_
+USE BaseType, ONLY: HierarchyInterpolation_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 
 PRIVATE
@@ -177,7 +177,8 @@ END INTERFACE HierarchicalElemShapeData
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/HierarchicalElemShapeData_test_1.F90) test 6, with `Initiate`
+! - [test 1](|base|ElemshapeData/examples/HierarchicalElemShapeData_test_1.F90)
+! test 6, with `Initiate`
 !
 ! See also: [[HierarchicalElemShapeData2]]
 

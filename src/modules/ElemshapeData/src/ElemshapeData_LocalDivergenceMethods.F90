@@ -24,9 +24,13 @@
 ! It uses the nodal values and `dNdXi`. The divergence of a matrix is
 ! the vector of row divergences, `SUM_k dM_ik/dxi_k`.
 
-module ElemshapeData_LocalDivergenceMethods
-USE BaseType
-USE GlobalData
+MODULE ElemshapeData_LocalDivergenceMethods
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: STElemshapeData_
+USE BaseType, ONLY: FEVariable_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -34,7 +38,8 @@ PUBLIC :: getLocalDivergence
 PUBLIC :: LocalDivergence
 
 !----------------------------------------------------------------------------
-!                                       getLocalDivergence@DivergenceMethods
+!                                                 getLocalDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -69,7 +74,8 @@ INTERFACE getLocalDivergence
 END INTERFACE getLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                        getLocalDivergence@DivergenceMethods
+!                                                  getLocalDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -107,7 +113,8 @@ INTERFACE getLocalDivergence
 END INTERFACE getLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                      getLocalDivergence@DivergenceMethods
+!                                                  getLocalDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -149,7 +156,8 @@ INTERFACE getLocalDivergence
 END INTERFACE getLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                      getLocalDivergence@DivergenceMethods
+!                                                  getLocalDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -184,7 +192,8 @@ INTERFACE getLocalDivergence
 END INTERFACE getLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                       getLocalDivergence@DivergenceMethods
+!                                                  getLocalDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -220,7 +229,8 @@ INTERFACE getLocalDivergence
 END INTERFACE getLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                       getLocalDivergence@DivergenceMethods
+!                                                  getLocalDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -263,7 +273,8 @@ INTERFACE getLocalDivergence
 END INTERFACE getLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                      getLocalDivergence@DivergenceMethods
+!                                                  getLocalDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -308,7 +319,8 @@ INTERFACE getLocalDivergence
 END INTERFACE getLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                      getLocalDivergence@DivergenceMethods
+!                                                  getLocalDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -346,7 +358,8 @@ INTERFACE getLocalDivergence
 END INTERFACE getLocalDivergence
 
 !----------------------------------------------------------------------------
-!
+!                                                     LocalDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -377,7 +390,8 @@ INTERFACE localDivergence
 END INTERFACE localDivergence
 
 !----------------------------------------------------------------------------
-!
+!                                                     LocalDivergence@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -407,4 +421,4 @@ INTERFACE localDivergence
   MODULE PROCEDURE elemsd_LocalDivergence_2
 END INTERFACE localDivergence
 
-end module ElemshapeData_LocalDivergenceMethods
+END MODULE ElemshapeData_LocalDivergenceMethods

@@ -15,9 +15,13 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_StabilizationParamMethods
-USE BaseType
-USE GlobalData
+MODULE ElemshapeData_StabilizationParamMethods
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: STElemshapeData_
+USE BaseType, ONLY: FEVariable_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: GetSUPGParam
@@ -25,7 +29,7 @@ PUBLIC :: getSUGN3Param
 PUBLIC :: getSUGN3Param_Takizawa2018
 
 !----------------------------------------------------------------------------
-!                                                   getSUGN3Param@GetMethods
+!                                                       getSUGN3Param@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -47,18 +51,18 @@ PUBLIC :: getSUGN3Param_Takizawa2018
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_1(obj, tau, val, nu, h, opt)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-      !! element shape data
+    !! element shape data
     TYPE(FEVariable_), INTENT(INOUT) :: tau
-      !! `tau`, a scalar variable on the space quadrature points
+    !! `tau`, a scalar variable on the space quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
-      !! solution, a scalar or a vector variable
+    !! solution, a scalar or a vector variable
     TYPE(FEVariable_), INTENT(IN) :: nu
-      !! kinematic viscosity or diffusivity, a scalar variable
+    !! kinematic viscosity or diffusivity, a scalar variable
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
-      !! if present, returns `h`, a scalar variable on the space
-      !! quadrature points
+    !! if present, returns `h`, a scalar variable on the space
+    !! quadrature points
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-      !! not used at present
+    !! not used at present
   END SUBROUTINE elemsd_GetSUGN3Param_1
 END INTERFACE
 
@@ -67,7 +71,7 @@ INTERFACE getSUGN3Param
 END INTERFACE getSUGN3Param
 
 !----------------------------------------------------------------------------
-!                                                   getSUGN3Param@GetMethods
+!                                                       getSUGN3Param@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -89,18 +93,18 @@ END INTERFACE getSUGN3Param
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_2(obj, tau, val, nu, h, opt)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-      !! space-time shape data, one entry for each time quadrature point
+    !! space-time shape data, one entry for each time quadrature point
     TYPE(FEVariable_), INTENT(INOUT) :: tau
-      !! `tau`, a scalar variable on the space-time quadrature points
+    !! `tau`, a scalar variable on the space-time quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
-      !! solution, a scalar or a vector variable
+    !! solution, a scalar or a vector variable
     TYPE(FEVariable_), INTENT(IN) :: nu
-      !! kinematic viscosity or diffusivity, a scalar variable
+    !! kinematic viscosity or diffusivity, a scalar variable
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
-      !! if present, returns `h`, a scalar variable on the space-time
-      !! quadrature points
+    !! if present, returns `h`, a scalar variable on the space-time
+    !! quadrature points
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-      !! not used at present
+    !! not used at present
   END SUBROUTINE elemsd_GetSUGN3Param_2
 END INTERFACE
 
@@ -109,7 +113,7 @@ INTERFACE getSUGN3Param
 END INTERFACE getSUGN3Param
 
 !----------------------------------------------------------------------------
-!                                                   getSUGN3Param@GetMethods
+!                                                       getSUGN3Param@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -131,18 +135,18 @@ END INTERFACE getSUGN3Param
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_3(obj, tau, val, nu, h, opt)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-      !! element shape data
+    !! element shape data
     TYPE(FEVariable_), INTENT(INOUT) :: tau
-      !! `tau`, a scalar variable on the space quadrature points
+    !! `tau`, a scalar variable on the space quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
-      !! solution, a scalar or a vector variable
+    !! solution, a scalar or a vector variable
     REAL(DFP), INTENT(IN) :: nu
-      !! kinematic viscosity or diffusivity, a constant
+    !! kinematic viscosity or diffusivity, a constant
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
-      !! if present, returns `h`, a scalar variable on the space
-      !! quadrature points
+    !! if present, returns `h`, a scalar variable on the space
+    !! quadrature points
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-      !! not used at present
+    !! not used at present
   END SUBROUTINE elemsd_GetSUGN3Param_3
 END INTERFACE
 
@@ -151,7 +155,7 @@ INTERFACE getSUGN3Param
 END INTERFACE getSUGN3Param
 
 !----------------------------------------------------------------------------
-!                                                   getSUGN3Param@GetMethods
+!                                                       getSUGN3Param@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -173,18 +177,18 @@ END INTERFACE getSUGN3Param
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_4(obj, tau, val, nu, h, opt)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-      !! space-time shape data, one entry for each time quadrature point
+    !! space-time shape data, one entry for each time quadrature point
     TYPE(FEVariable_), INTENT(INOUT) :: tau
-      !! `tau`, a scalar variable on the space-time quadrature points
+    !! `tau`, a scalar variable on the space-time quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
-      !! solution, a scalar or a vector variable
+    !! solution, a scalar or a vector variable
     REAL(DFP), INTENT(IN) :: nu
-      !! kinematic viscosity or diffusivity, a constant
+    !! kinematic viscosity or diffusivity, a constant
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
-      !! if present, returns `h`, a scalar variable on the space-time
-      !! quadrature points
+    !! if present, returns `h`, a scalar variable on the space-time
+    !! quadrature points
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-      !! not used at present
+    !! not used at present
   END SUBROUTINE elemsd_GetSUGN3Param_4
 END INTERFACE
 
@@ -193,7 +197,7 @@ INTERFACE getSUGN3Param
 END INTERFACE getSUGN3Param
 
 !----------------------------------------------------------------------------
-!                              getSUGN3Param_Takizawa2018@GetMethods
+!                                          getSUGN3Param_Takizawa2018@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -220,27 +224,28 @@ END INTERFACE getSUGN3Param
 ! [[elemsd_GetSUGN3Param_Takizawa2018_3]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_1(obj, &
-    & tau, val, nu, h, hmax, hmin, opt)
+  MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_1(obj, tau, val, &
+                                                             nu, h, hmax, &
+                                                             hmin, opt)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-      !! element shape data
+    !! element shape data
     TYPE(FEVariable_), INTENT(INOUT) :: tau
-      !! `tau`, a scalar variable on the space quadrature points
+    !! `tau`, a scalar variable on the space quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
-      !! solution, a scalar or a vector variable
+    !! solution, a scalar or a vector variable
     TYPE(FEVariable_), INTENT(IN) :: nu
-      !! kinematic viscosity or diffusivity, a scalar variable
+    !! kinematic viscosity or diffusivity, a scalar variable
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
-      !! if present, returns `h`, a scalar variable on the space
-      !! quadrature points
+    !! if present, returns `h`, a scalar variable on the space
+    !! quadrature points
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmax
-      !! if present, returns `hmax`, a scalar variable on the space
-      !! quadrature points
+    !! if present, returns `hmax`, a scalar variable on the space
+    !! quadrature points
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmin
-      !! if present, returns `hmin`, a scalar variable on the space
-      !! quadrature points
+    !! if present, returns `hmin`, a scalar variable on the space
+    !! quadrature points
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-      !! not used at present
+    !! not used at present
   END SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_1
 END INTERFACE
 
@@ -249,7 +254,7 @@ INTERFACE getSUGN3Param_Takizawa2018
 END INTERFACE getSUGN3Param_Takizawa2018
 
 !----------------------------------------------------------------------------
-!                                      getSUGN3Param_Takizawa2018@GetMethods
+!                                          getSUGN3Param_Takizawa2018@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -277,26 +282,27 @@ END INTERFACE getSUGN3Param_Takizawa2018
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_2(obj, tau, val, &
-    & nu, h, hmax, hmin, opt)
+                                                             nu, h, hmax, &
+                                                             hmin, opt)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-      !! space-time shape data, one entry for each time quadrature point
+    !! space-time shape data, one entry for each time quadrature point
     TYPE(FEVariable_), INTENT(INOUT) :: tau
-      !! `tau`, a scalar variable on the space-time quadrature points
+    !! `tau`, a scalar variable on the space-time quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
-      !! solution, a scalar or a vector variable
+    !! solution, a scalar or a vector variable
     TYPE(FEVariable_), INTENT(IN) :: nu
-      !! kinematic viscosity or diffusivity, a scalar variable
+    !! kinematic viscosity or diffusivity, a scalar variable
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
-      !! if present, returns `h`, a scalar variable on the space-time
-      !! quadrature points
+    !! if present, returns `h`, a scalar variable on the space-time
+    !! quadrature points
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmax
-      !! if present, returns `hmax`, a scalar variable on the space-time
-      !! quadrature points
+    !! if present, returns `hmax`, a scalar variable on the space-time
+    !! quadrature points
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmin
-      !! if present, returns `hmin`, a scalar variable on the space-time
-      !! quadrature points
+    !! if present, returns `hmin`, a scalar variable on the space-time
+    !! quadrature points
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-      !! not used at present
+    !! not used at present
   END SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_2
 END INTERFACE
 
@@ -305,7 +311,7 @@ INTERFACE getSUGN3Param_Takizawa2018
 END INTERFACE getSUGN3Param_Takizawa2018
 
 !----------------------------------------------------------------------------
-!                                      getSUGN3Param_Takizawa2018@GetMethods
+!                                          getSUGN3Param_Takizawa2018@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -333,26 +339,27 @@ END INTERFACE getSUGN3Param_Takizawa2018
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_3(obj, tau, val, &
-    & nu, h, hmax, hmin, opt)
+                                                             nu, h, hmax, &
+                                                             hmin, opt)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-      !! element shape data
+    !! element shape data
     TYPE(FEVariable_), INTENT(INOUT) :: tau
-      !! `tau`, a scalar variable on the space quadrature points
+    !! `tau`, a scalar variable on the space quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
-      !! solution, a scalar or a vector variable
+    !! solution, a scalar or a vector variable
     REAL(DFP), INTENT(IN) :: nu
-      !! kinematic viscosity or diffusivity, a constant
+    !! kinematic viscosity or diffusivity, a constant
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
-      !! if present, returns `h`, a scalar variable on the space
-      !! quadrature points
+    !! if present, returns `h`, a scalar variable on the space
+    !! quadrature points
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmax
-      !! if present, returns `hmax`, a scalar variable on the space
-      !! quadrature points
+    !! if present, returns `hmax`, a scalar variable on the space
+    !! quadrature points
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmin
-      !! if present, returns `hmin`, a scalar variable on the space
-      !! quadrature points
+    !! if present, returns `hmin`, a scalar variable on the space
+    !! quadrature points
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-      !! not used at present
+    !! not used at present
   END SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_3
 END INTERFACE
 
@@ -361,7 +368,7 @@ INTERFACE getSUGN3Param_Takizawa2018
 END INTERFACE getSUGN3Param_Takizawa2018
 
 !----------------------------------------------------------------------------
-!                                      getSUGN3Param_Takizawa2018@GetMethods
+!                                          getSUGN3Param_Takizawa2018@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -390,26 +397,27 @@ END INTERFACE getSUGN3Param_Takizawa2018
 
 INTERFACE
   MODULE PURE SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_4(obj, tau, val, &
-    & nu, h, hmax, hmin, opt)
+                                                             nu, h, hmax, &
+                                                             hmin, opt)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-      !! space-time shape data, one entry for each time quadrature point
+    !! space-time shape data, one entry for each time quadrature point
     TYPE(FEVariable_), INTENT(INOUT) :: tau
-      !! `tau`, a scalar variable on the space-time quadrature points
+    !! `tau`, a scalar variable on the space-time quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
-      !! solution, a scalar or a vector variable
+    !! solution, a scalar or a vector variable
     REAL(DFP), INTENT(IN) :: nu
-      !! kinematic viscosity or diffusivity, a constant
+    !! kinematic viscosity or diffusivity, a constant
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: h
-      !! if present, returns `h`, a scalar variable on the space-time
-      !! quadrature points
+    !! if present, returns `h`, a scalar variable on the space-time
+    !! quadrature points
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmax
-      !! if present, returns `hmax`, a scalar variable on the space-time
-      !! quadrature points
+    !! if present, returns `hmax`, a scalar variable on the space-time
+    !! quadrature points
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmin
-      !! if present, returns `hmin`, a scalar variable on the space-time
-      !! quadrature points
+    !! if present, returns `hmin`, a scalar variable on the space-time
+    !! quadrature points
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-      !! not used at present
+    !! not used at present
   END SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_4
 END INTERFACE
 
@@ -418,7 +426,7 @@ INTERFACE getSUGN3Param_Takizawa2018
 END INTERFACE getSUGN3Param_Takizawa2018
 
 !----------------------------------------------------------------------------
-!                                                   GetSUPGParam@GetMethods
+!                                                        GetSUPGParam@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -461,8 +469,8 @@ END INTERFACE getSUGN3Param_Takizawa2018
 ! See also: [[elemsd_GetSUPGParam2]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetSUPGParam1(obj, tau, c, val, nu, k, &
-    & phi, dt, opt)
+  MODULE PURE SUBROUTINE elemsd_GetSUPGParam1(obj, tau, c, val, nu, k, phi, &
+                                              dt, opt)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! element shape data, or a single [[STElemshapeData_]]
     TYPE(FEVariable_), INTENT(INOUT) :: tau
@@ -494,7 +502,7 @@ INTERFACE GetSUPGParam
 END INTERFACE GetSUPGParam
 
 !----------------------------------------------------------------------------
-!                                                   GetSUPGParam@GetMethods
+!                                                        GetSUPGParam@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -536,8 +544,8 @@ END INTERFACE GetSUPGParam
 ! See also: [[elemsd_GetSUPGParam1]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetSUPGParam2(obj, tau, c, val, nu, k, &
-    & phi, dt, opt)
+  MODULE PURE SUBROUTINE elemsd_GetSUPGParam2(obj, tau, c, val, nu, k, phi, &
+                                              dt, opt)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     !! space-time shape data, one entry for each time quadrature point
     TYPE(FEVariable_), INTENT(INOUT) :: tau
@@ -567,7 +575,7 @@ INTERFACE GetSUPGParam
 END INTERFACE GetSUPGParam
 
 !----------------------------------------------------------------------------
-!                                                   GetSUPGParam@GetMethods
+!                                                        GetSUPGParam@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -613,8 +621,8 @@ END INTERFACE GetSUPGParam
 ! See also: [[elemsd_GetSUPGParam1]], [[elemsd_GetSUPGParam4]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetSUPGParam3(obj, tau, c, val, nu, k, &
-    & phi, dt, opt)
+  MODULE PURE SUBROUTINE elemsd_GetSUPGParam3(obj, tau, c, val, nu, k, phi, &
+                                              dt, opt)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! element shape data, or a single [[STElemshapeData_]]
     TYPE(FEVariable_), INTENT(INOUT) :: tau
@@ -646,7 +654,7 @@ INTERFACE GetSUPGParam
 END INTERFACE GetSUPGParam
 
 !----------------------------------------------------------------------------
-!                                                   GetSUPGParam@GetMethods
+!                                                        GetSUPGParam@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -691,8 +699,8 @@ END INTERFACE GetSUPGParam
 ! See also: [[elemsd_GetSUPGParam2]], [[elemsd_GetSUPGParam3]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetSUPGParam4(obj, tau, c, val, nu, k, &
-    & phi, dt, opt)
+  MODULE PURE SUBROUTINE elemsd_GetSUPGParam4(obj, tau, c, val, nu, k, phi, &
+                                              dt, opt)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     !! space-time shape data, one entry for each time quadrature point
     TYPE(FEVariable_), INTENT(INOUT) :: tau
@@ -721,4 +729,4 @@ INTERFACE GetSUPGParam
   MODULE PROCEDURE elemsd_GetSUPGParam4
 END INTERFACE GetSUPGParam
 
-end module ElemshapeData_StabilizationParamMethods
+END MODULE ElemshapeData_StabilizationParamMethods

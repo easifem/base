@@ -25,9 +25,13 @@
 ! The local gradient of a scalar is a vector of size `xidim`.
 ! For a vector it is a matrix. For a matrix it is a rank-3 array.
 
-module ElemshapeData_LocalGradientMethods
-USE BaseType
-USE GlobalData
+MODULE ElemshapeData_LocalGradientMethods
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: STElemshapeData_
+USE BaseType, ONLY: FEVariable_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -35,7 +39,8 @@ PUBLIC :: getLocalGradient
 PUBLIC :: LocalGradient
 
 !----------------------------------------------------------------------------
-!                                           getLocalGradient@GradientMethods
+!                                                    getLocalGradient@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -50,7 +55,8 @@ PUBLIC :: LocalGradient
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90) first block
+! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90)
+! first block
 !
 ! See also: [[elemsd_getLocalGradient_5]], [[elemsd_LocalGradient_1]]
 
@@ -70,7 +76,8 @@ INTERFACE getLocalGradient
 END INTERFACE getLocalGradient
 
 !----------------------------------------------------------------------------
-!                                           getLocalGradient@GradientMethods
+!                                                    getLocalGradient@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -85,7 +92,8 @@ END INTERFACE getLocalGradient
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90) second block
+! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90)
+! second block
 !
 ! See also: [[elemsd_getLocalGradient_6]]
 
@@ -105,7 +113,8 @@ INTERFACE getLocalGradient
 END INTERFACE getLocalGradient
 
 !----------------------------------------------------------------------------
-!                                          getLocalGradient@GradientMethods
+!                                                    getLocalGradient@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -121,7 +130,8 @@ END INTERFACE getLocalGradient
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90) fourth block
+! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90)
+! fourth block
 !
 ! See also: [[elemsd_getLocalGradient_1]]
 
@@ -141,7 +151,8 @@ INTERFACE getLocalGradient
 END INTERFACE getLocalGradient
 
 !----------------------------------------------------------------------------
-!                                          getLocalGradient@GradientMethods
+!                                                    getLocalGradient@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -157,7 +168,8 @@ END INTERFACE getLocalGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetLocalGradient_test_2.F90) first block
+! - [test 2](|base|ElemshapeData/examples/GetLocalGradient_test_2.F90)
+! first block
 !
 ! See also: [[elemsd_getLocalGradient_2]]
 
@@ -177,7 +189,8 @@ INTERFACE getLocalGradient
 END INTERFACE getLocalGradient
 
 !----------------------------------------------------------------------------
-!                                          getLocalGradient@GradientMethods
+!                                                    getLocalGradient@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -199,7 +212,8 @@ END INTERFACE getLocalGradient
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90) third block
+! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90)
+! third block
 !
 ! See also: [[elemsd_getLocalGradient_1]], [[elemsd_getLocalGradient_3]]
 
@@ -219,7 +233,8 @@ INTERFACE getLocalGradient
 END INTERFACE getLocalGradient
 
 !----------------------------------------------------------------------------
-!                                           getLocalGradient@GradientMethods
+!                                                    getLocalGradient@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -235,7 +250,8 @@ END INTERFACE getLocalGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetLocalGradient_test_2.F90) second block
+! - [test 2](|base|ElemshapeData/examples/GetLocalGradient_test_2.F90)
+! second block
 !
 ! See also: [[elemsd_getLocalGradient_5]]
 
@@ -255,7 +271,8 @@ INTERFACE getLocalGradient
 END INTERFACE getLocalGradient
 
 !----------------------------------------------------------------------------
-!                                           getLocalGradient@GradientMethods
+!                                                    getLocalGradient@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -270,7 +287,8 @@ END INTERFACE getLocalGradient
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90) second block
+! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90)
+! second block
 !
 ! See also: [[elemsd_getLocalGradient_9]]
 
@@ -290,7 +308,8 @@ INTERFACE getLocalGradient
 END INTERFACE getLocalGradient
 
 !----------------------------------------------------------------------------
-!                                           getLocalGradient@GradientMethods
+!                                                    getLocalGradient@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -307,7 +326,8 @@ END INTERFACE getLocalGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetLocalGradient_test_2.F90) third block
+! - [test 2](|base|ElemshapeData/examples/GetLocalGradient_test_2.F90)
+! third block
 !
 ! See also: [[elemsd_getLocalGradient_7]]
 
@@ -327,7 +347,8 @@ INTERFACE getLocalGradient
 END INTERFACE getLocalGradient
 
 !----------------------------------------------------------------------------
-!                                           getLocalGradient@GradientMethods
+!                                                    getLocalGradient@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -343,7 +364,8 @@ END INTERFACE getLocalGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetLocalGradient_test_2.F90) fourth block
+! - [test 2](|base|ElemshapeData/examples/GetLocalGradient_test_2.F90)
+! fourth block
 !
 ! See also: [[elemsd_getLocalGradient_5]]
 
@@ -363,7 +385,8 @@ INTERFACE getLocalGradient
 END INTERFACE getLocalGradient
 
 !----------------------------------------------------------------------------
-!                                           getLocalGradient@GradientMethods
+!                                                    getLocalGradient@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -383,7 +406,8 @@ END INTERFACE getLocalGradient
 !
 ! Examples
 !
-! - [test 3](|base|ElemshapeData/examples/GetLocalGradient_test_3.F90) first block
+! - [test 3](|base|ElemshapeData/examples/GetLocalGradient_test_3.F90)
+! first block
 !
 ! See also: [[elemsd_getLocalGradient_5]], [[elemsd_LocalGradient_1]]
 
@@ -403,7 +427,8 @@ INTERFACE getLocalGradient
 END INTERFACE getLocalGradient
 
 !----------------------------------------------------------------------------
-!                                         getLocalGradient@GradientMethods
+!                                                    getLocalGradient@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -425,8 +450,10 @@ END INTERFACE getLocalGradient
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90) fourth block
-! - [test 3](|base|ElemshapeData/examples/GetLocalGradient_test_3.F90) scalar and vector `FEVariable_`
+! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90)
+! fourth block
+! - [test 3](|base|ElemshapeData/examples/GetLocalGradient_test_3.F90)
+! scalar and vector `FEVariable_`
 !
 ! See also: [[elemsd_getLocalGradient_10]], [[elemsd_LocalGradient_2]]
 
@@ -446,7 +473,8 @@ INTERFACE getLocalGradient
 END INTERFACE getLocalGradient
 
 !----------------------------------------------------------------------------
-!
+!                                                       LocalGradient@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -460,7 +488,8 @@ END INTERFACE getLocalGradient
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/LocalGradient_test_1.F90) nodal scalar `FEVariable_`
+! - [test 1](|base|ElemshapeData/examples/LocalGradient_test_1.F90)
+! nodal scalar `FEVariable_`
 !
 ! See also: [[elemsd_getLocalGradient_10]]
 
@@ -480,7 +509,8 @@ INTERFACE localGradient
 END INTERFACE localGradient
 
 !----------------------------------------------------------------------------
-!
+!                                                       LocalGradient@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -495,7 +525,8 @@ END INTERFACE localGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/LocalGradient_test_2.F90) scalar and vector space-time `FEVariable_`
+! - [test 2](|base|ElemshapeData/examples/LocalGradient_test_2.F90)
+! scalar and vector space-time `FEVariable_`
 !
 ! See also: [[elemsd_getLocalGradient_11]], [[elemsd_LocalGradient_1]]
 
@@ -514,4 +545,4 @@ INTERFACE LocalGradient
   MODULE PROCEDURE elemsd_LocalGradient_2
 END INTERFACE LocalGradient
 
-end module ElemshapeData_LocalGradientMethods
+END MODULE ElemshapeData_LocalGradientMethods

@@ -32,10 +32,12 @@
 ! set the values of `ans`.
 
 MODULE ElemshapeData_InterpolMethods
-USE GlobalData, ONLY: DFP, I4B, LGT
 USE BaseType, ONLY: ElemShapeData_
 USE BaseType, ONLY: STElemShapeData_
 USE BaseType, ONLY: FEVariable_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -70,10 +72,14 @@ PUBLIC :: Interpolation
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90) first block, scalar
-! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90) second block, vector
-! - [test 9](|base|ElemshapeData/examples/GetInterpolation_test_9.F90) constant and quadrature `val`
-! - [test 10](|base|ElemshapeData/examples/GetInterpolation_test_10.F90) second block, space-time `val`
+! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90)
+! first block, scalar
+! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90)
+! second block, vector
+! - [test 9](|base|ElemshapeData/examples/GetInterpolation_test_9.F90)
+! constant and quadrature `val`
+! - [test 10](|base|ElemshapeData/examples/GetInterpolation_test_10.F90)
+! second block, space-time `val`
 !
 ! See also: [[GetInterpolation_1]], [[Interpolation1]]
 
@@ -106,7 +112,8 @@ END INTERFACE GetInterpolation
 !
 ! Examples
 !
-! - [test 5](|base|ElemshapeData/examples/GetInterpolation_test_5.F90) first block
+! - [test 5](|base|ElemshapeData/examples/GetInterpolation_test_5.F90)
+! first block
 !
 ! See also: [[GetInterpolation1]], [[GetInterpolation_1a]]
 
@@ -138,8 +145,10 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90) first block, with `scale = 0.5`
-! - [test 10](|base|ElemshapeData/examples/GetInterpolation_test_10.F90) first block, space-time shape data
+! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90)
+! first block, with `scale = 0.5`
+! - [test 10](|base|ElemshapeData/examples/GetInterpolation_test_10.F90)
+! first block, space-time shape data
 !
 ! See also: [[GetInterpolation_1]]
 
@@ -183,8 +192,10 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90) third block
-! - [test 9](|base|ElemshapeData/examples/GetInterpolation_test_9.F90) fourth block, space `val`
+! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90)
+! third block
+! - [test 9](|base|ElemshapeData/examples/GetInterpolation_test_9.F90)
+! fourth block, space `val`
 !
 ! See also: [[GetInterpolation_2]]
 
@@ -217,7 +228,8 @@ END INTERFACE GetInterpolation
 !
 ! Examples
 !
-! - [test 5](|base|ElemshapeData/examples/GetInterpolation_test_5.F90) second block
+! - [test 5](|base|ElemshapeData/examples/GetInterpolation_test_5.F90)
+! second block
 !
 ! See also: [[GetInterpolation2]], [[GetInterpolation_2a]]
 
@@ -247,7 +259,8 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 5](|base|ElemshapeData/examples/GetInterpolation_test_5.F90) third block
+! - [test 5](|base|ElemshapeData/examples/GetInterpolation_test_5.F90)
+! third block
 !
 ! See also: [[GetInterpolation_2]]
 
@@ -281,8 +294,10 @@ END INTERFACE GetInterpolation_
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90) first block
-! - [test 9](|base|ElemshapeData/examples/GetInterpolation_test_9.F90) second block, constant vector
+! - [test 1](|base|ElemshapeData/examples/GetInterpolation_test_1.F90)
+! first block
+! - [test 9](|base|ElemshapeData/examples/GetInterpolation_test_9.F90)
+! second block, constant vector
 !
 ! See also: [[GetInterpolation1]]
 

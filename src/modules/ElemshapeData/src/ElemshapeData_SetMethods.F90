@@ -1,5 +1,6 @@
 ! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+! Expandable And Scalable Infrastructure for Finite Element Methods
+! htttps://www.easifem.com
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -13,7 +14,7 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
-
+!
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
 ! summary: Set the physical part of ElemShapeData_ and STElemShapeData_
@@ -31,11 +32,13 @@
 ! For example, call [[LagrangeElemShapeData]] to create them.
 
 MODULE ElemshapeData_SetMethods
-USE BaseType, ONLY: ElemshapeData_, STElemshapeData_, ElemshapeDataPointer_
-USE GlobalData, ONLY: DFP, I4B, LGT
-
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: ElemshapeDataPointer_
+USE BaseType, ONLY: STElemshapeData_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
-
 PRIVATE
 
 PUBLIC :: Set
@@ -49,7 +52,8 @@ PUBLIC :: SetdNTdt
 PUBLIC :: SetdNdXt
 
 !----------------------------------------------------------------------------
-!                                                       SetNormal@SetMethod
+!                                                          SetNormal@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -77,7 +81,8 @@ PUBLIC :: SetdNdXt
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/SetNormal_test_1.F90) bottom and right edges of a rectangle
+! - [test 1](|base|ElemshapeData/examples/SetNormal_test_1.F90) bottom and
+! right edges of a rectangle
 !
 
 INTERFACE SetNormal
@@ -88,7 +93,8 @@ INTERFACE SetNormal
 END INTERFACE SetNormal
 
 !----------------------------------------------------------------------------
-!                                                     SetThickness@SetMethod
+!                                                     SetThickness@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -102,7 +108,8 @@ END INTERFACE SetNormal
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/SetThickness_test_1.F90) first block
+! - [test 1](|base|ElemshapeData/examples/SetThickness_test_1.F90)
+! first block
 !
 ! See also: [[stsd_SetThickness]]
 
@@ -120,7 +127,8 @@ INTERFACE SetThickness
 END INTERFACE SetThickness
 
 !----------------------------------------------------------------------------
-!                                                     SetThickness@SetMethod
+!                                                       SetThickness@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -134,7 +142,8 @@ END INTERFACE SetThickness
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/SetThickness_test_1.F90) second block
+! - [test 1](|base|ElemshapeData/examples/SetThickness_test_1.F90)
+! second block
 !
 ! See also: [[elemsd_SetThickness]]
 
@@ -152,7 +161,8 @@ INTERFACE SetThickness
 END INTERFACE SetThickness
 
 !----------------------------------------------------------------------------
-!                                              SetBarycentricCoord@SetMethod
+!                                                SetBarycentricCoord@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -166,7 +176,8 @@ END INTERFACE SetThickness
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/SetBarycentricCoord_test_1.F90) first block
+! - [test 1](|base|ElemshapeData/examples/SetBarycentricCoord_test_1.F90)
+! first block
 !
 ! See also: [[stsd_SetBarycentricCoord]]
 
@@ -183,7 +194,8 @@ INTERFACE SetBarycentricCoord
 END INTERFACE SetBarycentricCoord
 
 !----------------------------------------------------------------------------
-!                                              SetBarycentricCoord@SetMethod
+!                                                SetBarycentricCoord@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -197,7 +209,8 @@ END INTERFACE SetBarycentricCoord
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/SetBarycentricCoord_test_1.F90) second block
+! - [test 1](|base|ElemshapeData/examples/SetBarycentricCoord_test_1.F90)
+! second block
 !
 ! See also: [[elemsd_SetBarycentricCoord]]
 
@@ -215,7 +228,8 @@ INTERFACE SetBarycentricCoord
 END INTERFACE SetBarycentricCoord
 
 !----------------------------------------------------------------------------
-!                                                            SetJs@SetMethod
+!                                                              SetJs@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -226,7 +240,8 @@ END INTERFACE SetBarycentricCoord
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/SetJs_test_1.F90) first and second blocks, cell and facet
+! - [test 1](|base|ElemshapeData/examples/SetJs_test_1.F90) first and
+! second blocks, cell and facet
 !
 ! See also: [[elemsd_SetJs2]]
 
@@ -238,7 +253,8 @@ INTERFACE SetJs
 END INTERFACE SetJs
 
 !----------------------------------------------------------------------------
-!                                                            SetJs@SetMethod
+!                                                            SetJs@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -255,7 +271,8 @@ END INTERFACE SetJs
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/SetJs_test_1.F90) third block, surface in 3D
+! - [test 1](|base|ElemshapeData/examples/SetJs_test_1.F90) third block,
+! surface in 3D
 !
 ! See also: [[elemsd_SetJs]]
 
@@ -275,7 +292,8 @@ INTERFACE SetJs
 END INTERFACE SetJs
 
 !----------------------------------------------------------------------------
-!                                                          SetdNdXt@SetMethod
+!                                                          SetdNdXt@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -286,7 +304,8 @@ END INTERFACE SetJs
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/SetdNdXt_test_1.F90) first and second blocks, cell and facet
+! - [test 1](|base|ElemshapeData/examples/SetdNdXt_test_1.F90) first and
+! second blocks, cell and facet
 !
 ! See also: [[elemsd_SetdNdXt2]], [[elemsd_SetJacobian]]
 
@@ -298,7 +317,8 @@ INTERFACE SetdNdXt
 END INTERFACE SetdNdXt
 
 !----------------------------------------------------------------------------
-!                                                          SetdNdXt@SetMethod
+!                                                          SetdNdXt@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -339,7 +359,8 @@ INTERFACE SetdNdXt
 END INTERFACE SetdNdXt
 
 !----------------------------------------------------------------------------
-!                                                      SetJacobian@SetMethod
+!                                                      SetJacobian@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -354,7 +375,8 @@ END INTERFACE SetdNdXt
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/SetJacobian_test_1.F90) first and second blocks, cell and facet
+! - [test 1](|base|ElemshapeData/examples/SetJacobian_test_1.F90)
+! first and second blocks, cell and facet
 !
 ! See also: [[stsd_SetJacobian]]
 
@@ -370,7 +392,8 @@ INTERFACE SetJacobian
 END INTERFACE SetJacobian
 
 !----------------------------------------------------------------------------
-!                                                      SetJacobian@SetMethod
+!                                                      SetJacobian@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -400,7 +423,8 @@ INTERFACE SetJacobian
 END INTERFACE SetJacobian
 
 !----------------------------------------------------------------------------
-!                                                         SetdNTdt@SetMethod
+!                                                         SetdNTdt@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -424,7 +448,8 @@ END INTERFACE SetJacobian
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/SetdNTdt_test_1.F90) fixed mesh
+! - [test 1](|base|ElemshapeData/examples/SetdNTdt_test_1.F90)
+! fixed mesh
 !
 ! See also: [[stsd_SetdNTdXt]]
 
@@ -438,7 +463,8 @@ INTERFACE SetdNTdt
 END INTERFACE SetdNTdt
 
 !----------------------------------------------------------------------------
-!                                                        SetdNTdXt@SetMethod
+!                                                          SetdNTdXt@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -457,7 +483,8 @@ END INTERFACE SetdNTdt
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/SetdNTdXt_test_1.F90) line element in space and time
+! - [test 1](|base|ElemshapeData/examples/SetdNTdXt_test_1.F90)
+! line element in space and time
 !
 ! See also: [[stsd_SetdNTdt]]
 
@@ -469,7 +496,8 @@ INTERFACE SetdNTdXt
 END INTERFACE SetdNTdXt
 
 !----------------------------------------------------------------------------
-!                                                             Set@SetMethod
+!                                                                Set@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -504,7 +532,8 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             Set@SetMethod
+!                                                                Set@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -555,7 +584,8 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             Set@SetMethod
+!                                                                Set@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -567,7 +597,8 @@ END INTERFACE Set
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/Set_test_2.F90) master and slave cells
+! - [test 2](|base|ElemshapeData/examples/Set_test_2.F90)
+! master and slave cells
 !
 ! See also: [[elemsd_Set2]]
 
@@ -616,7 +647,8 @@ INTERFACE Set
 END INTERFACE Set
 
 !----------------------------------------------------------------------------
-!                                                             Set@SetMethod
+!                                                                Set@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-03-04
@@ -638,7 +670,8 @@ END INTERFACE Set
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/Set_test_2.F90) second block, space-time
+! - [test 2](|base|ElemshapeData/examples/Set_test_2.F90)
+! second block, space-time
 !
 ! See also: [[elemsd_Set1]]
 

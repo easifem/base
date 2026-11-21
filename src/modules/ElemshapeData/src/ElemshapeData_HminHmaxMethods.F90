@@ -15,16 +15,20 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_HminHmaxMethods
-USE BaseType
-USE GlobalData
+MODULE ElemshapeData_HminHmaxMethods
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: STElemshapeData_
+USE BaseType, ONLY: FEVariable_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: GetHminHmax
 
 !----------------------------------------------------------------------------
-!                                                   GetHminHmax@GetMethods
+!                                                         GetHminHmax@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -65,7 +69,7 @@ INTERFACE GetHminHmax
 END INTERFACE GetHminHmax
 
 !----------------------------------------------------------------------------
-!                                                   GetHminHmax@GetMethods
+!                                                         GetHminHmax@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -113,7 +117,7 @@ INTERFACE GetHminHmax
 END INTERFACE GetHminHmax
 
 !----------------------------------------------------------------------------
-!                                                   GetHminHmax@GetMethods
+!                                                         GetHminHmax@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -148,7 +152,7 @@ INTERFACE GetHminHmax
 END INTERFACE GetHminHmax
 
 !----------------------------------------------------------------------------
-!                                                   GetHminHmax@GetMethods
+!                                                         GetHminHmax@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -187,7 +191,7 @@ INTERFACE GetHminHmax
 END INTERFACE GetHminHmax
 
 !----------------------------------------------------------------------------
-!                                                   GetHminHmax@GetMethods
+!                                                         GetHminHmax@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -223,7 +227,7 @@ INTERFACE GetHminHmax
 END INTERFACE GetHminHmax
 
 !----------------------------------------------------------------------------
-!                                                   GetHminHmax@GetMethods
+!                                                         GetHminHmax@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -264,7 +268,7 @@ INTERFACE GetHminHmax
 END INTERFACE GetHminHmax
 
 !----------------------------------------------------------------------------
-!                                                   GetHminHmax@GetMethods
+!                                                         GetHminHmax@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -300,7 +304,7 @@ INTERFACE GetHminHmax
 END INTERFACE GetHminHmax
 
 !----------------------------------------------------------------------------
-!                                                   GetHminHmax@GetMethods
+!                                                         GetHminHmax@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -338,4 +342,4 @@ INTERFACE GetHminHmax
   MODULE PROCEDURE elemsd_GetHminHmax8
 END INTERFACE GetHminHmax
 
-end module ElemshapeData_HminHmaxMethods
+END MODULE ElemshapeData_HminHmaxMethods

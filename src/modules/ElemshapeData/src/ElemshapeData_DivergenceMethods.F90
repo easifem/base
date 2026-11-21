@@ -26,9 +26,12 @@
 ! `dNTdXt`) must be set first, for example by [[Set]].
 
 MODULE ElemshapeData_DivergenceMethods
-USE BaseType, ONLY: ElemShapeData_, FEVariable_, STElemshapeData_
-USE GlobalData, ONLY: DFP, I4B, LGT
-
+USE BaseType, ONLY: ElemShapeData_
+USE BaseType, ONLY: FEVariable_
+USE BaseType, ONLY: STElemshapeData_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 
 PRIVATE
@@ -78,7 +81,7 @@ INTERFACE GetDivergence
 END INTERFACE GetDivergence
 
 !----------------------------------------------------------------------------
-!                                          GetDivergence@DivergenceMethods
+!                                                      GetDivergence@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -124,7 +127,7 @@ INTERFACE GetDivergence
 END INTERFACE GetDivergence
 
 !----------------------------------------------------------------------------
-!                                      GetDivergence@DivergenceMethods
+!                                                     GetDivergence@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -169,7 +172,7 @@ INTERFACE GetDivergence
 END INTERFACE GetDivergence
 
 !----------------------------------------------------------------------------
-!                                            GetDivergence@DivergenceMethods
+!                                                      GetDivergence@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -216,7 +219,7 @@ INTERFACE GetDivergence
 END INTERFACE GetDivergence
 
 !----------------------------------------------------------------------------
-!                                       GetDivergence@DivergenceMethods
+!                                                      GetDivergence@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.

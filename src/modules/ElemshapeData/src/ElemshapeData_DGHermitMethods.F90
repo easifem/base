@@ -14,13 +14,19 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-module ElemshapeData_DGHermitMethods
-USE BaseType
-USE GlobalData
+MODULE ElemshapeData_DGHermitMethods
+USE BaseType, ONLY: ElemShapeData_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: HermitInterpolation_
+USE BaseType, ONLY: DG_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
-public :: Initiate
+PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                                         Initiate@DGHermit
@@ -45,9 +51,9 @@ public :: Initiate
 !
 ! See also: [[ElemshapeData_DGMethods]]
 
-INTERFACE
+INTERFACE Initiate
   MODULE PURE SUBROUTINE DG_Hermit(obj, quad, refElem, &
-    & continuityType, interpolType)
+                                   continuityType, interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! shape function data to initiate
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -59,10 +65,6 @@ INTERFACE
     CLASS(HermitInterpolation_), INTENT(IN) :: interpolType
     !! Hermit interpolation type
   END SUBROUTINE DG_Hermit
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE DG_Hermit
 END INTERFACE Initiate
 
-end module ElemshapeData_DGHermitMethods
+END MODULE ElemshapeData_DGHermitMethods

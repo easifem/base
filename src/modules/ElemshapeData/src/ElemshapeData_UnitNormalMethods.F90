@@ -23,16 +23,20 @@
 ! It comes from the gradient of a scalar or vector field.
 ! An example is the normal of a level set.
 
-module ElemshapeData_UnitNormalMethods
-USE BaseType
-USE GlobalData
+MODULE ElemshapeData_UnitNormalMethods
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: FEVariable_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: GetUnitNormal
 
 !----------------------------------------------------------------------------
-!                                                    GetUnitNormal@getMethod
+!                                                       GetUnitNormal@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -70,7 +74,8 @@ INTERFACE GetUnitNormal
 END INTERFACE GetUnitNormal
 
 !----------------------------------------------------------------------------
-!                                                    GetUnitNormal@getMethod
+!                                                       GetUnitNormal@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -112,7 +117,8 @@ INTERFACE GetUnitNormal
 END INTERFACE GetUnitNormal
 
 !----------------------------------------------------------------------------
-!                                                    GetUnitNormal@getMethod
+!                                                       GetUnitNormal@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
@@ -151,4 +157,4 @@ INTERFACE GetUnitNormal
   MODULE PROCEDURE GetUnitNormal_3
 END INTERFACE GetUnitNormal
 
-end module ElemshapeData_UnitNormalMethods
+END MODULE ElemshapeData_UnitNormalMethods

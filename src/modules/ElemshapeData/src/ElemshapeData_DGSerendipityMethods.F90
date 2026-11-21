@@ -15,13 +15,19 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_DGSerendipityMethods
-USE BaseType
-USE GlobalData
+MODULE ElemshapeData_DGSerendipityMethods
+USE BaseType, ONLY: ElemShapeData_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: DG_
+USE BaseType, ONLY: SerendipityInterpolation_
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
-public :: Initiate
+PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
 !                                                    Initiate@DGSerendipity
@@ -43,9 +49,9 @@ public :: Initiate
 ! This routine has no implementation yet. The module is not compiled.
 ! @endwarning
 
-INTERFACE
+INTERFACE Initiate
   MODULE PURE SUBROUTINE DG_Serendipity(obj, quad, refElem, &
-    & continuityType, interpolType)
+                                        continuityType, interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! shape function data to initiate
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -57,10 +63,6 @@ INTERFACE
     CLASS(SerendipityInterpolation_), INTENT(IN) :: interpolType
     !! Serendipity interpolation type
   END SUBROUTINE DG_Serendipity
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE DG_Serendipity
 END INTERFACE Initiate
 
-end module ElemshapeData_DGSerendipityMethods
+END MODULE ElemshapeData_DGSerendipityMethods

@@ -14,16 +14,22 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-module ElemshapeData_DGHierarchyMethods
-USE BaseType
-USE GlobalData
+MODULE ElemshapeData_DGHierarchyMethods
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: DG_
+USE BaseType, ONLY: HierarchyInterpolation_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
-public :: Initiate
+PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                      Initiate@DGHierarchy
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -41,9 +47,9 @@ public :: Initiate
 ! in `ElemshapeData_DGMethods` instead.
 ! @endwarning
 
-INTERFACE
+INTERFACE Initiate
   MODULE PURE SUBROUTINE DG_Hierarchy(obj, quad, refElem, &
-    & continuityType, interpolType)
+                                      continuityType, interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! shape function data to initiate
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -55,10 +61,6 @@ INTERFACE
     CLASS(HierarchyInterpolation_), INTENT(IN) :: interpolType
     !! hierarchy interpolation type
   END SUBROUTINE DG_Hierarchy
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE DG_Hierarchy
 END INTERFACE Initiate
 
-end module ElemshapeData_DGHierarchyMethods
+END MODULE ElemshapeData_DGHierarchyMethods

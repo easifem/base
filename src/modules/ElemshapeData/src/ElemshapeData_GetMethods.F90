@@ -1,5 +1,6 @@
 ! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+! Expandable And Scalable Infrastructure for Finite Element Methods
+! htttps://www.easifem.com
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -20,19 +21,22 @@
 ! summary: Get methods of ElemShapeData_
 !
 ! Get the unit normal stored in element shape data.
-
+!
 MODULE ElemshapeData_GetMethods
-USE BaseType, ONLY: ElemshapeData_, STElemshapeData_, FEVariable_
-
-USE GlobalData, ONLY: DFP, I4B, LGT
-
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: FEVariable_
+USE BaseType, ONLY: STElemshapeData_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: GetNormal
 
 !----------------------------------------------------------------------------
-!                                                                 GetNormal
+!                                                          GetNormal@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-01-28
@@ -60,7 +64,8 @@ INTERFACE GetNormal
 END INTERFACE GetNormal
 
 !----------------------------------------------------------------------------
-!                                                                 GetNormal
+!                                                          GetNormal@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-01-28
@@ -89,7 +94,8 @@ INTERFACE GetNormal
 END INTERFACE GetNormal
 
 !----------------------------------------------------------------------------
-!                                                                 GetNormal
+!                                                         GetNormal@Methods
+!----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2022-01-28

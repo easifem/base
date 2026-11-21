@@ -15,10 +15,21 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE ElemshapeData_DGMethods
-USE BaseType
-USE GlobalData
+USE BaseType, ONLY: ElemShapeData_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: DG_
+USE BaseType, ONLY: SerendipityInterpolation_
+USE BaseType, ONLY: HermitInterpolation_
+USE BaseType, ONLY: OrthogonalInterpolation_
+USE BaseType, ONLY: HierarchyInterpolation_
+USE BaseType, ONLY: LagrangeInterpolation_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
+
 PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
@@ -43,20 +54,10 @@ PUBLIC :: Initiate
 ! [[DG_Serendipity1]]
 
 INTERFACE Initiate
-  MODULE SUBROUTINE DG_Lagrange1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation, &
-    & order,  &
-    & ipType, &
-    & basisType, &
-    & coeff,  &
-    & firstCall,  &
-    & alpha, &
-    & beta, &
-    & lambda)
+  MODULE SUBROUTINE DG_Lagrange1(obj, quad, refelem, baseContinuity, &
+                                 baseInterpolation, order, ipType, &
+                                 basisType, coeff, firstCall, alpha, &
+                                 beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -88,7 +89,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@DGHierarchy
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -109,17 +110,9 @@ END INTERFACE Initiate
 ! [[DG_Serendipity1]]
 
 INTERFACE Initiate
-  MODULE SUBROUTINE DG_Hierarchy1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE DG_Hierarchy1(obj, quad, refelem, baseContinuity, &
+                                  baseInterpolation, order, ipType, &
+                                  basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -146,7 +139,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@DGOrthogonal
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -167,17 +160,9 @@ END INTERFACE Initiate
 ! [[DG_Serendipity1]]
 
 INTERFACE Initiate
-  MODULE SUBROUTINE DG_Orthogonal1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE DG_Orthogonal1(obj, quad, refelem, baseContinuity, &
+                                   baseInterpolation, order, ipType, &
+                                   basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -201,7 +186,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                          Initiate@DGHermit
+!                                                          Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -222,17 +207,9 @@ END INTERFACE Initiate
 ! [[DG_Serendipity1]]
 
 INTERFACE Initiate
-  MODULE SUBROUTINE DG_Hermit1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE DG_Hermit1(obj, quad, refelem, baseContinuity, &
+                               baseInterpolation, order, ipType, basisType, &
+                               alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -256,7 +233,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@DGSerendipity
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -277,17 +254,9 @@ END INTERFACE Initiate
 ! [[DG_Hermit1]]
 
 INTERFACE Initiate
-  MODULE SUBROUTINE DG_Serendipity1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE DG_Serendipity1(obj, quad, refelem, baseContinuity, &
+                                    baseInterpolation, order, ipType, &
+                                    basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad

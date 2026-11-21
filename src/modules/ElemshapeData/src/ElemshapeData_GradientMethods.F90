@@ -34,7 +34,9 @@ USE BaseType, ONLY: FEVariable_
 USE BaseType, ONLY: FEVariableScalar_
 USE BaseType, ONLY: FEVariableVector_
 USE BaseType, ONLY: FEVariableMatrix_
-USE GlobalData, ONLY: DFP, I4B, LGT
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -56,7 +58,8 @@ PUBLIC :: GetSpatialGradient_
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
-! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90) on a facet
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90)
+! on a facet
 !
 ! See also: [[obj_GetSpatialGradient_1]]
 
@@ -96,7 +99,8 @@ END INTERFACE GetSpatialGradient
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
-! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) on a facet
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! on a facet
 !
 ! See also: [[obj_GetSpatialGradient1]]
 
@@ -130,7 +134,8 @@ END INTERFACE GetSpatialGradient_
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
-! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90) on a facet
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90)
+! on a facet
 !
 ! See also: [[obj_GetSpatialGradient_2]]
 
@@ -170,7 +175,8 @@ END INTERFACE GetSpatialGradient
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
-! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) on a facet
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! on a facet
 !
 ! See also: [[obj_GetSpatialGradient2]]
 
@@ -479,7 +485,8 @@ END INTERFACE GetSpatialGradient
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
-! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) with a constant `val`
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! with a constant `val`
 !
 ! See also: [[obj_GetSpatialGradient6]]
 
@@ -520,7 +527,8 @@ END INTERFACE GetSpatialGradient_
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
-! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90) on a facet
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90)
+! on a facet
 !
 ! See also: [[obj_GetSpatialGradient_7]]
 
@@ -558,7 +566,8 @@ END INTERFACE GetSpatialGradient
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
-! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) on a facet
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! on a facet
 !
 ! See also: [[obj_GetSpatialGradient7]]
 
@@ -684,7 +693,8 @@ END INTERFACE GetSpatialGradient_
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
-! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90) with constant and space-time `val`
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90)
+! with constant and space-time `val`
 !
 ! See also: [[obj_GetSpatialGradient_9]]
 
@@ -727,7 +737,8 @@ END INTERFACE GetSpatialGradient
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
-! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) with a constant `val`
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! with a constant `val`
 !
 ! See also: [[obj_GetSpatialGradient9]]
 
@@ -770,7 +781,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90) with space-time nodal values
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! with space-time nodal values
 !
 ! See also: [[obj_GetSpatialGradient_10]]
 
@@ -812,7 +824,8 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90) with space, space-time and constant `val`
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! with space, space-time and constant `val`
 !
 ! See also: [[obj_GetSpatialGradient10]]
 
@@ -851,7 +864,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90) with space-time `val`
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
+! with space-time `val`
 !
 ! See also: [[obj_GetSpatialGradient_11]]
 
@@ -893,8 +907,10 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90) with space-time `val`
-! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) with a space `val`
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! with space-time `val`
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! with a space `val`
 !
 ! See also: [[obj_GetSpatialGradient11]]
 
@@ -935,7 +951,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90) with space-time `val`
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
+! with space-time `val`
 !
 ! See also: [[obj_GetSpatialGradient_12]]
 
@@ -977,8 +994,10 @@ END INTERFACE GetSpatialGradient
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90) with space-time `val`
-! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90) with a space `val`
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! with space-time `val`
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! with a space `val`
 !
 ! See also: [[obj_GetSpatialGradient12]]
 

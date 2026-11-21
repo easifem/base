@@ -14,16 +14,22 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
-module ElemshapeData_DGLagrangeMethods
-USE BaseType
-USE GlobalData
+MODULE ElemshapeData_DGLagrangeMethods
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: DG_
+USE BaseType, ONLY: LagrangeInterpolation_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
-public :: Initiate
+PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@DGLagrange
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -39,9 +45,9 @@ public :: Initiate
 ! The build (`CMakeLists.txt`) does not include this module.
 ! @endwarning
 
-INTERFACE
+INTERFACE Initiate
   MODULE PURE SUBROUTINE DG_Lagrange(obj, quad, refElem, &
-    & continuityType, interpolType)
+                                     continuityType, interpolType)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! shape data to fill
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -53,10 +59,6 @@ INTERFACE
     CLASS(LagrangeInterpolation_), INTENT(IN) :: interpolType
     !! Lagrange interpolation type
   END SUBROUTINE DG_Lagrange
-END INTERFACE
-
-INTERFACE Initiate
-  MODULE PROCEDURE DG_Lagrange
 END INTERFACE Initiate
 
-end module ElemshapeData_DGLagrangeMethods
+END MODULE ElemshapeData_DGLagrangeMethods

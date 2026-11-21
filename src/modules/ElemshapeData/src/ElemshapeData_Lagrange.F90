@@ -22,16 +22,15 @@
 ! the reference coordinates at the quadrature points.
 
 MODULE ElemshapeData_Lagrange
-USE BaseType, ONLY: ElemshapeData_, &
-                    QuadraturePoint_, &
-                    ReferenceElement_, &
-                    H1_, &
-                    LagrangeInterpolation_
-
-USE GlobalData, ONLY: I4B, DFP, LGT
-
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: H1_
+USE BaseType, ONLY: LagrangeInterpolation_
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
-
 PRIVATE
 
 PUBLIC :: LagrangeElemShapeData
@@ -69,8 +68,10 @@ PUBLIC :: Initiate
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/LagrangeElemShapeData_test_1.F90) first three blocks: line, quadratic line, quadrangle
-! - [test 2](|base|ElemshapeData/examples/LagrangeElemShapeData_test_2.F90) with `coeff` and `firstCall`
+! - [test 1](|base|ElemshapeData/examples/LagrangeElemShapeData_test_1.F90)
+! first three blocks: line, quadratic line, quadrangle
+! - [test 2](|base|ElemshapeData/examples/LagrangeElemShapeData_test_2.F90)
+! with `coeff` and `firstCall`
 !
 ! See also: [[LagrangeElemShapeData2]], [[LagrangeFacetElemShapeData]]
 
@@ -131,7 +132,8 @@ END INTERFACE LagrangeElemShapeData
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/LagrangeElemShapeData_test_1.F90) fourth block, from `ReferenceLine`
+! - [test 1](|base|ElemshapeData/examples/LagrangeElemShapeData_test_1.F90)
+! fourth block, from `ReferenceLine`
 !
 ! See also: [[LagrangeElemShapeData1]]
 
@@ -182,7 +184,8 @@ END INTERFACE LagrangeElemShapeData
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/LagrangeElemShapeData_test_1.F90) fourth block, with `Initiate`
+! - [test 1](|base|ElemshapeData/examples/LagrangeElemShapeData_test_1.F90)
+! fourth block, with `Initiate`
 !
 ! See also: [[LagrangeElemShapeData2]]
 
@@ -251,8 +254,10 @@ END INTERFACE Initiate
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/LagrangeFacetElemShapeData_test_1.F90) quadrangle and its first face
-! - [test 2](|base|ElemshapeData/examples/LagrangeFacetElemShapeData_test_2.F90) hexahedron and one quadrangle face
+! - [test 1](|base|ElemshapeData/examples/LagrangeFacetElemShapeData_test_1.F90)
+! quadrangle and its first face
+! - [test 2](|base|ElemshapeData/examples/LagrangeFacetElemShapeData_test_2.F90)
+! hexahedron and one quadrangle face
 !
 ! See also: [[LagrangeElemShapeData1]]
 

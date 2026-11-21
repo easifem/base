@@ -15,16 +15,20 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_HRGNParamMethods
-USE BaseType
-USE GlobalData
+MODULE ElemshapeData_HRGNParamMethods
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: STElemshapeData_
+USE BaseType, ONLY: FEVariable_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: GetHRGNParam
 
 !----------------------------------------------------------------------------
-!                                                   GetHRGNParam@GetMethods
+!                                                        GetHRGNParam@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -89,7 +93,7 @@ INTERFACE GetHRGNParam
 END INTERFACE GetHRGNParam
 
 !----------------------------------------------------------------------------
-!                                                   GetHRGNParam@GetMethods
+!                                                        GetHRGNParam@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -130,7 +134,7 @@ INTERFACE GetHRGNParam
 END INTERFACE GetHRGNParam
 
 !----------------------------------------------------------------------------
-!                                                   GetHRGNParam@GetMethods
+!                                                        GetHRGNParam@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -178,7 +182,7 @@ INTERFACE GetHRGNParam
 END INTERFACE GetHRGNParam
 
 !----------------------------------------------------------------------------
-!                                                   GetHRGNParam@GetMethods
+!                                                        GetHRGNParam@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -218,4 +222,4 @@ INTERFACE GetHRGNParam
   MODULE PROCEDURE elemsd_GetHRGNParam4
 END INTERFACE GetHRGNParam
 
-end module ElemshapeData_HRGNParamMethods
+END MODULE ElemshapeData_HRGNParamMethods

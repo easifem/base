@@ -15,26 +15,25 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE ElemshapeData_H1Methods
-USE BaseType, ONLY: ElemshapeData_, &
-                    QuadraturePoint_, &
-                    ReferenceElement_, &
-                    H1_, &
-                    LagrangeInterpolation_, &
-                    HierarchyInterpolation_, &
-                    OrthogonalInterpolation_, &
-                    HermitInterpolation_, &
-                    SerendipityInterpolation_
-
-USE GlobalData, ONLY: I4B, DFP, LGT
-
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: H1_
+USE BaseType, ONLY: HermitInterpolation_
+USE BaseType, ONLY: HierarchyInterpolation_
+USE BaseType, ONLY: LagrangeInterpolation_
+USE BaseType, ONLY: OrthogonalInterpolation_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: SerendipityInterpolation_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
-
 PRIVATE
 
 PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@H1Hierarchy
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -88,7 +87,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@H1Orthogonal
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -143,7 +142,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                          Initiate@H1Hermit
+!                                                          Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -186,7 +185,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@H1Serendipity
+!                                                           Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.

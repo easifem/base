@@ -15,14 +15,24 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE ElemshapeData_HCurlMethods
-USE BaseType
-USE GlobalData
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: HCurl_
+USE BaseType, ONLY: LagrangeInterpolation_
+USE BaseType, ONLY: HierarchyInterpolation_
+USE BaseType, ONLY: OrthogonalInterpolation_
+USE BaseType, ONLY: HermitInterpolation_
+USE BaseType, ONLY: SerendipityInterpolation_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                          Initiate@Methods
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -86,7 +96,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@HCurlHierarchy
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -141,9 +151,8 @@ INTERFACE Initiate
   END SUBROUTINE HCurl_Hierarchy1
 END INTERFACE Initiate
 
-
 !----------------------------------------------------------------------------
-!                                                    Initiate@HCurlOrthogonal
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -162,17 +171,9 @@ END INTERFACE Initiate
 ! See also: [[HCurl_Lagrange1]], [[HCurl_Hierarchy1]]
 
 INTERFACE Initiate
-  MODULE SUBROUTINE HCurl_Orthogonal1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE HCurl_Orthogonal1(obj, quad, refelem, baseContinuity, &
+                                      baseInterpolation, order, ipType, &
+                                      basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -196,7 +197,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                       Initiate@HCurlHermit
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -215,17 +216,9 @@ END INTERFACE Initiate
 ! See also: [[HCurl_Lagrange1]], [[HCurl_Serendipity1]]
 
 INTERFACE Initiate
-  MODULE SUBROUTINE HCurl_Hermit1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE HCurl_Hermit1(obj, quad, refelem, baseContinuity, &
+                                  baseInterpolation, order, ipType, &
+                                  basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -249,7 +242,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@HCurlSerendipity
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -268,17 +261,9 @@ END INTERFACE Initiate
 ! See also: [[HCurl_Lagrange1]], [[HCurl_Hermit1]]
 
 INTERFACE Initiate
-  MODULE SUBROUTINE HCurl_Serendipity1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE HCurl_Serendipity1(obj, quad, refelem, baseContinuity, &
+                                       baseInterpolation, order, ipType, &
+                                       basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad

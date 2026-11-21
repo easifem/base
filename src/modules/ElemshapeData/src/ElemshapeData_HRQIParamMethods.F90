@@ -15,16 +15,20 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-module ElemshapeData_HRQIParamMethods
-USE BaseType
-USE GlobalData
+MODULE ElemshapeData_HRQIParamMethods
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: STElemshapeData_
+USE BaseType, ONLY: FEVariable_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
 PUBLIC :: GetHRQIParam
 
 !----------------------------------------------------------------------------
-!                                                   GetHRQIParam@GetMethods
+!                                                        GetHRQIParam@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -61,8 +65,7 @@ PUBLIC :: GetHRQIParam
 ! See also: [[elemsd_GetHRQIParam2]], [[elemsd_GetHRQIParam3]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetHRQIParam1(obj, h, val, hmax, hmin, &
-    & r, opt)
+  MODULE PURE SUBROUTINE elemsd_GetHRQIParam1(obj, h, val, hmax, hmin, r, opt)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! Shape function data. It can be an instance of [[STElemshapeData_]].
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h(:)
@@ -86,7 +89,7 @@ INTERFACE GetHRQIParam
 END INTERFACE GetHRQIParam
 
 !----------------------------------------------------------------------------
-!                                                   GetHRQIParam@GetMethods
+!                                                        GetHRQIParam@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -107,20 +110,19 @@ END INTERFACE GetHRQIParam
 ! See also: [[elemsd_GetHRQIParam1]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetHRQIParam2(obj, h, val, hmax, &
-    & hmin, r, opt)
+  MODULE PURE SUBROUTINE elemsd_GetHRQIParam2(obj, h, val, hmax, hmin, r, opt)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
-      !! Shape function data. It can be an instance of [[STElemshapeData_]].
+    !! Shape function data. It can be an instance of [[STElemshapeData_]].
     TYPE(FEVariable_), INTENT(INOUT) :: h
-      !! Element length, a scalar variable on quadrature points
+    !! Element length, a scalar variable on quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
-      !! Nodal values of a scalar or a vector. They define the direction.
+    !! Nodal values of a scalar or a vector. They define the direction.
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmax, hmin, r
-      !! `hmax` and `hmin` are the maximum and minimum directional
-      !! lengths, scalar variables on quadrature points.
-      !! `r` is the unit vector, a vector variable on quadrature points.
+    !! `hmax` and `hmin` are the maximum and minimum directional
+    !! lengths, scalar variables on quadrature points.
+    !! `r` is the unit vector, a vector variable on quadrature points.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-      !! Not used now. Kept for future use.
+    !! Not used now. Kept for future use.
   END SUBROUTINE elemsd_GetHRQIParam2
 END INTERFACE
 
@@ -129,7 +131,7 @@ INTERFACE GetHRQIParam
 END INTERFACE GetHRQIParam
 
 !----------------------------------------------------------------------------
-!                                                   GetHRQIParam@GetMethods
+!                                                        GetHRQIParam@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -152,23 +154,22 @@ END INTERFACE GetHRQIParam
 ! See also: [[elemsd_GetHRQIParam1]], [[elemsd_GetHRQIParam4]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetHRQIParam3(obj, h, val, hmax, &
-    & hmin, r, opt)
+  MODULE PURE SUBROUTINE elemsd_GetHRQIParam3(obj, h, val, hmax, hmin, r, opt)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-      !! Space-time shape function data. `obj(ipt)` is the data at
-      !! the `ipt`-th quadrature point in the time domain.
+    !! Space-time shape function data. `obj(ipt)` is the data at
+    !! the `ipt`-th quadrature point in the time domain.
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h(:, :)
-      !! Element length, shape(h) = (nips, nipt)
+    !! Element length, shape(h) = (nips, nipt)
     TYPE(FEVariable_), INTENT(IN) :: val
-      !! Nodal values of a scalar or a vector. They define the direction.
+    !! Nodal values of a scalar or a vector. They define the direction.
     REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmax(:, :)
-      !! Maximum directional length, shape(hmax) = (nips, nipt)
+    !! Maximum directional length, shape(hmax) = (nips, nipt)
     REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmin(:, :)
-      !! Minimum directional length, shape(hmin) = (nips, nipt)
+    !! Minimum directional length, shape(hmin) = (nips, nipt)
     REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: r(:, :, :)
-      !! Unit vector, shape(r) = (nsd, nips, nipt)
+    !! Unit vector, shape(r) = (nsd, nips, nipt)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-      !! Not used now. Kept for future use.
+    !! Not used now. Kept for future use.
   END SUBROUTINE elemsd_GetHRQIParam3
 END INTERFACE
 
@@ -177,7 +178,7 @@ INTERFACE GetHRQIParam
 END INTERFACE GetHRQIParam
 
 !----------------------------------------------------------------------------
-!                                                   GetHRQIParam@GetMethods
+!                                                        GetHRQIParam@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -199,21 +200,20 @@ END INTERFACE GetHRQIParam
 ! See also: [[elemsd_GetHRQIParam3]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetHRQIParam4(obj, h, val, hmax, &
-    & hmin, r, opt)
+  MODULE PURE SUBROUTINE elemsd_GetHRQIParam4(obj, h, val, hmax, hmin, r, opt)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
-      !! Space-time shape function data. `obj(ipt)` is the data at
-      !! the `ipt`-th quadrature point in the time domain.
+    !! Space-time shape function data. `obj(ipt)` is the data at
+    !! the `ipt`-th quadrature point in the time domain.
     TYPE(FEVariable_), INTENT(INOUT) :: h
-      !! Element length, a scalar variable on space-time quadrature points
+    !! Element length, a scalar variable on space-time quadrature points
     TYPE(FEVariable_), INTENT(IN) :: val
-      !! Nodal values of a scalar or a vector. They define the direction.
+    !! Nodal values of a scalar or a vector. They define the direction.
     TYPE(FEVariable_), OPTIONAL, INTENT(INOUT) :: hmax, hmin, r
-      !! `hmax` and `hmin` are the maximum and minimum directional
-      !! lengths, scalar variables on space-time quadrature points.
-      !! `r` is the unit vector, a vector variable on the same points.
+    !! `hmax` and `hmin` are the maximum and minimum directional
+    !! lengths, scalar variables on space-time quadrature points.
+    !! `r` is the unit vector, a vector variable on the same points.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
-      !! Not used now. Kept for future use.
+    !! Not used now. Kept for future use.
   END SUBROUTINE elemsd_GetHRQIParam4
 END INTERFACE
 
@@ -221,4 +221,4 @@ INTERFACE GetHRQIParam
   MODULE PROCEDURE elemsd_GetHRQIParam4
 END INTERFACE GetHRQIParam
 
-end module ElemshapeData_HRQIParamMethods
+END MODULE ElemshapeData_HRQIParamMethods

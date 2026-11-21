@@ -15,14 +15,24 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 
 MODULE ElemshapeData_HDivMethods
-USE BaseType
-USE GlobalData
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: QuadraturePoint_
+USE BaseType, ONLY: ReferenceElement_
+USE BaseType, ONLY: HDiv_
+USE BaseType, ONLY: LagrangeInterpolation_
+USE BaseType, ONLY: HierarchyInterpolation_
+USE BaseType, ONLY: OrthogonalInterpolation_
+USE BaseType, ONLY: HermitInterpolation_
+USE BaseType, ONLY: SerendipityInterpolation_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: Initiate
 
 !----------------------------------------------------------------------------
-!                                                          Initiate@Methods
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -38,20 +48,10 @@ PUBLIC :: Initiate
 ! @endwarning
 
 INTERFACE Initiate
-  MODULE SUBROUTINE HDiv_Lagrange1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation, &
-    & order,  &
-    & ipType, &
-    & basisType, &
-    & coeff,  &
-    & firstCall,  &
-    & alpha, &
-    & beta, &
-    & lambda)
+  MODULE SUBROUTINE HDiv_Lagrange1(obj, quad, refelem, baseContinuity, &
+                                   baseInterpolation, order, ipType, &
+                                   basisType, coeff, firstCall, alpha, beta, &
+                                   lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -82,7 +82,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@HDivHierarchy
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -98,17 +98,9 @@ END INTERFACE Initiate
 ! @endwarning
 
 INTERFACE Initiate
-  MODULE SUBROUTINE HDiv_Hierarchy1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE HDiv_Hierarchy1(obj, quad, refelem, baseContinuity, &
+                                    baseInterpolation, order, ipType, &
+                                    basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -134,9 +126,8 @@ INTERFACE Initiate
   END SUBROUTINE HDiv_Hierarchy1
 END INTERFACE Initiate
 
-
 !----------------------------------------------------------------------------
-!                                                    Initiate@HDivOrthogonal
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -152,17 +143,9 @@ END INTERFACE Initiate
 ! @endwarning
 
 INTERFACE Initiate
-  MODULE SUBROUTINE HDiv_Orthogonal1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE HDiv_Orthogonal1(obj, quad, refelem, baseContinuity, &
+                                     baseInterpolation, order, ipType, &
+                                     basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -186,7 +169,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                          Initiate@HDivHermit
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -202,17 +185,10 @@ END INTERFACE Initiate
 ! @endwarning
 
 INTERFACE Initiate
-  MODULE SUBROUTINE HDiv_Hermit1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE HDiv_Hermit1(obj, quad, refelem, baseContinuity, &
+                                 baseInterpolation, order, ipType, &
+                                 basisType, &
+                                 alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
@@ -236,7 +212,7 @@ INTERFACE Initiate
 END INTERFACE Initiate
 
 !----------------------------------------------------------------------------
-!                                                    Initiate@HDivSerendipity
+!                                                            Initiate@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -252,17 +228,9 @@ END INTERFACE Initiate
 ! @endwarning
 
 INTERFACE Initiate
-  MODULE SUBROUTINE HDiv_Serendipity1( &
-    & obj, &
-    & quad, &
-    & refelem, &
-    & baseContinuity, &
-    & baseInterpolation,  &
-    & order,  &
-    & ipType,  &
-    & basisType,  &
-    & alpha, beta, lambda &
-    &)
+  MODULE SUBROUTINE HDiv_Serendipity1(obj, quad, refelem, baseContinuity, &
+                                      baseInterpolation, order, ipType, &
+                                      basisType, alpha, beta, lambda)
     CLASS(ElemshapeData_), INTENT(INOUT) :: obj
     !! Element shape data
     CLASS(QuadraturePoint_), INTENT(IN) :: quad
