@@ -25,11 +25,11 @@ USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 PUBLIC :: GetSUPGParam
-PUBLIC :: getSUGN3Param
-PUBLIC :: getSUGN3Param_Takizawa2018
+PUBLIC :: GetSUGN3Param
+PUBLIC :: GetSUGN3Param_Takizawa2018
 
 !----------------------------------------------------------------------------
-!                                                       getSUGN3Param@Methods
+!                                                       GetSUGN3Param@SUGN3
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -66,12 +66,12 @@ INTERFACE
   END SUBROUTINE elemsd_GetSUGN3Param_1
 END INTERFACE
 
-INTERFACE getSUGN3Param
+INTERFACE GetSUGN3Param
   MODULE PROCEDURE elemsd_GetSUGN3Param_1
-END INTERFACE getSUGN3Param
+END INTERFACE GetSUGN3Param
 
 !----------------------------------------------------------------------------
-!                                                       getSUGN3Param@Methods
+!                                                       GetSUGN3Param@SUGN3
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -108,12 +108,12 @@ INTERFACE
   END SUBROUTINE elemsd_GetSUGN3Param_2
 END INTERFACE
 
-INTERFACE getSUGN3Param
+INTERFACE GetSUGN3Param
   MODULE PROCEDURE elemsd_GetSUGN3Param_2
-END INTERFACE getSUGN3Param
+END INTERFACE GetSUGN3Param
 
 !----------------------------------------------------------------------------
-!                                                       getSUGN3Param@Methods
+!                                                       GetSUGN3Param@SUGN3
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -150,12 +150,12 @@ INTERFACE
   END SUBROUTINE elemsd_GetSUGN3Param_3
 END INTERFACE
 
-INTERFACE getSUGN3Param
+INTERFACE GetSUGN3Param
   MODULE PROCEDURE elemsd_GetSUGN3Param_3
-END INTERFACE getSUGN3Param
+END INTERFACE GetSUGN3Param
 
 !----------------------------------------------------------------------------
-!                                                       getSUGN3Param@Methods
+!                                                       GetSUGN3Param@SUGN3
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -192,12 +192,12 @@ INTERFACE
   END SUBROUTINE elemsd_GetSUGN3Param_4
 END INTERFACE
 
-INTERFACE getSUGN3Param
+INTERFACE GetSUGN3Param
   MODULE PROCEDURE elemsd_GetSUGN3Param_4
-END INTERFACE getSUGN3Param
+END INTERFACE GetSUGN3Param
 
 !----------------------------------------------------------------------------
-!                                          getSUGN3Param_Takizawa2018@Methods
+!                             GetSUGN3Param_Takizawa2018@Takizawa2018
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -249,12 +249,12 @@ INTERFACE
   END SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_1
 END INTERFACE
 
-INTERFACE getSUGN3Param_Takizawa2018
+INTERFACE GetSUGN3Param_Takizawa2018
   MODULE PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_1
-END INTERFACE getSUGN3Param_Takizawa2018
+END INTERFACE GetSUGN3Param_Takizawa2018
 
 !----------------------------------------------------------------------------
-!                                          getSUGN3Param_Takizawa2018@Methods
+!                             GetSUGN3Param_Takizawa2018@Takizawa2018
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -306,12 +306,12 @@ INTERFACE
   END SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_2
 END INTERFACE
 
-INTERFACE getSUGN3Param_Takizawa2018
+INTERFACE GetSUGN3Param_Takizawa2018
   MODULE PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_2
-END INTERFACE getSUGN3Param_Takizawa2018
+END INTERFACE GetSUGN3Param_Takizawa2018
 
 !----------------------------------------------------------------------------
-!                                          getSUGN3Param_Takizawa2018@Methods
+!                             GetSUGN3Param_Takizawa2018@Takizawa2018
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -363,12 +363,12 @@ INTERFACE
   END SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_3
 END INTERFACE
 
-INTERFACE getSUGN3Param_Takizawa2018
+INTERFACE GetSUGN3Param_Takizawa2018
   MODULE PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_3
-END INTERFACE getSUGN3Param_Takizawa2018
+END INTERFACE GetSUGN3Param_Takizawa2018
 
 !----------------------------------------------------------------------------
-!                                          getSUGN3Param_Takizawa2018@Methods
+!                             GetSUGN3Param_Takizawa2018@Takizawa2018
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -421,12 +421,12 @@ INTERFACE
   END SUBROUTINE elemsd_GetSUGN3Param_Takizawa2018_4
 END INTERFACE
 
-INTERFACE getSUGN3Param_Takizawa2018
+INTERFACE GetSUGN3Param_Takizawa2018
   MODULE PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_4
-END INTERFACE getSUGN3Param_Takizawa2018
+END INTERFACE GetSUGN3Param_Takizawa2018
 
 !----------------------------------------------------------------------------
-!                                                        GetSUPGParam@Methods
+!                                                        GetSUPGParam@SUPG
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -502,7 +502,7 @@ INTERFACE GetSUPGParam
 END INTERFACE GetSUPGParam
 
 !----------------------------------------------------------------------------
-!                                                        GetSUPGParam@Methods
+!                                                        GetSUPGParam@SUPG
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -575,7 +575,7 @@ INTERFACE GetSUPGParam
 END INTERFACE GetSUPGParam
 
 !----------------------------------------------------------------------------
-!                                                        GetSUPGParam@Methods
+!                                                        GetSUPGParam@SUPG
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -654,7 +654,7 @@ INTERFACE GetSUPGParam
 END INTERFACE GetSUPGParam
 
 !----------------------------------------------------------------------------
-!                                                        GetSUPGParam@Methods
+!                                                        GetSUPGParam@SUPG
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.

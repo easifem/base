@@ -15,7 +15,22 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 SUBMODULE(ElemshapeData_StabilizationParamMethods) SUPG
-USE BaseMethod
+USE BaseType, ONLY: TypeFEVariableScalar
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+USE BaseType, ONLY: TypeFEVariableVector
+USE BaseType, ONLY: math => TypeMathOpt
+USE ElemshapeData_ProjectionMethods, ONLY: GetProjectionOfdNdXt
+USE ElemshapeData_ProjectionMethods, ONLY: GetProjectionOfdNTdXt
+USE ElemshapeData_ScalarInterpolMethods, ONLY: GetInterpolation
+USE ElemshapeData_UnitNormalMethods, ONLY: GetUnitNormal
+USE FEVariable_Method, ONLY: ASSIGNMENT(=)
+USE FEVariable_Method, ONLY: DEALLOCATE
+USE FEVariable_Method, ONLY: Get
+USE FEVariable_Method, ONLY: QuadratureVariable
+USE GlobalData, ONLY: MaxDFP
+USE InputUtility, ONLY: Input
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
 
@@ -24,7 +39,7 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 PURE SUBROUTINE elemsd_getSUPGParam_a(obj, tau, c, val, nu, k, &
-  & phi, dt, opt)
+                                      phi, dt, opt)
   CLASS(ElemshapeData_), INTENT(IN) :: obj
   !! element shape data
   TYPE(FEVariable_), INTENT(INOUT) :: tau
@@ -47,10 +62,8 @@ PURE SUBROUTINE elemsd_getSUPGParam_a(obj, tau, c, val, nu, k, &
   !! default=1
   !! if opt=1, then we use `SQRT(1.0_DFP / (t1**2 + t2**2 + t3**2 + t4**2))`
   !! if opt=2, then we use `1.0_DFP / (t1 + t2 + t3 + t4)`
-  !!
-  !!
+
   !! define internal variables
-  !!
   INTEGER(I4B) :: ii, opt0
   REAL(DFP) :: t1, t2, t3, t4
   REAL(DFP), ALLOCATABLE :: p(:, :)
@@ -65,20 +78,19 @@ PURE SUBROUTINE elemsd_getSUPGParam_a(obj, tau, c, val, nu, k, &
   !! value of nu at space quadrature points
   TYPE(FEVariable_) :: rvar
   !! vector variable for keeping r
-  !!
+
   !! Main
-  !!
   opt0 = INPUT(default=1_I4B, option=opt)
-  !!
+
   CALL GetProjectionOfdNdXt(obj=obj, ans=p, c=c, crank=TypeFEVariableVector)
-  !!
+
   CALL GetUnitNormal(obj=obj, val=val, r=r)
   rvar = QuadratureVariable(r, TypeFEVariableVector, TypeFEVariableSpace)
   CALL GetProjectionOfdNdXt(obj=obj, ans=q, c=rvar, &
                             crank=TypeFEVariableVector)
-  !!
+
   CALL GetInterpolation(obj=obj, val=nu, ans=nubar)
-  !!
+
   IF (PRESENT(k)) THEN
     CALL GetInterpolation(obj=obj, val=k, ans=kbar)
     CALL GetInterpolation(obj=obj, val=phi, ans=phibar)
@@ -88,14 +100,14 @@ PURE SUBROUTINE elemsd_getSUPGParam_a(obj, tau, c, val, nu, k, &
     kbar = MaxDFP !! very large number
     phibar = 1.0_DFP
   END IF
-  !!
+
   t2 = 0.0_DFP
   IF (PRESENT(dt)) THEN
-    IF (dt .GT. zero) t2 = 2.0_DFP / dt
+    IF (dt .GT. math%zero) t2 = 2.0_DFP / dt
   END IF
-  !!
+
   CALL Reallocate(ans, SIZE(obj%N, 2))
-  !!
+
   IF (opt0 .EQ. 1_I4B) THEN
     DO ii = 1, SIZE(ans)
       t1 = SUM(ABS(p(:, ii)))
@@ -111,9 +123,9 @@ PURE SUBROUTINE elemsd_getSUPGParam_a(obj, tau, c, val, nu, k, &
       ans(ii) = 1.0_DFP / (t1 + t2 + t3 + t4)
     END DO
   END IF
-  !!
+
   tau = QuadratureVariable(ans, TypeFEVariableScalar, TypeFEVariableSpace)
-  !!
+
   !! cleanup
   IF (ALLOCATED(p)) DEALLOCATE (p)
   IF (ALLOCATED(r)) DEALLOCATE (r)
@@ -154,9 +166,8 @@ PURE SUBROUTINE elemsd_getSUPGParam_b(obj, tau, c, val, nu, k, &
   !! default=1
   !! opt=1, then `ans(ii) = SQRT(1.0_DFP / (t12**2 + t3**2 + t4**2))`
   !! opt=2, then `ans(ii) = 1.0_DFP / (t12 + t3 + t4)`
-  !!
+
   !! INTERNAL VARIABLES
-  !!
   INTEGER(I4B) :: ii, opt0
   REAL(DFP) :: t12, t3, t4
   REAL(DFP), ALLOCATABLE :: p(:, :, :)
@@ -170,24 +181,22 @@ PURE SUBROUTINE elemsd_getSUPGParam_b(obj, tau, c, val, nu, k, &
   REAL(DFP), ALLOCATABLE :: kbar(:)
   REAL(DFP), ALLOCATABLE :: phibar(:)
   TYPE(FEVariable_) :: rvar
-  !!
+
   !! MAIN
-  !!
   opt0 = INPUT(option=opt, default=1_I4B)
-  !!
+
   CALL GetProjectionOfdNTdXt(obj=obj, ans=p, c=c, &
                              crank=TypeFEVariableVector)
-  !!
+
   !! make cdNTdxt + dNTdt
-  !!
   p = p + obj%dNTdt
-  !!
+
   CALL GetUnitNormal(obj=obj, val=val, r=r)
   rvar = QuadratureVariable(r, TypeFEVariableVector, TypeFEVariableSpace)
   CALL GetProjectionOfdNTdXt(obj=obj, ans=q, c=rvar, &
                              crank=TypeFEVariableVector)
   CALL GetInterpolation(obj=obj, val=nu, ans=nubar)
-  !!
+
   IF (PRESENT(k)) THEN
     CALL GetInterpolation(obj=obj, val=k, ans=kbar)
     CALL GetInterpolation(obj=obj, val=phi, ans=phibar)
@@ -197,9 +206,9 @@ PURE SUBROUTINE elemsd_getSUPGParam_b(obj, tau, c, val, nu, k, &
     kbar = MaxDFP !! very large number
     phibar = 1.0_DFP
   END IF
-  !!
-  CALL reallocate(ans, SIZE(obj%N, 2))
-  !!
+
+  CALL Reallocate(ans, SIZE(obj%N, 2))
+
   IF (opt0 .EQ. 1_I4B) THEN
     DO ii = 1, SIZE(ans, 1)
       t12 = SUM(ABS(p(:, :, ii)))
@@ -215,11 +224,10 @@ PURE SUBROUTINE elemsd_getSUPGParam_b(obj, tau, c, val, nu, k, &
       ans(ii) = 1.0_DFP / (t12 + t3 + t4)
     END DO
   END IF
-  !!
+
   tau = QuadratureVariable(ans, TypeFEVariableScalar, TypeFEVariableSpace)
-  !!
+
   !! cleanup
-  !!
   IF (ALLOCATED(p)) DEALLOCATE (p)
   IF (ALLOCATED(r)) DEALLOCATE (r)
   IF (ALLOCATED(q)) DEALLOCATE (q)
@@ -237,31 +245,13 @@ END SUBROUTINE elemsd_getSUPGParam_b
 MODULE PROCEDURE elemsd_getSUPGParam1
 SELECT TYPE (obj)
 TYPE IS (ElemshapeData_)
-  !!
-  CALL elemsd_getSUPGParam_a( &
-    & obj=obj, &
-    & tau=tau, &
-    & c=c, &
-    & val=val, &
-    & nu=nu, &
-    & k=k, &
-    & phi=phi, &
-    & dt=dt, &
-    & opt=opt)
-  !!
+  CALL elemsd_getSUPGParam_a(obj=obj, tau=tau, c=c, val=val, nu=nu, k=k, &
+                             phi=phi, dt=dt, opt=opt)
+
 CLASS IS (STElemshapeData_)
-  !!
-  CALL elemsd_getSUPGParam_b( &
-    & obj=obj, &
-    & tau=tau, &
-    & c=c, &
-    & val=val, &
-    & nu=nu, &
-    & k=k, &
-    & phi=phi, &
-    & dt=dt, &
-    & opt=opt)
-  !!
+  CALL elemsd_getSUPGParam_b(obj=obj, tau=tau, c=c, val=val, nu=nu, k=k, &
+                             phi=phi, dt=dt, opt=opt)
+
 END SELECT
 END PROCEDURE elemsd_getSUPGParam1
 
@@ -273,42 +263,29 @@ MODULE PROCEDURE elemsd_GetSUPGParam2
 INTEGER(I4B) :: ii
 REAL(DFP), ALLOCATABLE :: ans(:, :)
 TYPE(FEVariable_) :: a
-!!
+
 !! main
-!!
 CALL Reallocate(ans, SIZE(obj(1)%N, 2), SIZE(obj))
-!!
+
 DO ii = 1, SIZE(obj)
-  !!
-  CALL elemsd_getSUPGParam_b( &
-    & obj=obj(ii), &
-    & tau=a, &
-    & c=c, &
-    & val=val, &
-    & nu=nu, &
-    & k=k, &
-    & phi=phi, &
-    & dt=dt, &
-    & opt=opt)
-  !!
+  CALL elemsd_getSUPGParam_b(obj=obj(ii), tau=a, c=c, val=val, nu=nu, k=k, &
+                             phi=phi, dt=dt, opt=opt)
+
   ans(:, ii) = Get(a, TypeFEVariableScalar, TypeFEVariableSpace)
-  !!
 END DO
-!!
-tau = QuadratureVariable( &
-  & ans, &
-  & TypeFEVariableScalar, &
-  & TypeFEVariableSpaceTime)
-!!
+
+tau = QuadratureVariable(ans, TypeFEVariableScalar, &
+                         TypeFEVariableSpaceTime)
+
 CALL DEALLOCATE (a); DEALLOCATE (ans)
 END PROCEDURE elemsd_GetSUPGParam2
 
 !----------------------------------------------------------------------------
-!                                                               getSUPGParam
+!                                                               GetSUPGParam
 !----------------------------------------------------------------------------
 
 PURE SUBROUTINE elemsd_getSUPGParam_c(obj, tau, c, val, nu, k, &
-  & phi, dt, opt)
+                                      phi, dt, opt)
   CLASS(ElemshapeData_), INTENT(IN) :: obj
   !! element shape data
   TYPE(FEVariable_), INTENT(INOUT) :: tau
@@ -331,10 +308,8 @@ PURE SUBROUTINE elemsd_getSUPGParam_c(obj, tau, c, val, nu, k, &
   !! default = 1
   !! opt=1
   !! opt=2
-  !
-  !!
+
   !! internal variables
-  !!
   INTEGER(I4B) :: ii, opt0
   REAL(DFP) :: t1, t2, t3, t4, kbar, phibar
   REAL(DFP), ALLOCATABLE :: p(:, :)
@@ -348,18 +323,17 @@ PURE SUBROUTINE elemsd_getSUPGParam_c(obj, tau, c, val, nu, k, &
   !! value of nu at space quadrature points
   TYPE(FEVariable_) :: rvar
   !! vector variable for keeping r
-  !!
+
   !! MAIN
-  !!
   opt0 = INPUT(default=1_I4B, option=opt)
-  !!
+
   CALL GetProjectionOfdNdXt(obj=obj, ans=p, c=c, crank=TypeFEVariableVector)
-  !!
+
   CALL GetUnitNormal(obj=obj, val=val, r=r)
   rvar = QuadratureVariable(r, TypeFEVariableVector, TypeFEVariableSpace)
   CALL GetProjectionOfdNdXt(obj=obj, ans=q, c=rvar, &
                             crank=TypeFEVariableVector)
-  !!
+
   IF (PRESENT(k)) THEN
     kbar = k
     phibar = phi
@@ -367,14 +341,14 @@ PURE SUBROUTINE elemsd_getSUPGParam_c(obj, tau, c, val, nu, k, &
     kbar = MaxDFP
     phibar = 1.0_DFP
   END IF
-  !!
+
   t2 = 0.0_DFP
   IF (PRESENT(dt)) THEN
     t2 = 2.0_DFP / dt
   END IF
-  !!
+
   CALL Reallocate(ans, SIZE(obj%N, 2))
-  !!
+
   IF (opt0 .EQ. 1_I4B) THEN
     DO ii = 1, SIZE(ans)
       t1 = SUM(ABS(p(:, ii)))
@@ -390,16 +364,16 @@ PURE SUBROUTINE elemsd_getSUPGParam_c(obj, tau, c, val, nu, k, &
       ans(ii) = 1.0_DFP / (t1 + t2 + t3 + t4)
     END DO
   END IF
-  !!
+
   tau = QuadratureVariable(ans, TypeFEVariableScalar, TypeFEVariableSpace)
-  !!
+
   !! cleanup
   DEALLOCATE (p, r, q, ans)
   CALL DEALLOCATE (rvar)
 END SUBROUTINE elemsd_getSUPGParam_c
 
 !----------------------------------------------------------------------------
-!                                                              getSUPGParam
+!                                                               GetSUPGParam
 !----------------------------------------------------------------------------
 
 PURE SUBROUTINE elemsd_getSUPGParam_d(obj, tau, c, val, nu, k, &
@@ -426,9 +400,8 @@ PURE SUBROUTINE elemsd_getSUPGParam_d(obj, tau, c, val, nu, k, &
   !! default=1
   !! opt=1,
   !! opt=2
-  !!
-  !! INTERNAL VARIABLES
-  !!
+
+  ! INTERNAL VARIABLES
   INTEGER(I4B) :: ii, opt0
   REAL(DFP) :: t12, t3, t4, kbar, phibar
   REAL(DFP), ALLOCATABLE :: p(:, :, :)
@@ -436,25 +409,22 @@ PURE SUBROUTINE elemsd_getSUPGParam_d(obj, tau, c, val, nu, k, &
   REAL(DFP), ALLOCATABLE :: r(:, :)
   !! vector at space quad points
   REAL(DFP), ALLOCATABLE :: q(:, :, :)
-  !!
   REAL(DFP), ALLOCATABLE :: ans(:)
   TYPE(FEVariable_) :: rvar
-  !!
+
   !! MAIN
-  !!
   opt0 = INPUT(default=1_I4B, option=opt)
-  !!
+
   CALL GetProjectionOfdNTdXt(obj=obj, ans=p, c=c, crank=TypeFEVariableVector)
-  !!
+
   !! make cdNTdxt + dNTdt
-  !!
   p = p + obj%dNTdt
-  !!
+
   CALL GetUnitNormal(obj=obj, val=val, r=r)
   rvar = QuadratureVariable(r, TypeFEVariableVector, TypeFEVariableSpace)
   CALL GetProjectionOfdNTdXt(obj=obj, ans=q, c=rvar, &
                              crank=TypeFEVariableVector)
-  !!
+
   IF (PRESENT(k)) THEN
     kbar = k
     phibar = phi
@@ -462,10 +432,9 @@ PURE SUBROUTINE elemsd_getSUPGParam_d(obj, tau, c, val, nu, k, &
     kbar = MaxDFP
     phibar = 1.0_DFP
   END IF
-  !!
-  !!
+
   CALL reallocate(ans, SIZE(obj%N, 2))
-  !!
+
   IF (opt0 .EQ. 1_I4B) THEN
     DO ii = 1, SIZE(ans, 1)
       t12 = SUM(ABS(p(:, :, ii)))
@@ -481,86 +450,51 @@ PURE SUBROUTINE elemsd_getSUPGParam_d(obj, tau, c, val, nu, k, &
       ans(ii) = 1.0_DFP / (t12 + t3 + t4)
     END DO
   END IF
-  !!
+
   tau = QuadratureVariable(ans, TypeFEVariableScalar, TypeFEVariableSpace)
-  !!
+
   !! cleanup
-  !!
   DEALLOCATE (p, r, q, ans)
   CALL DEALLOCATE (rvar)
 END SUBROUTINE elemsd_getSUPGParam_d
 
 !----------------------------------------------------------------------------
-!                                                               getSUPGParam
+!                                                               GetSUPGParam
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_getSUPGParam3
 SELECT TYPE (obj)
 TYPE IS (ElemshapeData_)
-  !!
-  CALL elemsd_getSUPGParam_c( &
-    & obj=obj, &
-    & tau=tau, &
-    & c=c, &
-    & val=val, &
-    & nu=nu, &
-    & k=k, &
-    & phi=phi, &
-    & dt=dt, &
-    & opt=opt)
-  !!
+  CALL elemsd_getSUPGParam_c(obj=obj, tau=tau, c=c, val=val, nu=nu, k=k, &
+                             phi=phi, dt=dt, opt=opt)
+
 CLASS IS (STElemshapeData_)
-  !!
-  CALL elemsd_getSUPGParam_d( &
-    & obj=obj, &
-    & tau=tau, &
-    & c=c, &
-    & val=val, &
-    & nu=nu, &
-    & k=k, &
-    & phi=phi, &
-    & dt=dt, &
-    & opt=opt)
-  !!
+  CALL elemsd_getSUPGParam_d(obj=obj, tau=tau, c=c, val=val, nu=nu, k=k, &
+                             phi=phi, dt=dt, opt=opt)
 END SELECT
 END PROCEDURE elemsd_getSUPGParam3
 
 !----------------------------------------------------------------------------
-!                                                             GetSUPGParam
+!                                                               GetSUPGParam
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetSUPGParam4
 INTEGER(I4B) :: ii
 REAL(DFP), ALLOCATABLE :: ans(:, :)
 TYPE(FEVariable_) :: a
-  !!
-  !! main
-  !!
+
+!! main
 CALL Reallocate(ans, SIZE(obj(1)%N, 2), SIZE(obj))
-  !!
+
 DO ii = 1, SIZE(obj)
-    !!
-  CALL elemsd_getSUPGParam_d( &
-    & obj=obj(ii), &
-    & tau=a, &
-    & c=c, &
-    & val=val, &
-    & nu=nu, &
-    & k=k, &
-    & phi=phi, &
-    & dt=dt, &
-    & opt=opt)
-    !!
+  CALL elemsd_getSUPGParam_d(obj=obj(ii), tau=a, c=c, val=val, nu=nu, k=k, &
+                             phi=phi, dt=dt, opt=opt)
   ans(:, ii) = Get(a, TypeFEVariableScalar, TypeFEVariableSpace)
-    !!
 END DO
-  !!
-tau = QuadratureVariable( &
-  & ans, &
-  & TypeFEVariableScalar, &
-  & TypeFEVariableSpaceTime)
-  !!
-  !!
+
+tau = QuadratureVariable(ans, TypeFEVariableScalar, &
+                         TypeFEVariableSpaceTime)
+
 CALL DEALLOCATE (a)
 DEALLOCATE (ans)
 END PROCEDURE elemsd_GetSUPGParam4

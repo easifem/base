@@ -16,7 +16,13 @@
 !
 
 SUBMODULE(ElemshapeData_StabilizationParamMethods) SUGN3
-USE BaseMethod
+USE BaseType, ONLY: TypeFEVariableScalar
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+USE ElemshapeData_HRGNParamMethods, ONLY: GetHRGNParam
+USE ElemshapeData_ScalarInterpolMethods, ONLY: GetInterpolation
+USE FEVariable_Method, ONLY: ASSIGNMENT(=)
+USE FEVariable_Method, ONLY: QuadratureVariable
 IMPLICIT NONE
 CONTAINS
 
@@ -27,23 +33,23 @@ CONTAINS
 MODULE PROCEDURE elemsd_GetSUGN3Param_1
 REAL(DFP), ALLOCATABLE :: h0(:), nubar(:)
 INTEGER(I4B) :: ii
-!!
+
 CALL GetHRGNParam(obj=obj, h=h0, val=val, opt=opt)
-!!
+
 IF (PRESENT(h)) THEN
   h = QuadratureVariable(h0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
+                         TypeFEVariableSpace)
 END IF
-!!
+
 CALL GetInterpolation(obj=obj, val=nu, ans=nubar)
-!!
+
 DO ii = 1, SIZE(h0)
   h0(ii) = h0(ii)**2 / nubar(ii) / 4.0_DFP
 END DO
-!!
+
 tau = QuadratureVariable(h0, TypeFEVariableScalar, &
-  & TypeFEVariableSpace)
-!!
+                         TypeFEVariableSpace)
+
 DEALLOCATE (h0, nubar)
 END PROCEDURE elemsd_GetSUGN3Param_1
 
@@ -54,32 +60,26 @@ END PROCEDURE elemsd_GetSUGN3Param_1
 MODULE PROCEDURE elemsd_GetSUGN3Param_2
 INTEGER(I4B) :: ii
 REAL(DFP), ALLOCATABLE :: h0(:, :), nubar(:, :)
-!!
+
 !! main
-!!
 CALL GetHRGNParam(obj=obj, h=h0, val=val, opt=opt)
-!!
+
 IF (PRESENT(h)) THEN
-  h = QuadratureVariable( &
-    & h0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
+  h = QuadratureVariable(h0, TypeFEVariableScalar, &
+                         TypeFEVariableSpaceTime)
 END IF
-!!
+
 CALL GetInterpolation(obj=obj, val=nu, ans=nubar)
-!!
+
 DO ii = 1, SIZE(obj)
   h0(:, ii) = h0(:, ii)**2 / nubar(:, ii) / 4.0_DFP
 END DO
-!!
-tau = QuadratureVariable( &
-  & h0, &
-  & TypeFEVariableScalar, &
-  & TypeFEVariableSpaceTime)
-!!
+
+tau = QuadratureVariable(h0, TypeFEVariableScalar, &
+                         TypeFEVariableSpaceTime)
+
 IF (ALLOCATED(h0)) DEALLOCATE (h0)
 IF (ALLOCATED(nubar)) DEALLOCATE (nubar)
-!!
 END PROCEDURE elemsd_GetSUGN3Param_2
 
 !----------------------------------------------------------------------------
@@ -89,23 +89,22 @@ END PROCEDURE elemsd_GetSUGN3Param_2
 MODULE PROCEDURE elemsd_GetSUGN3Param_3
 REAL(DFP), ALLOCATABLE :: h0(:)
 INTEGER(I4B) :: ii
-!!
+
 CALL GetHRGNParam(obj=obj, h=h0, val=val, opt=opt)
-!!
+
 IF (PRESENT(h)) THEN
   h = QuadratureVariable(h0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
+                         TypeFEVariableSpace)
 END IF
-!!
+
 DO ii = 1, SIZE(h0)
   h0(ii) = h0(ii)**2 / nu / 4.0_DFP
 END DO
-!!
+
 tau = QuadratureVariable(h0, TypeFEVariableScalar, &
-  & TypeFEVariableSpace)
-!!
+                         TypeFEVariableSpace)
+
 DEALLOCATE (h0)
-!!
 END PROCEDURE elemsd_GetSUGN3Param_3
 
 !----------------------------------------------------------------------------
@@ -115,29 +114,23 @@ END PROCEDURE elemsd_GetSUGN3Param_3
 MODULE PROCEDURE elemsd_GetSUGN3Param_4
 INTEGER(I4B) :: ii
 REAL(DFP), ALLOCATABLE :: h0(:, :)
-!!
+
 !! main
-!!
 CALL GetHRGNParam(obj=obj, h=h0, val=val, opt=opt)
-!!
+
 IF (PRESENT(h)) THEN
-  h = QuadratureVariable( &
-    & h0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
+  h = QuadratureVariable(h0, TypeFEVariableScalar, &
+                         TypeFEVariableSpaceTime)
 END IF
-!!
+
 DO ii = 1, SIZE(obj)
   h0(:, ii) = h0(:, ii)**2 / nu / 4.0_DFP
 END DO
-!!
-tau = QuadratureVariable( &
-  & h0, &
-  & TypeFEVariableScalar, &
-  & TypeFEVariableSpaceTime)
-!!
+
+tau = QuadratureVariable(h0, TypeFEVariableScalar, &
+                         TypeFEVariableSpaceTime)
+
 IF (ALLOCATED(h0)) DEALLOCATE (h0)
-!!
 END PROCEDURE elemsd_GetSUGN3Param_4
 
 !----------------------------------------------------------------------------
