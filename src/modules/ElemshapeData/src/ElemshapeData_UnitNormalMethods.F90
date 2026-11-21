@@ -138,13 +138,20 @@ END INTERFACE GetUnitNormal
 ! For a scalar `val` it works like [[GetUnitNormal_1]].
 ! For a vector `val` it works like [[GetUnitNormal_2]].
 !
-! @note
-! `val` must hold nodal values. A matrix `val` is not supported, and
-! then `R` does not change.
-! @endnote
+! @warning
+! `val` must hold nodal values of a scalar or vector field.
+! Quadrature values are unsupported. The routine does not check this
+! precondition, so do not rely on its output for quadrature values.
+!
+! For a matrix or any other unsupported rank, the routine returns
+! silently without changing `R`. An unallocated `R` stays unallocated.
+! An allocated `R` retains its old values, not a computed normal.
+! No diagnostic reports unsupported inputs. See easifem/base#543.
+! @endwarning
 !
 ! Changes:
 !   - 2026-11-21: Reuse the raw-array normalization formulas.
+!   - 2026-11-21: Document unsupported inputs and unchanged outputs.
 !
 ! Examples
 !
