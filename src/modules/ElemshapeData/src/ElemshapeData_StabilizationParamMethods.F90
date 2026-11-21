@@ -453,9 +453,8 @@ END INTERFACE GetSUGN3Param_Takizawa2018
 !
 ! If `k` is absent, the Darcy term is zero.
 !
-! @note
-! If you pass `k`, you must also pass `phi`.
-! @endnote
+! If `k` is present, omitted `phi` defaults to 1.
+! If `k` is absent, the routine ignores `phi`.
 !
 ! @note
 ! If `obj` is an [[STElemshapeData_]], the call uses the space-time
@@ -463,9 +462,14 @@ END INTERFACE GetSUGN3Param_Takizawa2018
 ! A single object uses time index 1 for quadrature coefficients.
 ! @endnote
 !
+! Changes:
+!   - 2026-11-21: Default omitted porosity to 1 with supplied permeability.
+!
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetSUPGParam_test_1.F90)
+!
+! - [test 5](|base|ElemshapeData/examples/GetSUPGParam_test_5.F90)
 !
 ! See also: [[elemsd_GetSUPGParam2]]
 
@@ -488,7 +492,7 @@ INTERFACE
     !! If absent, the Darcy term is zero.
     TYPE(FEVariable_), OPTIONAL, INTENT(IN) :: phi
     !! porosity, a scalar variable
-    !! Required when `k` is present.
+    !! Defaults to 1 with `k`; ignored without `k`.
     REAL(DFP), OPTIONAL, INTENT(IN) :: dt
     !! time step size
     !! If absent or not positive, the time term is zero.
@@ -531,9 +535,8 @@ END INTERFACE GetSUPGParam
 !
 ! If `k` is absent, the Darcy term is zero.
 !
-! @note
-! If you pass `k`, you must also pass `phi`.
-! @endnote
+! If `k` is present, omitted `phi` defaults to 1.
+! If `k` is absent, the routine ignores `phi`.
 !
 ! @note
 ! The routine ignores `dt`. The time derivative of the shape functions
@@ -542,11 +545,14 @@ END INTERFACE GetSUPGParam
 !
 ! Changes:
 !   - 2026-11-21: Select quadrature coefficients at each time point.
+!   - 2026-11-21: Default omitted porosity to 1 with supplied permeability.
 !
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetSUPGParam_test_2.F90)
 ! - [test 3](|base|ElemshapeData/examples/GetSUPGParam_test_3.F90)
+!
+! - [test 5](|base|ElemshapeData/examples/GetSUPGParam_test_5.F90)
 !
 ! See also: [[elemsd_GetSUPGParam1]]
 
@@ -568,7 +574,7 @@ INTERFACE
     !! If absent, the Darcy term is zero.
     TYPE(FEVariable_), OPTIONAL, INTENT(IN) :: phi
     !! porosity, a scalar variable
-    !! Required when `k` is present.
+    !! Defaults to 1 with `k`; ignored without `k`.
     REAL(DFP), OPTIONAL, INTENT(IN) :: dt
     !! time step size, not used at present
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
@@ -611,9 +617,8 @@ END INTERFACE GetSUPGParam
 !
 ! If `k` is absent, the Darcy term is zero.
 !
-! @note
-! If you pass `k`, you must also pass `phi`.
-! @endnote
+! If `k` is present, omitted `phi` defaults to 1.
+! If `k` is absent, the routine ignores `phi`.
 !
 ! @note
 ! If `obj` is an [[STElemshapeData_]], the routine uses the space-time
@@ -623,6 +628,7 @@ END INTERFACE GetSUPGParam
 !
 ! Changes:
 !   - 2026-11-21: Omit the time term for nonpositive time steps.
+!   - 2026-11-21: Default omitted porosity to 1 with supplied permeability.
 !
 ! Examples
 !
@@ -631,6 +637,8 @@ END INTERFACE GetSUPGParam
 !   one space-time shape data
 !
 ! - [test 4](|base|ElemshapeData/examples/GetSUPGParam_test_4.F90)
+!
+! - [test 5](|base|ElemshapeData/examples/GetSUPGParam_test_5.F90)
 !
 ! See also: [[elemsd_GetSUPGParam1]], [[elemsd_GetSUPGParam4]]
 
@@ -653,7 +661,7 @@ INTERFACE
     !! If absent, the Darcy term is zero.
     REAL(DFP), OPTIONAL, INTENT(IN) :: phi
     !! porosity, a constant
-    !! Required when `k` is present.
+    !! Defaults to 1 with `k`; ignored without `k`.
     REAL(DFP), OPTIONAL, INTENT(IN) :: dt
     !! time step size
     !! If absent or not positive, the time term is zero.
@@ -699,9 +707,8 @@ END INTERFACE GetSUPGParam
 !
 ! If `k` is absent, the Darcy term is zero.
 !
-! @note
-! If you pass `k`, you must also pass `phi`.
-! @endnote
+! If `k` is present, omitted `phi` defaults to 1.
+! If `k` is absent, the routine ignores `phi`.
 !
 ! @note
 ! The routine ignores `dt`. The time derivative of the shape functions
@@ -710,11 +717,14 @@ END INTERFACE GetSUPGParam
 !
 ! Changes:
 !   - 2026-11-21: Select quadrature velocity at each time point.
+!   - 2026-11-21: Default omitted porosity to 1 with supplied permeability.
 !
 ! Examples
 !
 ! - [test 2](|base|ElemshapeData/examples/GetSUPGParam_test_2.F90)
 ! - [test 3](|base|ElemshapeData/examples/GetSUPGParam_test_3.F90)
+!
+! - [test 5](|base|ElemshapeData/examples/GetSUPGParam_test_5.F90)
 !
 ! See also: [[elemsd_GetSUPGParam2]], [[elemsd_GetSUPGParam3]]
 
@@ -736,7 +746,7 @@ INTERFACE
     !! If absent, the Darcy term is zero.
     REAL(DFP), OPTIONAL, INTENT(IN) :: phi
     !! porosity, a constant
-    !! Required when `k` is present.
+    !! Defaults to 1 with `k`; ignored without `k`.
     REAL(DFP), OPTIONAL, INTENT(IN) :: dt
     !! time step size, not used at present
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt

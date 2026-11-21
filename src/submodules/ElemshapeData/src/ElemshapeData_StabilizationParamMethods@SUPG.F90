@@ -92,14 +92,17 @@ PURE SUBROUTINE elemsd_getSUPGParam_a(obj, tau, c, val, nu, k, &
 
   CALL GetInterpolation(obj=obj, val=nu, ans=nubar)
 
+  ALLOCATE (phibar(SIZE(nubar)))
+  phibar = 0.0_DFP
   IF (PRESENT(k)) THEN
     CALL GetInterpolation(obj=obj, val=k, ans=kbar)
-    CALL GetInterpolation(obj=obj, val=phi, ans=phibar)
+    phibar = 1.0_DFP
+    IF (PRESENT(phi)) THEN
+      CALL GetInterpolation(obj=obj, val=phi, ans=phibar)
+    END IF
   ELSE
     ALLOCATE (kbar(SIZE(nubar)))
-    ALLOCATE (phibar(SIZE(nubar)))
-    kbar = MaxDFP !! very large number
-    phibar = 1.0_DFP
+    kbar = MaxDFP
   END IF
 
   t2 = 0.0_DFP
@@ -202,17 +205,20 @@ PURE SUBROUTINE elemsd_getSUPGParam_b(obj, tau, c, val, nu, k, &
   CALL GetInterpolation(obj=obj, &
                         val=obj_SUPGScalarAtTime(nu, timeIndx), ans=nubar)
 
+  ALLOCATE (phibar(SIZE(nubar)))
+  phibar = 0.0_DFP
   IF (PRESENT(k)) THEN
     CALL GetInterpolation(obj=obj, &
                           val=obj_SUPGScalarAtTime(k, timeIndx), ans=kbar)
-    CALL GetInterpolation(obj=obj, &
-                          val=obj_SUPGScalarAtTime(phi, timeIndx), &
-                          ans=phibar)
+    phibar = 1.0_DFP
+    IF (PRESENT(phi)) THEN
+      CALL GetInterpolation(obj=obj, &
+                            val=obj_SUPGScalarAtTime(phi, timeIndx), &
+                            ans=phibar)
+    END IF
   ELSE
     ALLOCATE (kbar(SIZE(nubar)))
-    ALLOCATE (phibar(SIZE(nubar)))
-    kbar = MaxDFP !! very large number
-    phibar = 1.0_DFP
+    kbar = MaxDFP
   END IF
 
   CALL Reallocate(ans, SIZE(obj%N, 2))
@@ -342,12 +348,13 @@ PURE SUBROUTINE elemsd_getSUPGParam_c(obj, tau, c, val, nu, k, &
   CALL GetProjectionOfdNdXt(obj=obj, ans=q, c=rvar, &
                             crank=TypeFEVariableVector)
 
+  phibar = 0.0_DFP
   IF (PRESENT(k)) THEN
     kbar = k
-    phibar = phi
+    phibar = 1.0_DFP
+    IF (PRESENT(phi)) phibar = phi
   ELSE
     kbar = MaxDFP
-    phibar = 1.0_DFP
   END IF
 
   t2 = 0.0_DFP
@@ -437,12 +444,13 @@ PURE SUBROUTINE elemsd_getSUPGParam_d(obj, tau, c, val, nu, k, &
   CALL GetProjectionOfdNTdXt(obj=obj, ans=q, c=rvar, &
                              crank=TypeFEVariableVector)
 
+  phibar = 0.0_DFP
   IF (PRESENT(k)) THEN
     kbar = k
-    phibar = phi
+    phibar = 1.0_DFP
+    IF (PRESENT(phi)) phibar = phi
   ELSE
     kbar = MaxDFP
-    phibar = 1.0_DFP
   END IF
 
   CALL reallocate(ans, SIZE(obj%N, 2))
