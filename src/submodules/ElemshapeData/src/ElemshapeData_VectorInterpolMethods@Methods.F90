@@ -173,6 +173,7 @@ ncol = obj%nips
 CALL Reallocate(ans, nrow, ncol)
 CALL GetInterpolation_(obj=obj, ans=ans, val=val, nrow=nrow, ncol=ncol, &
                        scale=math%one, addContribution=math%no)
+IF (nrow .EQ. 0 .AND. ncol .EQ. 0) CALL Reallocate(ans, 0, 0)
 END PROCEDURE GetInterpolation4
 
 !----------------------------------------------------------------------------
@@ -191,6 +192,8 @@ END PROCEDURE GetInterpolation_4
 MODULE PROCEDURE GetInterpolation_4a
 INTEGER(I4B) :: timeIndx0
 
+nrow = 0
+ncol = 0
 timeIndx0 = 1_I4B
 IF (PRESENT(timeIndx)) timeIndx0 = timeIndx
 
@@ -233,6 +236,7 @@ END PROCEDURE GetInterpolation_4a
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_4b
+tsize = 0
 SELECT CASE (val%vartype)
 CASE (TypeFEVariableOpt%constant)
   CALL FEVariableGetInterpolation_(obj=val, RANK=TypeFEVariableVector, &
@@ -291,6 +295,9 @@ CALL Reallocate(ans, dim1, dim2, dim3)
 CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, &
                        dim2=dim2, dim3=dim3, scale=math%one, &
                        addContribution=math%no)
+IF (dim3 .GT. 0 .AND. dim1 .EQ. 0 .AND. dim2 .EQ. 0) THEN
+  CALL Reallocate(ans, 0, 0, dim3)
+END IF
 END PROCEDURE GetInterpolation5
 
 !----------------------------------------------------------------------------
