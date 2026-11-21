@@ -146,6 +146,7 @@ END INTERFACE GetInterpolation_
 ! Interpolates the space-time nodal values `val(nns, nnt)` at one time
 ! point. `obj` is the shape data at that time quadrature point.
 ! It reallocates `ans(nips)`.
+! With no contributing time nodes, it returns zero at every point.
 !
 ! Formula:
 !   $$ ans(ips) = \sum_a T(a) \sum_I N(I, ips) \, val(I, a) $$
@@ -154,6 +155,8 @@ END INTERFACE GetInterpolation_
 !
 ! - [test 2](|base|ElemshapeData/examples/GetInterpolation_test_2.F90)
 ! second block
+!
+! - [test 16](|base|ElemshapeData/examples/GetInterpolation_test_16.F90)
 !
 ! See also: [[GetInterpolation_2]], [[STInterpolation1]]
 
@@ -214,8 +217,17 @@ END INTERFACE GetInterpolation_
 ! If `addContribution` is false, it clears `ans` first.
 !
 ! It uses only the first `MIN(SIZE(val, 2), obj%nnt)` time nodes.
+! It returns `tsize = obj%nips`, including when no time nodes contribute.
+! With no contributions, replacement clears the active output.
+! Accumulation leaves the active output untouched.
+! Neither mode changes entries beyond `obj%nips`.
+!
+! Changes:
+!   - 2026-11-21: Define the active size for zero time-node contributions.
 !
 ! Examples
+!
+! - [test 16](|base|ElemshapeData/examples/GetInterpolation_test_16.F90)
 !
 ! - [test 6](|base|ElemshapeData/examples/GetInterpolation_test_6.F90)
 ! first block
@@ -253,8 +265,14 @@ END INTERFACE GetInterpolation_
 ! `ipt`. It reallocates `ans(nips, nipt)`.
 !
 ! It fills column `ipt` like [[GetInterpolation2]] with `obj(ipt)`.
+! If `obj` is empty, it reallocates `ans` to shape `(0, 0)`.
+!
+! Changes:
+!   - 2026-11-21: Handle empty time-point arrays.
 !
 ! Examples
+!
+! - [test 16](|base|ElemshapeData/examples/GetInterpolation_test_16.F90)
 !
 ! - [test 2](|base|ElemshapeData/examples/GetInterpolation_test_2.F90) second block
 !
@@ -283,6 +301,7 @@ END INTERFACE GetInterpolation
 ! Interpolates `val` like [[GetInterpolation3]].
 ! It writes into the existing `ans` and returns the used size in
 ! `nrow` and `ncol`.
+! With empty `obj`, it returns zero sizes and leaves `ans` untouched.
 !
 ! Examples
 !
@@ -318,6 +337,7 @@ END INTERFACE GetInterpolation_
 ! Interpolates `val` like [[GetInterpolation_3]].
 ! It adds `scale` times the interpolated value to `ans`.
 ! If `addContribution` is false, it clears `ans` first.
+! With empty `obj`, it returns zero sizes and leaves `ans` untouched.
 !
 ! Examples
 !
@@ -524,8 +544,14 @@ END INTERFACE GetInterpolation_
 !
 ! It fills column `ipt` like [[GetInterpolation_4a]] with
 ! `timeIndx = ipt`.
+! If `obj` is empty, it reallocates `ans` to shape `(0, 0)`.
+!
+! Changes:
+!   - 2026-11-21: Handle empty time-point arrays.
 !
 ! Examples
+!
+! - [test 16](|base|ElemshapeData/examples/GetInterpolation_test_16.F90)
 !
 ! - [test 2](|base|ElemshapeData/examples/GetInterpolation_test_2.F90)
 ! third block
@@ -555,6 +581,7 @@ END INTERFACE GetInterpolation
 ! Interpolates `val` like [[GetInterpolation5]].
 ! It writes into the existing `ans` and returns the used size in
 ! `nrow` and `ncol`.
+! With empty `obj`, it returns zero sizes and leaves `ans` untouched.
 !
 ! Examples
 !
@@ -591,6 +618,7 @@ END INTERFACE GetInterpolation_
 ! Interpolates `val` like [[GetInterpolation_5]].
 ! It adds `scale` times the interpolated value to `ans`.
 ! If `addContribution` is false, it clears `ans` first.
+! With empty `obj`, it returns zero sizes and leaves `ans` untouched.
 !
 ! Examples
 !
