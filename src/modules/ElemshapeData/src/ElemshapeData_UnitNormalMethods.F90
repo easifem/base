@@ -90,13 +90,16 @@ END INTERFACE GetUnitNormal
 ! It interpolates `p` from the nodal values `val`.
 ! It reallocates `R(nsd, nips)`.
 !
-! Where `|p|` is zero, it takes every component of `p / |p|` as one.
+! Where `|p|` is zero, it sets `R` to zero.
+! This rule also applies when the field gradient is nonzero.
 ! Where `m` is zero, `R` is zero.
 !
 ! Changes:
 !   - 2026-11-21: Share normalization with the vector FEVariable overload.
+!   - 2026-11-21: Return zero normals where the field vector is zero.
 !
 ! Formula:
+! For nonzero `|p|` and `|m|`,
 !   $$ m_j = \sum_k \frac{p_k}{|p|} \frac{\partial p_k}{\partial x_j},
 !   \quad R = \frac{m}{|m|} $$
 !
@@ -108,6 +111,8 @@ END INTERFACE GetUnitNormal
 !   third to fifth blocks, fields `(x, y)`, `(x, y, 0)` and zero
 !
 ! - [test 3](|base|ElemshapeData/examples/GetUnitNormal_test_3.F90)
+!
+! - [test 4](|base|ElemshapeData/examples/GetUnitNormal_test_4.F90)
 !
 ! See also: [[GetUnitNormal_1]]
 
@@ -152,6 +157,7 @@ END INTERFACE GetUnitNormal
 ! Changes:
 !   - 2026-11-21: Reuse the raw-array normalization formulas.
 !   - 2026-11-21: Document unsupported inputs and unchanged outputs.
+!   - 2026-11-21: Return zero normals where the field vector is zero.
 !
 ! Examples
 !
@@ -161,6 +167,8 @@ END INTERFACE GetUnitNormal
 !   third block (vector) and sixth block (matrix, `R` does not change)
 !
 ! - [test 3](|base|ElemshapeData/examples/GetUnitNormal_test_3.F90)
+!
+! - [test 4](|base|ElemshapeData/examples/GetUnitNormal_test_4.F90)
 !
 ! See also: [[GetUnitNormal_1]], [[GetUnitNormal_2]]
 

@@ -156,18 +156,19 @@ PURE SUBROUTINE obj_VectorUnitNormal(p, dp, R)
   INTEGER(I4B) :: i
 
   pnorm = NORM2(p, DIM=1)
-  DO i = 1, SIZE(pnorm)
+  quadraturePoints: DO i = 1, SIZE(pnorm)
     IF (pnorm(i) .GT. math%zero) THEN
       p(:, i) = p(:, i) / pnorm(i)
     ELSE
-      p(:, i) = 1.0_DFP
+      R(:, i) = math%zero
+      CYCLE quadraturePoints
     END IF
     mv = MATMUL(p(:, i), dp(:, :, i))
     nrm = NORM2(mv)
     IF (nrm .GT. math%zero) THEN
       R(:, i) = mv / nrm
     END IF
-  END DO
+  END DO quadraturePoints
 END SUBROUTINE obj_VectorUnitNormal
 
 END SUBMODULE Methods
