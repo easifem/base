@@ -157,6 +157,7 @@ MODULE PROCEDURE GetInterpolation4
 INTEGER(I4B) :: tsize
 CALL Reallocate(ans, obj%nips)
 CALL GetInterpolation_(obj=obj, ans=ans, val=val, tsize=tsize)
+IF (tsize .EQ. 0) CALL Reallocate(ans, 0)
 END PROCEDURE GetInterpolation4
 
 !----------------------------------------------------------------------------
@@ -177,6 +178,7 @@ END PROCEDURE GetInterpolation_4
 MODULE PROCEDURE GetInterpolation_4a
 INTEGER(I4B) :: timeIndx0
 
+tsize = 0
 timeIndx0 = 1_I4B
 IF (PRESENT(timeIndx)) timeIndx0 = timeIndx
 
@@ -271,6 +273,9 @@ CASE (TypeFEVariableOpt%spacetime)
             CALL Reallocate(ans, nrow, ncol)
             CALL GetInterpolation_(obj=obj, ans=ans, val=val, nrow=nrow, &
                                    ncol=ncol, scale=one, addContribution=no)
+            IF (ncol .GT. 0 .AND. nrow .EQ. 0) THEN
+              CALL Reallocate(ans, 0, ncol)
+            END IF
             END PROCEDURE GetInterpolation5
 
 !----------------------------------------------------------------------------
