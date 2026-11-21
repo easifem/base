@@ -118,6 +118,18 @@ END INTERFACE GetProjectionOfdNdXt_
 ! It interpolates `c` at each quadrature point with `N`.
 ! It reallocates `ans(nns, nips)`.
 !
+! @warning
+! `c` must have exactly `obj%nsd` components, with `obj%nsd <= 3`.
+! This routine uses a three-component interpolation buffer.
+! Debug builds reject a mismatched count before interpolation.
+! They also check the returned interpolation size.
+! Both checks use `ERROR STOP`.
+! Release builds do not check component counts.
+! More than three components can overwrite memory in release builds.
+! Too few components silently substitute zeros for missing directions.
+! Extra components do not contribute to the projection.
+! @endwarning
+!
 ! @note
 ! `c` must be a constant or space vector variable.
 ! Time and space-time variables are not supported.
@@ -127,11 +139,15 @@ END INTERFACE GetProjectionOfdNdXt_
 !
 ! Changes:
 !   - 2026-11-21: Reject time-dependent velocities in debug builds.
+!   - 2026-11-21: Document component-count and buffer constraints.
+!   - 2026-11-21: Check component counts in debug builds.
 !
 ! Examples
 !
 ! - [test 3](|base|ElemshapeData/examples/GetProjectionOfdNdXt_test_3.F90)
 ! - [test 1](|base|ElemshapeData/examples/GetProjectionOfdNdXt_test_1.F90) second block, constant `c`
+!
+! - [test 4](|base|ElemshapeData/examples/GetProjectionOfdNdXt_test_4.F90)
 !
 ! See also: [[GetProjectionOfdNdXt2_]]
 
@@ -159,6 +175,8 @@ END INTERFACE GetProjectionOfdNdXt
 ! Returns `c(ips) . grad(N_I)` like [[GetProjectionOfdNdXt_2]].
 ! It writes into the existing `ans` and does not allocate it.
 ! It returns `nrow = nns` and `ncol = nips`.
+! The component-count precondition and buffer risks of
+! [[GetProjectionOfdNdXt_2]] also apply here.
 !
 ! @note
 ! `c` must be a constant or space vector variable.
@@ -378,14 +396,32 @@ END INTERFACE GetProjectionOfdNTdXt_
 ! The interpolation uses time index 1.
 ! It reallocates `ans(nns, nnt, nips)`.
 !
+! @warning
+! `c` must have exactly `obj%nsd` components, with `obj%nsd <= 3`.
+! This routine uses a three-component interpolation buffer.
+! Debug builds reject a mismatched count before interpolation.
+! They also check the returned interpolation size.
+! Both checks use `ERROR STOP`.
+! Release builds do not check component counts.
+! More than three components can overwrite memory in release builds.
+! Too few components silently substitute zeros for missing directions.
+! Extra components do not contribute to the projection.
+! @endwarning
+!
 ! @note
 ! A time-only `c` is unsupported. Debug builds reject it with `ERROR STOP`.
 ! Release builds return zero projection values for this type.
 ! @endnote
 !
+! Changes:
+!   - 2026-11-21: Document component-count and buffer constraints.
+!   - 2026-11-21: Check component counts in debug builds.
+!
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetProjectionOfdNTdXt_test_1.F90) first block, constant `c`
+!
+! - [test 4](|base|ElemshapeData/examples/GetProjectionOfdNTdXt_test_4.F90)
 !
 ! See also: [[GetProjectionOfdNTdXt2_]], [[GetProjectionOfdNTdXt_3]]
 
@@ -413,6 +449,8 @@ END INTERFACE GetProjectionOfdNTdXt
 ! Returns `c(ips) . grad(N_I T_a)` like [[GetProjectionOfdNTdXt_2]].
 ! It writes into the existing `ans` and does not allocate it.
 ! It returns `dim1 = nns`, `dim2 = nnt` and `dim3 = nips`.
+! The component-count precondition and buffer risks of
+! [[GetProjectionOfdNTdXt_2]] also apply here.
 ! A time-only `c` triggers `ERROR STOP` in debug builds.
 ! Release builds return zero projection values for this type.
 !
@@ -462,6 +500,8 @@ END INTERFACE GetProjectionOfdNTdXt_
 ! It fills time point `ipt` like [[GetProjectionOfdNTdXt_2]].
 ! It interpolates `c` at each space point `ips` and time point `ipt`.
 ! It follows [[GetProjectionOfdNTdXt_2]] for unsupported time-only `c`.
+! Its component-count precondition and buffer risks also apply here.
+! Each entry of `obj` must have the same spatial dimension.
 !
 ! Examples
 !
@@ -494,6 +534,9 @@ END INTERFACE GetProjectionOfdNTdXt
 ! It writes into the existing `ans` and does not allocate it.
 ! It returns `dim1 = nns`, `dim2 = nnt`, `dim3 = nips` and
 ! `dim4 = nipt`.
+! The component-count precondition and buffer risks of
+! [[GetProjectionOfdNTdXt_2]] also apply here.
+! Each entry of `obj` must have the same spatial dimension.
 ! A time-only `c` triggers `ERROR STOP` in debug builds.
 ! Release builds return zero projection values for this type.
 !
@@ -542,6 +585,8 @@ END INTERFACE GetProjectionOfdNTdXt_
 ! It uses the shape data `obj(ipt)`.
 ! It sets `ans(1:nns, 1:nnt)` and returns `nrow = nns` and
 ! `ncol = nnt`.
+! The component-count precondition and buffer risks of
+! [[GetProjectionOfdNTdXt_2]] also apply here, using `obj(ipt)%nsd`.
 ! A time-only `c` triggers `ERROR STOP` in debug builds.
 ! Release builds return zero projection values for this type.
 !

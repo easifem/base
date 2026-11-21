@@ -78,6 +78,12 @@ INTEGER(I4B) :: ips, nsd, i1
 REAL(DFP) :: cbar(3), T(0)
 
 #ifdef DEBUG_VER
+IF (c%s(1) .NE. obj%nsd) THEN
+  ERROR STOP 'projection: c component count must equal nsd'
+END IF
+#endif
+
+#ifdef DEBUG_VER
 IF (c%vartype .EQ. TypeFEVariableOpt%time .OR. &
     c%vartype .EQ. TypeFEVariableOpt%spacetime) THEN
   ERROR STOP 'NdXt projection: time-dependent c unsupported'
@@ -94,6 +100,11 @@ DO ips = 1, obj%nips
     obj=c, RANK=crank, N=obj%N, nns=obj%nns, spaceIndx=ips, timeIndx=0_I4B, &
     T=T, nnt=0_I4B, scale=1.0_DFP, addContribution=.FALSE., ans=cbar, &
     tsize=i1)
+#ifdef DEBUG_VER
+  IF (i1 .NE. nsd) THEN
+    ERROR STOP 'projection: interpolated component count must equal nsd'
+  END IF
+#endif
 
   ans(1:nrow, ips) = MATMUL(obj%dNdXt(1:nrow, 1:nsd, ips), cbar(1:nsd))
 END DO
@@ -198,6 +209,12 @@ MODULE PROCEDURE GetProjectionOfdNTdXt2_
 INTEGER(I4B) :: ips, nsd, i1, i2
 REAL(DFP) :: cbar(3)
 
+#ifdef DEBUG_VER
+IF (c%s(1) .NE. obj%nsd) THEN
+  ERROR STOP 'projection: c component count must equal nsd'
+END IF
+#endif
+
 dim1 = obj%nns
 dim2 = obj%nnt
 dim3 = obj%nips
@@ -215,6 +232,11 @@ DO ips = 1, obj%nips
     obj=c, RANK=crank, N=obj%N, nns=obj%nns, spaceIndx=ips, timeIndx=1_I4B, &
     T=obj%T, nnt=obj%nnt, scale=1.0_DFP, addContribution=.FALSE., ans=cbar, &
     tsize=i1)
+#ifdef DEBUG_VER
+  IF (i1 .NE. nsd) THEN
+    ERROR STOP 'projection: interpolated component count must equal nsd'
+  END IF
+#endif
 
   CALL Matmul_(a1=obj%dNTdXt(1:dim1, 1:dim2, 1:nsd, ips), &
                a2=cbar(1:nsd), ans=ans(:, :, ips), nrow=i1, ncol=i2)
@@ -245,6 +267,12 @@ MODULE PROCEDURE GetProjectionOfdNTdXt3_
 INTEGER(I4B) :: ips, ipt, nsd, i1, i2
 REAL(DFP) :: cbar(3)
 
+#ifdef DEBUG_VER
+IF (c%s(1) .NE. obj(1)%nsd) THEN
+  ERROR STOP 'projection: c component count must equal nsd'
+END IF
+#endif
+
 dim1 = obj(1)%nns
 dim2 = obj(1)%nnt
 dim3 = obj(1)%nips
@@ -264,6 +292,11 @@ DO ipt = 1, dim4
       obj=c, RANK=crank, N=obj(ipt)%N, nns=obj(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=obj(ipt)%T, nnt=obj(ipt)%nnt, &
       scale=1.0_DFP, addContribution=.FALSE., ans=cbar, tsize=i1)
+#ifdef DEBUG_VER
+    IF (i1 .NE. nsd) THEN
+      ERROR STOP 'projection: interpolated component count must equal nsd'
+    END IF
+#endif
 
     CALL Matmul_(a1=obj(ipt)%dNTdXt(1:dim1, 1:dim2, 1:nsd, ips), &
                  a2=cbar(1:nsd), ans=ans(:, :, ips, ipt), nrow=i1, ncol=i2)
@@ -278,6 +311,12 @@ END PROCEDURE GetProjectionOfdNTdXt3_
 MODULE PROCEDURE GetProjectionOfdNTdXt4_
 INTEGER(I4B) :: nsd, i1, i2
 REAL(DFP) :: cbar(3)
+
+#ifdef DEBUG_VER
+IF (c%s(1) .NE. obj(ipt)%nsd) THEN
+  ERROR STOP 'projection: c component count must equal nsd'
+END IF
+#endif
 
 nrow = obj(ipt)%nns
 ncol = obj(ipt)%nnt
@@ -294,6 +333,11 @@ CALL GetInterpolation_( &
   obj=c, RANK=crank, N=obj(ipt)%N, nns=obj(ipt)%nns, &
   spaceIndx=ips, timeIndx=ipt, T=obj(ipt)%T, nnt=obj(ipt)%nnt, &
   scale=1.0_DFP, addContribution=.FALSE., ans=cbar, tsize=i1)
+#ifdef DEBUG_VER
+IF (i1 .NE. nsd) THEN
+  ERROR STOP 'projection: interpolated component count must equal nsd'
+END IF
+#endif
 
 CALL Matmul_(a1=obj(ipt)%dNTdXt(1:nrow, 1:ncol, 1:nsd, ips), &
              a2=cbar(1:nsd), ans=ans, nrow=i1, ncol=i2)
