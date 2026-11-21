@@ -404,7 +404,15 @@ END INTERFACE GetInterpolation_
 ! - For a quadrature `val`, it copies the values.
 ! - For a constant `val`, it repeats the value at every point.
 !
+! A time-only `val` returns shape `(0, 0, 0)`.
+! A space-time `val` with plain spatial shape data does the same.
+!
+! Changes:
+!   - 2026-11-21: Return empty outputs for unsupported combinations.
+!
 ! Examples
+!
+! - [test 19](|base|ElemshapeData/examples/GetInterpolation_test_19.F90)
 !
 ! - [test 4](|base|ElemshapeData/examples/GetInterpolation_test_4.F90),
 !   Test 1
@@ -435,6 +443,8 @@ END INTERFACE GetInterpolation
 ! Interpolates `val` like [[GetInterpolation4]].
 ! It writes into the existing `ans` and returns the used size in
 ! `dim1`, `dim2` and `dim3`.
+! Unsupported combinations return zero sizes and leave `ans` untouched.
+! See [[GetInterpolation_4a]] for these combinations.
 !
 ! Examples
 !
@@ -480,11 +490,16 @@ END INTERFACE GetInterpolation_
 !
 ! @note
 ! A time `val` is not supported. A space-time `val` with a plain
-! `ElemShapeData_` is not supported either. In both cases, it writes
-! nothing.
+! `ElemShapeData_` is not supported either. Both cases return zero sizes.
+! They leave `ans` untouched, regardless of `addContribution`.
 ! @endnote
 !
+! Changes:
+!   - 2026-11-21: Define sizes for unsupported combinations.
+!
 ! Examples
+!
+! - [test 19](|base|ElemshapeData/examples/GetInterpolation_test_19.F90)
 !
 ! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
 !   Test 4
@@ -533,8 +548,16 @@ END INTERFACE GetInterpolation_
 ! If `addContribution` is false, it clears `ans` first.
 !
 ! A space-time `val` needs `obj` to be a `STElemShapeData_`.
+! A time-only `val` returns zero in `nrow` and `ncol`.
+! A space-time `val` with plain spatial shape data does the same.
+! Both leave `ans` untouched, regardless of `addContribution`.
+!
+! Changes:
+!   - 2026-11-21: Define sizes for unsupported combinations.
 !
 ! Examples
+!
+! - [test 19](|base|ElemshapeData/examples/GetInterpolation_test_19.F90)
 !
 ! - [test 8](|base|ElemshapeData/examples/GetInterpolation_test_8.F90),
 !   Test 4
@@ -584,9 +607,11 @@ END INTERFACE GetInterpolation_
 ! `timeIndx = ipt`.
 ! With empty `obj`, it allocates shape `(nrow, ncol, 0, 0)`.
 ! The first two extents come from the matrix dimensions of `val`.
+! A time-only `val` with nonempty `obj` returns `(0, 0, 0, SIZE(obj))`.
 !
 ! Changes:
 !   - 2026-11-21: Handle empty time-point arrays.
+!   - 2026-11-21: Return empty outputs for unsupported combinations.
 !
 ! Examples
 !
@@ -596,6 +621,8 @@ END INTERFACE GetInterpolation_
 !   Test 5
 ! - [test 11](|base|ElemshapeData/examples/GetInterpolation_test_11.F90),
 !   Test 3
+!
+! - [test 19](|base|ElemshapeData/examples/GetInterpolation_test_19.F90)
 !
 ! See also: [[GetInterpolation_5]]
 
@@ -622,6 +649,8 @@ END INTERFACE GetInterpolation
 ! Interpolates `val` like [[GetInterpolation5]].
 ! It writes into the existing `ans` and returns the used size in
 ! `dim1` to `dim4`.
+! A time-only `val` leaves `ans` untouched.
+! It returns zero in `dim1` to `dim3`, and `SIZE(obj)` in `dim4`.
 ! With empty `obj`, all four sizes are zero. It leaves `ans` untouched.
 !
 ! Examples
@@ -662,6 +691,8 @@ END INTERFACE GetInterpolation_
 ! Interpolates `val` like [[GetInterpolation_5]].
 ! It adds `scale` times the interpolated value to `ans`.
 ! If `addContribution` is false, it clears `ans` first.
+! A time-only `val` leaves `ans` untouched.
+! It returns zero in `dim1` to `dim3`, and `SIZE(obj)` in `dim4`.
 ! With empty `obj`, all four sizes are zero. It leaves `ans` untouched.
 !
 ! Examples
