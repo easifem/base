@@ -16,10 +16,11 @@
 !
 
 SUBMODULE(ElemshapeData_ProjectionMethods) Methods
-USE FEVariable_Method, ONLY: GetInterpolation_
-USE ReallocateUtility, ONLY: Reallocate
-USE MatmulUtility, ONLY: Matmul_
 USE BaseType, ONLY: math => TypeMathOpt
+USE BaseType, ONLY: TypeFEVariableOpt
+USE FEVariable_Method, ONLY: GetInterpolation_
+USE MatmulUtility, ONLY: Matmul_
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 
 CONTAINS
@@ -76,14 +77,21 @@ INTEGER(I4B) :: ips, nsd, i1
 ! REAL(DFP) :: cbar(SIZE(obj%dNdXt, 2), SIZE(obj%dNdXt, 3))
 REAL(DFP) :: cbar(3), T(0)
 
+#ifdef DEBUG_VER
+IF (c%vartype .EQ. TypeFEVariableOpt%time .OR. &
+    c%vartype .EQ. TypeFEVariableOpt%spacetime) THEN
+  ERROR STOP 'NdXt projection: time-dependent c unsupported'
+END IF
+#endif
+
 nrow = obj%nns
 ncol = obj%nips
 nsd = obj%nsd
-cbar = 0.0_DFP
 
 DO ips = 1, obj%nips
+  cbar = 0.0_DFP
   CALL GetInterpolation_( &
-    obj=c, rank=crank, N=obj%N, nns=obj%nns, spaceIndx=ips, timeIndx=0_I4B, &
+    obj=c, RANK=crank, N=obj%N, nns=obj%nns, spaceIndx=ips, timeIndx=0_I4B, &
     T=T, nnt=0_I4B, scale=1.0_DFP, addContribution=.FALSE., ans=cbar, &
     tsize=i1)
 
@@ -195,9 +203,16 @@ dim2 = obj%nnt
 dim3 = obj%nips
 nsd = obj%nsd
 
+#ifdef DEBUG_VER
+IF (c%vartype .EQ. TypeFEVariableOpt%time) THEN
+  ERROR STOP 'NTdXt projection: time-only c unsupported'
+END IF
+#endif
+
 DO ips = 1, obj%nips
+  cbar = 0.0_DFP
   CALL GetInterpolation_( &
-    obj=c, rank=crank, N=obj%N, nns=obj%nns, spaceIndx=ips, timeIndx=1_I4B, &
+    obj=c, RANK=crank, N=obj%N, nns=obj%nns, spaceIndx=ips, timeIndx=1_I4B, &
     T=obj%T, nnt=obj%nnt, scale=1.0_DFP, addContribution=.FALSE., ans=cbar, &
     tsize=i1)
 
@@ -236,10 +251,17 @@ dim3 = obj(1)%nips
 dim4 = SIZE(obj)
 nsd = obj(1)%nsd
 
+#ifdef DEBUG_VER
+IF (c%vartype .EQ. TypeFEVariableOpt%time) THEN
+  ERROR STOP 'NTdXt projection: time-only c unsupported'
+END IF
+#endif
+
 DO ipt = 1, dim4
   DO ips = 1, obj(ipt)%nips
+    cbar = 0.0_DFP
     CALL GetInterpolation_( &
-      obj=c, rank=crank, N=obj(ipt)%N, nns=obj(ipt)%nns, &
+      obj=c, RANK=crank, N=obj(ipt)%N, nns=obj(ipt)%nns, &
       spaceIndx=ips, timeIndx=ipt, T=obj(ipt)%T, nnt=obj(ipt)%nnt, &
       scale=1.0_DFP, addContribution=.FALSE., ans=cbar, tsize=i1)
 
@@ -261,8 +283,15 @@ nrow = obj(ipt)%nns
 ncol = obj(ipt)%nnt
 nsd = obj(ipt)%nsd
 
+#ifdef DEBUG_VER
+IF (c%vartype .EQ. TypeFEVariableOpt%time) THEN
+  ERROR STOP 'NTdXt projection: time-only c unsupported'
+END IF
+#endif
+
+cbar = 0.0_DFP
 CALL GetInterpolation_( &
-  obj=c, rank=crank, N=obj(ipt)%N, nns=obj(ipt)%nns, &
+  obj=c, RANK=crank, N=obj(ipt)%N, nns=obj(ipt)%nns, &
   spaceIndx=ips, timeIndx=ipt, T=obj(ipt)%T, nnt=obj(ipt)%nnt, &
   scale=1.0_DFP, addContribution=.FALSE., ans=cbar, tsize=i1)
 

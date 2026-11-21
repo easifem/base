@@ -121,10 +121,16 @@ END INTERFACE GetProjectionOfdNdXt_
 ! @note
 ! `c` must be a constant or space vector variable.
 ! Time and space-time variables are not supported.
+! Debug builds reject them with `ERROR STOP`.
+! Release builds return zero projection values for these types.
 ! @endnote
+!
+! Changes:
+!   - 2026-11-21: Reject time-dependent velocities in debug builds.
 !
 ! Examples
 !
+! - [test 3](|base|ElemshapeData/examples/GetProjectionOfdNdXt_test_3.F90)
 ! - [test 1](|base|ElemshapeData/examples/GetProjectionOfdNdXt_test_1.F90) second block, constant `c`
 !
 ! See also: [[GetProjectionOfdNdXt2_]]
@@ -157,10 +163,16 @@ END INTERFACE GetProjectionOfdNdXt
 ! @note
 ! `c` must be a constant or space vector variable.
 ! Time and space-time variables are not supported.
+! Debug builds reject them with `ERROR STOP`.
+! Release builds return zero projection values for these types.
 ! @endnote
+!
+! Changes:
+!   - 2026-11-21: Reject time-dependent velocities in debug builds.
 !
 ! Examples
 !
+! - [test 3](|base|ElemshapeData/examples/GetProjectionOfdNdXt_test_3.F90)
 ! - [test 1](|base|ElemshapeData/examples/GetProjectionOfdNdXt_test_1.F90) second block, nodal space `c`
 !
 ! See also: [[GetProjectionOfdNdXt_2]]
@@ -366,6 +378,11 @@ END INTERFACE GetProjectionOfdNTdXt_
 ! The interpolation uses time index 1.
 ! It reallocates `ans(nns, nnt, nips)`.
 !
+! @note
+! A time-only `c` is unsupported. Debug builds reject it with `ERROR STOP`.
+! Release builds return zero projection values for this type.
+! @endnote
+!
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetProjectionOfdNTdXt_test_1.F90) first block, constant `c`
@@ -396,8 +413,15 @@ END INTERFACE GetProjectionOfdNTdXt
 ! Returns `c(ips) . grad(N_I T_a)` like [[GetProjectionOfdNTdXt_2]].
 ! It writes into the existing `ans` and does not allocate it.
 ! It returns `dim1 = nns`, `dim2 = nnt` and `dim3 = nips`.
+! A time-only `c` triggers `ERROR STOP` in debug builds.
+! Release builds return zero projection values for this type.
+!
+! Changes:
+!   - 2026-11-21: Reject time-only velocities in debug builds.
 !
 ! Examples
+!
+! - [test 3](|base|ElemshapeData/examples/GetProjectionOfdNTdXt_test_3.F90)
 !
 ! - [test 2](|base|ElemshapeData/examples/GetProjectionOfdNTdXt_test_2.F90) first block
 !
@@ -437,6 +461,7 @@ END INTERFACE GetProjectionOfdNTdXt_
 !
 ! It fills time point `ipt` like [[GetProjectionOfdNTdXt_2]].
 ! It interpolates `c` at each space point `ips` and time point `ipt`.
+! It follows [[GetProjectionOfdNTdXt_2]] for unsupported time-only `c`.
 !
 ! Examples
 !
@@ -469,8 +494,15 @@ END INTERFACE GetProjectionOfdNTdXt
 ! It writes into the existing `ans` and does not allocate it.
 ! It returns `dim1 = nns`, `dim2 = nnt`, `dim3 = nips` and
 ! `dim4 = nipt`.
+! A time-only `c` triggers `ERROR STOP` in debug builds.
+! Release builds return zero projection values for this type.
+!
+! Changes:
+!   - 2026-11-21: Reject time-only velocities in debug builds.
 !
 ! Examples
+!
+! - [test 3](|base|ElemshapeData/examples/GetProjectionOfdNTdXt_test_3.F90)
 !
 ! - [test 2](|base|ElemshapeData/examples/GetProjectionOfdNTdXt_test_2.F90) second block
 !
@@ -510,14 +542,19 @@ END INTERFACE GetProjectionOfdNTdXt_
 ! It uses the shape data `obj(ipt)`.
 ! It sets `ans(1:nns, 1:nnt)` and returns `nrow = nns` and
 ! `ncol = nnt`.
+! A time-only `c` triggers `ERROR STOP` in debug builds.
+! Release builds return zero projection values for this type.
 !
 ! Changes:
 !   - 2026-11-14: it reads nns, nnt and nsd from obj(ipt); before, it
 !     read them from obj(ips)
+!   - 2026-11-21: Reject time-only velocities in debug builds.
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetProjectionOfdNTdXt_test_1.F90) second block, at `ips = 1` and `ipt = 2`
+!
+! - [test 3](|base|ElemshapeData/examples/GetProjectionOfdNTdXt_test_3.F90)
 !
 ! See also: [[GetProjectionOfdNTdXt_3]]
 
