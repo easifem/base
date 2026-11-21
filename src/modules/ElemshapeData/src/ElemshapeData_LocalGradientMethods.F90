@@ -435,11 +435,18 @@ END INTERFACE getLocalGradient
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
-! A matrix `val` is not supported either, and then `lg` does not
-! change.
+! A matrix `val` is unsupported as a FEVariable result.
+! Debug builds reject it with `ERROR STOP`.
+! Release builds leave `lg` untouched for matrix inputs.
+! Use the raw-array overload to obtain a matrix field's gradient.
 ! @endnote
 !
+! Changes:
+!   - 2026-11-21: Reject matrix FEVariable results in debug builds.
+!
 ! Examples
+!
+! - [test 6](|base|ElemshapeData/examples/GetLocalGradient_test_6.F90)
 !
 ! - [test 3](|base|ElemshapeData/examples/GetLocalGradient_test_3.F90)
 ! first block
@@ -480,10 +487,18 @@ END INTERFACE getLocalGradient
 ! `val` can hold nodal values in space or in space-time.
 !
 ! @note
-! A matrix `val` is not supported, and then `lg` does not change.
+! A matrix `val` is unsupported as a FEVariable result.
+! Debug builds reject it with `ERROR STOP`.
+! Release builds leave `lg` untouched for matrix inputs.
+! Use the raw-array overload to obtain a matrix field's gradient.
 ! @endnote
 !
+! Changes:
+!   - 2026-11-21: Reject matrix FEVariable results in debug builds.
+!
 ! Examples
+!
+! - [test 6](|base|ElemshapeData/examples/GetLocalGradient_test_6.F90)
 !
 ! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90)
 ! fourth block
@@ -518,6 +533,14 @@ END INTERFACE getLocalGradient
 ! Returns the local gradient of `val` as a quadrature `FEVariable_`.
 ! It gives the same result as [[elemsd_getLocalGradient_10]].
 !
+! @warning
+! A matrix `val` triggers `ERROR STOP` in debug builds.
+! In release builds, it returns a default, uncomputed FEVariable.
+! @endwarning
+!
+! Changes:
+!   - 2026-11-21: Reject matrix FEVariable results in debug builds.
+!
 ! Returns:
 !   ans : `FEVariable_` - local gradient, quadrature space variable
 !
@@ -525,6 +548,8 @@ END INTERFACE getLocalGradient
 !
 ! - [test 1](|base|ElemshapeData/examples/LocalGradient_test_1.F90)
 ! nodal scalar `FEVariable_`
+!
+! - [test 6](|base|ElemshapeData/examples/GetLocalGradient_test_6.F90)
 !
 ! See also: [[elemsd_getLocalGradient_10]]
 
@@ -555,6 +580,14 @@ END INTERFACE localGradient
 ! It gives the same result as [[elemsd_getLocalGradient_11]].
 ! Here `obj(ipt)` is the shape data at time quadrature point `ipt`.
 !
+! @warning
+! A matrix `val` triggers `ERROR STOP` in debug builds.
+! In release builds, it returns a default, uncomputed FEVariable.
+! @endwarning
+!
+! Changes:
+!   - 2026-11-21: Reject matrix FEVariable results in debug builds.
+!
 ! Returns:
 !   ans : `FEVariable_` - local gradient, quadrature space-time variable
 !
@@ -562,6 +595,8 @@ END INTERFACE localGradient
 !
 ! - [test 2](|base|ElemshapeData/examples/LocalGradient_test_2.F90)
 ! scalar and vector space-time `FEVariable_`
+!
+! - [test 6](|base|ElemshapeData/examples/GetLocalGradient_test_6.F90)
 !
 ! See also: [[elemsd_getLocalGradient_11]], [[elemsd_LocalGradient_1]]
 
