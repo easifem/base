@@ -46,6 +46,9 @@ PUBLIC :: GetUnitNormal
 ! It interpolates `p` from the nodal values `val`.
 ! It reallocates `R(nsd, nips)`. Where `grad(p)` is zero, `R` is zero.
 !
+! Changes:
+!   - 2026-11-21: Share normalization with the scalar FEVariable overload.
+!
 ! Formula:
 !   $$ R = \operatorname{sign}(p) \frac{\nabla p}{|\nabla p|} $$
 !
@@ -55,6 +58,8 @@ PUBLIC :: GetUnitNormal
 !   first block, level set `p = y - 1/2`
 ! - [test 2](|base|ElemshapeData/examples/GetUnitNormal_test_2.F90)
 !   first and second blocks, constant `p` gives `R = 0`
+!
+! - [test 3](|base|ElemshapeData/examples/GetUnitNormal_test_3.F90)
 !
 ! See also: [[GetUnitNormal_2]], [[GetUnitNormal_3]]
 
@@ -88,6 +93,9 @@ END INTERFACE GetUnitNormal
 ! Where `|p|` is zero, it takes every component of `p / |p|` as one.
 ! Where `m` is zero, `R` is zero.
 !
+! Changes:
+!   - 2026-11-21: Share normalization with the vector FEVariable overload.
+!
 ! Formula:
 !   $$ m_j = \sum_k \frac{p_k}{|p|} \frac{\partial p_k}{\partial x_j},
 !   \quad R = \frac{m}{|m|} $$
@@ -98,6 +106,8 @@ END INTERFACE GetUnitNormal
 !   second block, field `(x, 0)`
 ! - [test 2](|base|ElemshapeData/examples/GetUnitNormal_test_2.F90)
 !   third to fifth blocks, fields `(x, y)`, `(x, y, 0)` and zero
+!
+! - [test 3](|base|ElemshapeData/examples/GetUnitNormal_test_3.F90)
 !
 ! See also: [[GetUnitNormal_1]]
 
@@ -133,12 +143,17 @@ END INTERFACE GetUnitNormal
 ! then `R` does not change.
 ! @endnote
 !
+! Changes:
+!   - 2026-11-21: Reuse the raw-array normalization formulas.
+!
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetUnitNormal_test_1.F90)
 !   both blocks, with `NodalVariable`
 ! - [test 2](|base|ElemshapeData/examples/GetUnitNormal_test_2.F90)
 !   third block (vector) and sixth block (matrix, `R` does not change)
+!
+! - [test 3](|base|ElemshapeData/examples/GetUnitNormal_test_3.F90)
 !
 ! See also: [[GetUnitNormal_1]], [[GetUnitNormal_2]]
 
