@@ -47,6 +47,10 @@ SELECT TYPE (obj)
 TYPE IS (STElemshapeData_)
   lg = MATMUL(MATMUL(Val, obj%T), obj%dNdXi)
   !! matmul r1 r3
+#ifdef DEBUG_VER
+CLASS DEFAULT
+  ERROR STOP 'GetLocalGradient: space-time object required'
+#endif
 END SELECT
 END PROCEDURE elemsd_GetLocalGradient_3
 
@@ -59,6 +63,10 @@ SELECT TYPE (obj)
 TYPE IS (STElemshapeData_)
   lg = MATMUL(MATMUL(Val, obj%T), obj%dNdXi)
   !! (r3.r1).r3 => r2.r3
+#ifdef DEBUG_VER
+CLASS DEFAULT
+  ERROR STOP 'GetLocalGradient: space-time object required'
+#endif
 END SELECT
 END PROCEDURE elemsd_GetLocalGradient_4
 
@@ -67,17 +75,20 @@ END PROCEDURE elemsd_GetLocalGradient_4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetLocalGradient_5
+#ifdef DEBUG_VER
+CALL obj_CheckLocalGradientInput(obj, val)
+#endif
 SELECT CASE (val%varType)
 CASE (constant)
   CALL Reallocate(lg, obj%xidim, obj%nips)
 CASE (space)
   CALL GetLocalGradient(obj=obj, lg=lg, &
-       & Val=Get(val, TypeFEVariableScalar, TypeFEVariableSpace))
+       & Val = Get(val, TypeFEVariableScalar, TypeFEVariableSpace))
 CASE (spacetime)
   SELECT TYPE (obj)
   TYPE is (STElemShapeData_)
     CALL GetLocalGradient(obj=obj, lg=lg, &
-         & Val=Get(val, TypeFEVariableScalar, TypeFEVariableSpaceTime))
+         & Val = Get(val, TypeFEVariableScalar, TypeFEVariableSpaceTime))
   END SELECT
 END SELECT
 END PROCEDURE elemsd_GetLocalGradient_5
@@ -89,18 +100,21 @@ END PROCEDURE elemsd_GetLocalGradient_5
 MODULE PROCEDURE elemsd_GetLocalGradient_6
 INTEGER(I4B) :: s(1)
 !!
+#ifdef DEBUG_VER
+CALL obj_CheckLocalGradientInput(obj, val)
+#endif
 SELECT CASE (val%varType)
 CASE (constant)
   s = SHAPE(val)
   CALL Reallocate(lg, s(1), obj%xidim, obj%nips)
 CASE (space)
   CALL GetLocalGradient(obj=obj, lg=lg, &
-       & Val=Get(val, TypeFEVariableVector, TypeFEVariableSpace))
+       & Val = Get(val, TypeFEVariableVector, TypeFEVariableSpace))
 CASE (spacetime)
   SELECT TYPE (obj)
   TYPE is (STElemShapeData_)
     CALL GetLocalGradient(obj=obj, lg=lg, &
-         & Val=Get(val, TypeFEVariableVector, TypeFEVariableSpaceTime))
+         & Val = Get(val, TypeFEVariableVector, TypeFEVariableSpaceTime))
   END SELECT
 END SELECT
 END PROCEDURE elemsd_GetLocalGradient_6
@@ -123,6 +137,10 @@ SELECT TYPE (obj)
 TYPE IS (STElemShapeData_)
   lg = MATMUL(MATMUL(Val, obj%T), obj%dNdXi)
   !! (r4.r1).r3
+#ifdef DEBUG_VER
+CLASS DEFAULT
+  ERROR STOP 'GetLocalGradient: space-time object required'
+#endif
 END SELECT
 END PROCEDURE elemsd_GetLocalGradient_8
 
@@ -132,18 +150,21 @@ END PROCEDURE elemsd_GetLocalGradient_8
 
 MODULE PROCEDURE elemsd_GetLocalGradient_9
 INTEGER(I4B) :: s(2)
+#ifdef DEBUG_VER
+CALL obj_CheckLocalGradientInput(obj, val)
+#endif
 SELECT CASE (val%varType)
 CASE (constant)
   s = SHAPE(val)
   CALL Reallocate(lg, s(1), s(2), obj%xidim, obj%nips)
 CASE (space)
   CALL GetLocalGradient(obj=obj, lg=lg, &
-       & Val=Get(val, TypeFEVariableMatrix, TypeFEVariableSpace))
+       & Val = Get(val, TypeFEVariableMatrix, TypeFEVariableSpace))
 CASE (spacetime)
   SELECT TYPE (obj)
   TYPE is (STElemShapeData_)
     CALL GetLocalGradient(obj=obj, lg=lg, &
-         & Val=Get(val, TypeFEVariableMatrix, TypeFEVariableSpaceTime))
+         & Val = Get(val, TypeFEVariableMatrix, TypeFEVariableSpaceTime))
   END SELECT
 END SELECT
 END PROCEDURE elemsd_GetLocalGradient_9
@@ -155,7 +176,7 @@ END PROCEDURE elemsd_GetLocalGradient_9
 MODULE PROCEDURE elemsd_GetLocalGradient_10
 REAL(DFP), ALLOCATABLE :: r2(:, :), r3(:, :, :)
 !!
-SELECT CASE (val%rank)
+SELECT CASE (val%RANK)
 CASE (scalar)
   CALL GetLocalGradient(obj=obj, lg=r2, val=val)
   lg = QuadratureVariable(r2, typeFEVariableVector, typeFEVariableSpace)
@@ -179,7 +200,7 @@ MODULE PROCEDURE elemsd_GetLocalGradient_11
 REAL(DFP), ALLOCATABLE :: r2(:, :), r3(:, :, :), r4(:, :, :, :)
 INTEGER(I4B) :: ii
 !!
-SELECT CASE (val%rank)
+SELECT CASE (val%RANK)
 !!
 !! scalar
 !!
@@ -239,5 +260,35 @@ END PROCEDURE elemsd_LocalGradient_2
 !----------------------------------------------------------------------------
 !
 !----------------------------------------------------------------------------
+
+#ifdef DEBUG_VER
+!----------------------------------------------------------------------------
+!                                               obj_CheckLocalGradientInput
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE obj_CheckLocalGradientInput(obj, val)
+  CLASS(ElemShapeData_), INTENT(IN) :: obj
+  !! element shape data
+  TYPE(FEVariable_), INTENT(IN) :: val
+  !! nodal constant, spatial, or space-time FEVariable
+
+  IF (val%defineOn .NE. nodal) THEN
+    ERROR STOP 'GetLocalGradient: unsupported FEVariable; use nodal values'
+  END IF
+  SELECT CASE (val%varType)
+  CASE (constant, space)
+    CONTINUE
+  CASE (spacetime)
+    SELECT TYPE (obj)
+    TYPE IS (STElemShapeData_)
+      CONTINUE
+    CLASS DEFAULT
+      ERROR STOP 'GetLocalGradient: unsupported FEVariable/object pairing'
+    END SELECT
+  CASE DEFAULT
+    ERROR STOP 'GetLocalGradient: unsupported FEVariable type'
+  END SELECT
+END SUBROUTINE obj_CheckLocalGradientInput
+#endif
 
 END SUBMODULE Methods

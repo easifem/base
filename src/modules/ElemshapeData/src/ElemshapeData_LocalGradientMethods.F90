@@ -125,11 +125,17 @@ END INTERFACE getLocalGradient
 ! Then it sets `lg(xidim, nips)` like [[elemsd_getLocalGradient_1]].
 !
 ! @note
-! `obj` must be a `STElemShapeData_`. Otherwise, it does nothing.
+! `obj` must have dynamic type exactly `STElemShapeData_`.
+! Debug builds reject other types, including extensions, with `ERROR STOP`.
+! Release builds leave `lg` untouched for those types.
 ! @endnote
+!
+! Changes:
+!   - 2026-11-21: Reject unsupported object types in debug builds.
 !
 ! Examples
 !
+! - [test 4](|base|ElemshapeData/examples/GetLocalGradient_test_4.F90)
 ! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90)
 ! fourth block
 !
@@ -163,11 +169,17 @@ END INTERFACE getLocalGradient
 ! Then it sets `lg(ncomp, xidim, nips)` like [[elemsd_getLocalGradient_2]].
 !
 ! @note
-! `obj` must be a `STElemShapeData_`. Otherwise, it does nothing.
+! `obj` must have dynamic type exactly `STElemShapeData_`.
+! Debug builds reject other types, including extensions, with `ERROR STOP`.
+! Release builds leave `lg` untouched for those types.
 ! @endnote
+!
+! Changes:
+!   - 2026-11-21: Reject unsupported object types in debug builds.
 !
 ! Examples
 !
+! - [test 4](|base|ElemshapeData/examples/GetLocalGradient_test_4.F90)
 ! - [test 2](|base|ElemshapeData/examples/GetLocalGradient_test_2.F90)
 ! first block
 !
@@ -204,14 +216,21 @@ END INTERFACE getLocalGradient
 ! - A space-time `val` works like [[elemsd_getLocalGradient_3]].
 !   Then `obj` must be a `STElemShapeData_`.
 !
-! For other variable types, it does not set `lg`.
+! Debug builds reject unsupported variable types with `ERROR STOP`.
+! They also reject quadrature data and incompatible space-time objects.
+! A space-time input needs dynamic type exactly `STElemShapeData_`.
+! Release builds retain the unchecked behavior for invalid inputs.
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
 ! @endnote
 !
+! Changes:
+!   - 2026-11-21: Validate FEVariable inputs in debug builds.
+!
 ! Examples
 !
+! - [test 5](|base|ElemshapeData/examples/GetLocalGradient_test_5.F90)
 ! - [test 1](|base|ElemshapeData/examples/GetLocalGradient_test_1.F90)
 ! third block
 !
@@ -246,10 +265,15 @@ END INTERFACE getLocalGradient
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
+! Debug builds apply the input checks of [[elemsd_getLocalGradient_5]].
 ! @endnote
+!
+! Changes:
+!   - 2026-11-21: Validate FEVariable inputs in debug builds.
 !
 ! Examples
 !
+! - [test 5](|base|ElemshapeData/examples/GetLocalGradient_test_5.F90)
 ! - [test 2](|base|ElemshapeData/examples/GetLocalGradient_test_2.F90)
 ! second block
 !
@@ -321,11 +345,17 @@ END INTERFACE getLocalGradient
 ! [[elemsd_getLocalGradient_7]].
 !
 ! @note
-! `obj` must be a `STElemShapeData_`. Otherwise, it does nothing.
+! `obj` must have dynamic type exactly `STElemShapeData_`.
+! Debug builds reject other types, including extensions, with `ERROR STOP`.
+! Release builds leave `lg` untouched for those types.
 ! @endnote
+!
+! Changes:
+!   - 2026-11-21: Reject unsupported object types in debug builds.
 !
 ! Examples
 !
+! - [test 4](|base|ElemshapeData/examples/GetLocalGradient_test_4.F90)
 ! - [test 2](|base|ElemshapeData/examples/GetLocalGradient_test_2.F90)
 ! third block
 !
@@ -360,10 +390,15 @@ END INTERFACE getLocalGradient
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
+! Debug builds apply the input checks of [[elemsd_getLocalGradient_5]].
 ! @endnote
+!
+! Changes:
+!   - 2026-11-21: Validate FEVariable inputs in debug builds.
 !
 ! Examples
 !
+! - [test 5](|base|ElemshapeData/examples/GetLocalGradient_test_5.F90)
 ! - [test 2](|base|ElemshapeData/examples/GetLocalGradient_test_2.F90)
 ! fourth block
 !
