@@ -57,6 +57,15 @@ IF (nns .EQ. 0) THEN
                 file=__FILE__, line=__LINE__, unitno=stderr)
   STOP
 END IF
+
+IF (PRESENT(coeff)) THEN
+  IF (SIZE(coeff, 1) .LT. nns .OR. SIZE(coeff, 2) .LT. nns) THEN
+    CALL ErrorMsg(msg="coeff must have at least nns rows and columns", &
+                  routine="LagrangeElemShapeData1()", &
+                  file=__FILE__, line=__LINE__, unitno=stderr)
+    STOP
+  END IF
+END IF
 #endif
 
 CALL Elemsd_Allocate(obj=obj, nsd=nsd, xidim=xidim, nns=nns, nips=nips)
@@ -174,7 +183,8 @@ CALL LagrangeElemShapeData(obj=obj, quad=quad, nsd=nsd, xidim=xidim, &
                            coeff=coeff, firstCall=firstCall, &
                            alpha=alpha, beta=beta, lambda=lambda)
 
-CALL Refelem_GetFaceElemType(elemType=elemType, localFaceNumber=localFaceNumber, &
+CALL Refelem_GetFaceElemType(elemType=elemType, &
+                             localFaceNumber=localFaceNumber, &
                              faceElemType=faceElemType, &
                              opt=2, tFaceNodes=tFaceNodes)
 

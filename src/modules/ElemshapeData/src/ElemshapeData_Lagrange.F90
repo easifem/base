@@ -60,6 +60,9 @@ PUBLIC :: Initiate
 !
 ! If `coeff` is present and `firstCall` is true, it computes the
 ! coefficients into `coeff`. If `firstCall` is false, it reuses them.
+! `coeff` must have at least `nns` rows and columns. Only
+! `coeff(1:nns, 1:nns)` is used. In debug builds, a smaller `coeff`
+! stops the program with an error message.
 !
 ! @note
 ! It does not set `dNdXt`, `jacobian`, `js` or `coord`.
@@ -72,6 +75,8 @@ PUBLIC :: Initiate
 ! first three blocks: line, quadratic line, quadrangle
 ! - [test 2](|base|ElemshapeData/examples/LagrangeElemShapeData_test_2.F90)
 ! with `coeff` and `firstCall`
+! - [test 4](|base|ElemshapeData/examples/LagrangeElemShapeData_test_4.F90)
+! oversized and undersized `coeff`
 !
 ! See also: [[LagrangeElemShapeData2]], [[LagrangeFacetElemShapeData]]
 
