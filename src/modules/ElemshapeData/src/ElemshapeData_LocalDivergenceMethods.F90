@@ -34,11 +34,11 @@ USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
-PUBLIC :: getLocalDivergence
+PUBLIC :: GetLocalDivergence
 PUBLIC :: LocalDivergence
 
 !----------------------------------------------------------------------------
-!                                                 getLocalDivergence@Methods
+!                                                  GetLocalDivergence@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -54,11 +54,12 @@ PUBLIC :: LocalDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90) first block
+! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90)
+! first block
 !
 ! See also: [[elemsd_getLocalDivergence_3]], [[elemsd_LocalDivergence_1]]
 
-INTERFACE
+INTERFACE GetLocalDivergence
   MODULE PURE SUBROUTINE elemsd_getLocalDivergence_1(obj, lg, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! element shape data
@@ -67,14 +68,10 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: val(:, :)
     !! nodal values, val(xidim, nns)
   END SUBROUTINE elemsd_getLocalDivergence_1
-END INTERFACE
-
-INTERFACE getLocalDivergence
-  MODULE PROCEDURE elemsd_getLocalDivergence_1
-END INTERFACE getLocalDivergence
+END INTERFACE GetLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                                  getLocalDivergence@Methods
+!                                                  GetLocalDivergence@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -97,7 +94,7 @@ END INTERFACE getLocalDivergence
 !
 ! See also: [[elemsd_getLocalDivergence_1]]
 
-INTERFACE
+INTERFACE GetLocalDivergence
   MODULE PURE SUBROUTINE elemsd_getLocalDivergence_2(obj, lg, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! space-time shape data at one time point
@@ -106,14 +103,10 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! space-time nodal values, val(xidim, nns, nnt)
   END SUBROUTINE elemsd_getLocalDivergence_2
-END INTERFACE
-
-INTERFACE getLocalDivergence
-  MODULE PROCEDURE elemsd_getLocalDivergence_2
-END INTERFACE getLocalDivergence
+END INTERFACE GetLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                                  getLocalDivergence@Methods
+!                                                  GetLocalDivergence@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -140,7 +133,7 @@ END INTERFACE getLocalDivergence
 !
 ! See also: [[elemsd_getLocalDivergence_1]], [[elemsd_getLocalDivergence_2]]
 
-INTERFACE
+INTERFACE GetLocalDivergence
   MODULE PURE SUBROUTINE elemsd_getLocalDivergence_3(obj, lg, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! element shape data
@@ -149,14 +142,10 @@ INTERFACE
     TYPE(FEVariable_), INTENT(IN) :: val
     !! vector nodal FEVariable
   END SUBROUTINE elemsd_getLocalDivergence_3
-END INTERFACE
-
-INTERFACE getLocalDivergence
-  MODULE PROCEDURE elemsd_getLocalDivergence_3
-END INTERFACE getLocalDivergence
+END INTERFACE GetLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                                  getLocalDivergence@Methods
+!                                                  GetLocalDivergence@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -176,7 +165,7 @@ END INTERFACE getLocalDivergence
 !
 ! See also: [[elemsd_getLocalDivergence_6]]
 
-INTERFACE
+INTERFACE GetLocalDivergence
   MODULE PURE SUBROUTINE elemsd_getLocalDivergence_4(obj, lg, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! element shape data
@@ -185,14 +174,10 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: val(:, :, :)
     !! nodal values, val(nrow, xidim, nns)
   END SUBROUTINE elemsd_getLocalDivergence_4
-END INTERFACE
-
-INTERFACE getLocalDivergence
-  MODULE PROCEDURE elemsd_getLocalDivergence_4
-END INTERFACE getLocalDivergence
+END INTERFACE GetLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                                  getLocalDivergence@Methods
+!                                                  GetLocalDivergence@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -213,7 +198,7 @@ END INTERFACE getLocalDivergence
 !
 ! See also: [[elemsd_getLocalDivergence_4]]
 
-INTERFACE
+INTERFACE GetLocalDivergence
   MODULE PURE SUBROUTINE elemsd_getLocalDivergence_5(obj, lg, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! space-time shape data at one time point
@@ -222,14 +207,10 @@ INTERFACE
     REAL(DFP), INTENT(IN) :: val(:, :, :, :)
     !! space-time nodal values, val(nrow, xidim, nns, nnt)
   END SUBROUTINE elemsd_getLocalDivergence_5
-END INTERFACE
-
-INTERFACE getLocalDivergence
-  MODULE PROCEDURE elemsd_getLocalDivergence_5
-END INTERFACE getLocalDivergence
+END INTERFACE GetLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                                  getLocalDivergence@Methods
+!                                                  GetLocalDivergence@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -257,7 +238,7 @@ END INTERFACE getLocalDivergence
 !
 ! See also: [[elemsd_getLocalDivergence_3]], [[elemsd_getLocalDivergence_4]]
 
-INTERFACE
+INTERFACE GetLocalDivergence
   MODULE PURE SUBROUTINE elemsd_getLocalDivergence_6(obj, lg, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! element shape data
@@ -266,14 +247,10 @@ INTERFACE
     TYPE(FEVariable_), INTENT(IN) :: val
     !! matrix nodal FEVariable
   END SUBROUTINE elemsd_getLocalDivergence_6
-END INTERFACE
-
-INTERFACE getLocalDivergence
-  MODULE PROCEDURE elemsd_getLocalDivergence_6
-END INTERFACE getLocalDivergence
+END INTERFACE GetLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                                  getLocalDivergence@Methods
+!                                                  GetLocalDivergence@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -303,7 +280,7 @@ END INTERFACE getLocalDivergence
 !
 ! See also: [[elemsd_getLocalDivergence_3]], [[elemsd_getLocalDivergence_6]]
 
-INTERFACE
+INTERFACE GetLocalDivergence
   MODULE PURE SUBROUTINE elemsd_getLocalDivergence_7(obj, lg, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! element shape data
@@ -312,14 +289,10 @@ INTERFACE
     TYPE(FEVariable_), INTENT(IN) :: val
     !! vector or matrix nodal FEVariable
   END SUBROUTINE elemsd_getLocalDivergence_7
-END INTERFACE
-
-INTERFACE getLocalDivergence
-  MODULE PROCEDURE elemsd_getLocalDivergence_7
-END INTERFACE getLocalDivergence
+END INTERFACE GetLocalDivergence
 
 !----------------------------------------------------------------------------
-!                                                  getLocalDivergence@Methods
+!                                                  GetLocalDivergence@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
@@ -342,7 +315,7 @@ END INTERFACE getLocalDivergence
 !
 ! See also: [[elemsd_getLocalDivergence_7]], [[elemsd_LocalDivergence_2]]
 
-INTERFACE
+INTERFACE GetLocalDivergence
   MODULE PURE SUBROUTINE elemsd_getLocalDivergence_8(obj, lg, val)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     !! space-time shape data at each time point
@@ -351,11 +324,7 @@ INTERFACE
     TYPE(FEVariable_), INTENT(IN) :: val
     !! vector or matrix nodal FEVariable
   END SUBROUTINE elemsd_getLocalDivergence_8
-END INTERFACE
-
-INTERFACE getLocalDivergence
-  MODULE PROCEDURE elemsd_getLocalDivergence_8
-END INTERFACE getLocalDivergence
+END INTERFACE GetLocalDivergence
 
 !----------------------------------------------------------------------------
 !                                                     LocalDivergence@Methods
@@ -374,7 +343,7 @@ END INTERFACE getLocalDivergence
 !
 ! See also: [[elemsd_getLocalDivergence_7]]
 
-INTERFACE
+INTERFACE LocalDivergence
   MODULE PURE FUNCTION elemsd_LocalDivergence_1(obj, val) RESULT(Ans)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! element shape data
@@ -383,11 +352,7 @@ INTERFACE
     TYPE(FEVariable_) :: ans
     !! local divergence, quadrature space variable
   END FUNCTION elemsd_LocalDivergence_1
-END INTERFACE
-
-INTERFACE localDivergence
-  MODULE PROCEDURE elemsd_LocalDivergence_1
-END INTERFACE localDivergence
+END INTERFACE LocalDivergence
 
 !----------------------------------------------------------------------------
 !                                                     LocalDivergence@Methods
@@ -406,7 +371,7 @@ END INTERFACE localDivergence
 !
 ! See also: [[elemsd_getLocalDivergence_8]]
 
-INTERFACE
+INTERFACE LocalDivergence
   MODULE PURE FUNCTION elemsd_LocalDivergence_2(obj, val) RESULT(Ans)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     !! space-time shape data at each time point
@@ -415,10 +380,6 @@ INTERFACE
     TYPE(FEVariable_) :: ans
     !! local divergence, quadrature space-time variable
   END FUNCTION elemsd_LocalDivergence_2
-END INTERFACE
-
-INTERFACE localDivergence
-  MODULE PROCEDURE elemsd_LocalDivergence_2
-END INTERFACE localDivergence
+END INTERFACE LocalDivergence
 
 END MODULE ElemshapeData_LocalDivergenceMethods
