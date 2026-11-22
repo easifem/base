@@ -278,10 +278,16 @@ END INTERFACE GetLocalDivergence
 !
 ! @note
 ! If `val` is space-time, `obj` must be a `STElemShapeData_`.
+! Otherwise, it leaves `lg` unchanged.
+! A time-only `val` also leaves `lg` unchanged.
 ! @endnote
+!
+! Changes:
+!   - 2026-11-22: Leave `lg` unchanged for unsupported inputs.
 !
 ! Examples
 !
+! - [test 5](|base|ElemshapeData/examples/GetLocalDivergence_test_5.F90)
 ! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90)
 ! second block
 ! - [test 3](|base|ElemshapeData/examples/GetLocalDivergence_test_3.F90)
@@ -352,9 +358,11 @@ END INTERFACE GetLocalDivergence
 !
 ! Returns the local divergence of `val` as a quadrature `FEVariable_`.
 ! It gives the same result as [[elemsd_getLocalDivergence_7]].
+! For unsupported inputs, it returns a default, uncomputed `FEVariable_`.
 !
 ! Examples
 !
+! - [test 5](|base|ElemshapeData/examples/GetLocalDivergence_test_5.F90)
 ! - [test 1](|base|ElemshapeData/examples/LocalDivergence_test_1.F90)
 ! first block
 !

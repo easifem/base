@@ -142,12 +142,16 @@ REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :)
 SELECT CASE (val%RANK)
 CASE (TypeFEVariableOpt%vector)
   CALL GetLocalDivergence(obj=obj, lg=r1, val=val)
-  lg = QuadratureVariable(r1, typeFEVariableScalar, typeFEVariableSpace)
-  DEALLOCATE (r1)
+  IF (ALLOCATED(r1)) THEN
+    lg = QuadratureVariable(r1, typeFEVariableScalar, typeFEVariableSpace)
+    DEALLOCATE (r1)
+  END IF
 CASE (TypeFEVariableOpt%matrix)
   CALL GetLocalDivergence(obj=obj, lg=r2, val=val)
-  lg = QuadratureVariable(r2, typeFEVariableVector, typeFEVariableSpace)
-  DEALLOCATE (r2)
+  IF (ALLOCATED(r2)) THEN
+    lg = QuadratureVariable(r2, typeFEVariableVector, typeFEVariableSpace)
+    DEALLOCATE (r2)
+  END IF
 END SELECT
 END PROCEDURE elemsd_GetLocalDivergence_7
 
