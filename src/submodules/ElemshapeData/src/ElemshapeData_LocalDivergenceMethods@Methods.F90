@@ -165,29 +165,37 @@ SELECT CASE (val%RANK)
 CASE (TypeFEVariableOpt%vector)
   DO ii = 1, SIZE(obj)
     CALL GetLocalDivergence(obj=obj(ii), lg=r1, val=val)
+    IF (.NOT. ALLOCATED(r1)) RETURN
     IF (.NOT. ALLOCATED(r2)) THEN
       CALL reallocate(r2, SIZE(r1, 1), SIZE(obj))
     END IF
 
     r2(:, ii) = r1
   END DO
-  lg = QuadratureVariable(r2, typeFEVariableScalar,&
-       & typeFEVariableSpaceTime)
-  DEALLOCATE (r2, r1)
+  IF (ALLOCATED(r2)) THEN
+    lg = QuadratureVariable(r2, typeFEVariableScalar, &
+                            typeFEVariableSpaceTime)
+  END IF
+  IF (ALLOCATED(r1)) DEALLOCATE (r1)
+  IF (ALLOCATED(r2)) DEALLOCATE (r2)
 
 !! matrix
 CASE (TypeFEVariableOpt%matrix)
   DO ii = 1, SIZE(obj)
     CALL GetLocalDivergence(obj=obj(ii), lg=r2, val=val)
+    IF (.NOT. ALLOCATED(r2)) RETURN
     IF (.NOT. ALLOCATED(r3)) THEN
       CALL reallocate(r3, SIZE(r2, 1), SIZE(r2, 2), SIZE(obj))
     END IF
 
     r3(:, :, ii) = r2
   END DO
-  lg = QuadratureVariable(r3, typeFEVariableVector, &
-                          typeFEVariableSpaceTime)
-  DEALLOCATE (r2, r3)
+  IF (ALLOCATED(r3)) THEN
+    lg = QuadratureVariable(r3, typeFEVariableVector, &
+                            typeFEVariableSpaceTime)
+  END IF
+  IF (ALLOCATED(r2)) DEALLOCATE (r2)
+  IF (ALLOCATED(r3)) DEALLOCATE (r3)
 END SELECT
 END PROCEDURE elemsd_GetLocalDivergence_8
 

@@ -89,8 +89,10 @@ END INTERFACE GetLocalDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90) third block
-! - [test 3](|base|ElemshapeData/examples/GetLocalDivergence_test_3.F90) plain `ElemShapeData_`, `lg` unchanged
+! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90)
+! third block
+! - [test 3](|base|ElemshapeData/examples/GetLocalDivergence_test_3.F90)
+! plain `ElemShapeData_`, `lg` unchanged
 !
 ! See also: [[elemsd_getLocalDivergence_1]]
 
@@ -129,7 +131,8 @@ END INTERFACE GetLocalDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90) second block
+! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90)
+! second block
 !
 ! See also: [[elemsd_getLocalDivergence_1]], [[elemsd_getLocalDivergence_2]]
 
@@ -161,7 +164,8 @@ END INTERFACE GetLocalDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90) first block
+! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90)
+! first block
 !
 ! See also: [[elemsd_getLocalDivergence_6]]
 
@@ -194,7 +198,8 @@ END INTERFACE GetLocalDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90) third block
+! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90)
+! third block
 !
 ! See also: [[elemsd_getLocalDivergence_4]]
 
@@ -233,8 +238,10 @@ END INTERFACE GetLocalDivergence
 !
 ! Examples
 !
-! - [test 2](|base|ElemshapeData/examples/GetLocalDivergence_test_2.F90) space and space-time
-! - [test 3](|base|ElemshapeData/examples/GetLocalDivergence_test_3.F90) constant matrix gives zero
+! - [test 2](|base|ElemshapeData/examples/GetLocalDivergence_test_2.F90)
+! space and space-time
+! - [test 3](|base|ElemshapeData/examples/GetLocalDivergence_test_3.F90)
+! constant matrix gives zero
 !
 ! See also: [[elemsd_getLocalDivergence_3]], [[elemsd_getLocalDivergence_4]]
 
@@ -275,8 +282,10 @@ END INTERFACE GetLocalDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90) second block
-! - [test 3](|base|ElemshapeData/examples/GetLocalDivergence_test_3.F90) vector `val`, scalar `lg`
+! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90)
+! second block
+! - [test 3](|base|ElemshapeData/examples/GetLocalDivergence_test_3.F90)
+! vector `val`, scalar `lg`
 !
 ! See also: [[elemsd_getLocalDivergence_3]], [[elemsd_getLocalDivergence_6]]
 
@@ -307,11 +316,18 @@ END INTERFACE GetLocalDivergence
 ! - A matrix `val` gives a vector with shape `[nrow, nips, nipt]`.
 !
 ! If `val` is neither a vector nor a matrix, it leaves `lg` unchanged.
+! If `obj` is empty, it also leaves `lg` unchanged.
+!
+! Changes:
+!   - 2026-11-22: Handle an empty `obj` array.
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90) third block
-! - [test 3](|base|ElemshapeData/examples/GetLocalDivergence_test_3.F90) matrix `val`, vector `lg`
+! - [test 4](|base|ElemshapeData/examples/GetLocalDivergence_test_4.F90)
+! - [test 1](|base|ElemshapeData/examples/GetLocalDivergence_test_1.F90)
+! third block
+! - [test 3](|base|ElemshapeData/examples/GetLocalDivergence_test_3.F90)
+! matrix `val`, vector `lg`
 !
 ! See also: [[elemsd_getLocalDivergence_7]], [[elemsd_LocalDivergence_2]]
 
@@ -339,7 +355,8 @@ END INTERFACE GetLocalDivergence
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/LocalDivergence_test_1.F90) first block
+! - [test 1](|base|ElemshapeData/examples/LocalDivergence_test_1.F90)
+! first block
 !
 ! See also: [[elemsd_getLocalDivergence_7]]
 
@@ -364,10 +381,13 @@ END INTERFACE LocalDivergence
 !
 ! Returns the local divergence of `val` at all time points.
 ! It gives the same result as [[elemsd_getLocalDivergence_8]].
+! If `obj` is empty, it returns a default, uncomputed `FEVariable_`.
 !
 ! Examples
 !
-! - [test 1](|base|ElemshapeData/examples/LocalDivergence_test_1.F90) second block, space-time
+! - [test 4](|base|ElemshapeData/examples/GetLocalDivergence_test_4.F90)
+! - [test 1](|base|ElemshapeData/examples/LocalDivergence_test_1.F90)
+! second block, space-time
 !
 ! See also: [[elemsd_getLocalDivergence_8]]
 
