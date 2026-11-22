@@ -16,32 +16,21 @@
 !
 
 SUBMODULE(ElemShapeData_Lagrange) Methods
-USE InputUtility, ONLY: Input
-
-USE ReferenceElement_Method, ONLY: &
-  Refelem_Initiate => Initiate, Refelem_GetFaceElemType => GetFaceElemType, &
-  Refelem_RefCoord_ => RefCoord_
-
+USE BaseType, ONLY: TypePolynomialOpt
+USE BaseType, ONLY: TypeQuadratureOpt
 USE ElemShapeData_Method, ONLY: Elemsd_Allocate => ALLOCATE
-
-USE LagrangePolynomialUtility, ONLY: LagrangeDOF, &
-                                     InterpolationPoint_, &
-                                     LagrangeEvalAll, &
-                                     LagrangeEvalAll_, &
-                                     LagrangeGradientEvalAll_
-
-USE QuadraturePoint_Method, ONLY: GetQuadraturePoints, &
-                                  QuadraturePoint_Size => Size, &
-                                  GetTotalQuadraturePoints, &
-                                  GetQuadratureWeights_
-
-USE BaseType, ONLY: TypeQuadratureOpt, &
-                    TypePolynomialOpt
-
+USE ErrorHandling, ONLY: ErrorMsg
+USE GlobalData, ONLY: stderr
+USE InputUtility, ONLY: Input
+USE LagrangePolynomialUtility, ONLY: InterpolationPoint_
+USE LagrangePolynomialUtility, ONLY: LagrangeDOF
+USE LagrangePolynomialUtility, ONLY: LagrangeEvalAll_
+USE LagrangePolynomialUtility, ONLY: LagrangeGradientEvalAll_
+USE QuadraturePoint_Method, ONLY: GetQuadratureWeights_
+USE QuadraturePoint_Method, ONLY: GetTotalQuadraturePoints
+USE ReferenceElement_Method, ONLY: Refelem_GetFaceElemType => GetFaceElemType
+USE ReferenceElement_Method, ONLY: Refelem_RefCoord_ => RefCoord_
 USE SwapUtility, ONLY: SWAP_
-
-USE Display_Method, ONLY: Display
-
 IMPLICIT NONE
 
 CONTAINS
@@ -52,22 +41,20 @@ CONTAINS
 
 MODULE PROCEDURE LagrangeElemShapeData1
 REAL(DFP), ALLOCATABLE :: xij(:, :), coeff0(:, :), temp(:, :, :)
-INTEGER(I4B) :: ipType0, basisType0, nips, nns, indx(10), ii, jj
+INTEGER(I4B) :: ipType0, basisType0, nips, nns, indx(3), ii, jj
 
 ipType0 = Input(default=TypeQuadratureOpt%equidistance, option=ipType)
 basisType0 = Input(default=TypePolynomialOpt%Monomial, option=basisType)
 
-! CALL DEALLOCATE (obj)
-
 nips = GetTotalQuadraturePoints(obj=quad)
-! pt = quad%points(1:quad%txi, 1:nips)
-! wt = quad%points(quad%txi + 1, 1:nips)
 
 nns = LagrangeDOF(order=order, elemType=elemType)
 
 #ifdef DEBUG_VER
 IF (nns .EQ. 0) THEN
-  CALL Display("Error: LagrangeDOF returned zero DOF")
+  CALL ErrorMsg(msg="LagrangeDOF returned zero DOF", &
+                routine="LagrangeElemShapeData1()", &
+                file=__FILE__, line=__LINE__, unitno=stderr)
   STOP
 END IF
 #endif
@@ -114,7 +101,6 @@ ELSE
 
   ALLOCATE (coeff0(nns, nns))
 
-  ! obj%N = TRANSPOSE(LagrangeEvalAll(order=order, elemType=elemType, &
   CALL LagrangeEvalAll_(order=order, elemType=elemType, &
                         x=quad%points(1:quad%txi, 1:nips), &
                         xij=xij(1:xidim, :), &
@@ -126,7 +112,6 @@ ELSE
 
   obj%N(1:nns, 1:nips) = TRANSPOSE(temp(1:nips, 1:nns, 1))
 
-  ! dNdXi = LagrangeGradientEvalAll(order=order, elemType=elemType, &
   CALL LagrangeGradientEvalAll_(order=order, elemType=elemType, &
                                 x=quad%points(1:quad%txi, 1:nips), &
                                 xij=xij(1:xidim, :), &
