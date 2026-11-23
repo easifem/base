@@ -71,8 +71,13 @@ PUBLIC :: Interpolation
 ! length.
 !
 ! @note
-! It treats a space-time `val` as a space variable and uses only its
-! first time slice. For space-time, use [[GetInterpolation2]].
+! For a space-time `val`, the result depends on the type of `obj`:
+!
+! - `ElemShapeData_`: it uses only the first time slice of `val`.
+! - `STElemShapeData_`: it also interpolates `val` in time, with the
+!   time shape functions `T` of `obj`.
+!
+! For all time points at once, use [[GetInterpolation2]].
 ! @endnote
 !
 ! Examples
@@ -85,6 +90,8 @@ PUBLIC :: Interpolation
 ! constant and quadrature `val`
 ! - [test 10](|base|ElemshapeData/examples/GetInterpolation_test_10.F90)
 ! second block, space-time `val`
+! - [test 20](|base|ElemshapeData/examples/GetInterpolation_test_20.F90)
+! second block, space-time `val` and shape data
 !
 ! See also: [[GetInterpolation_1]], [[Interpolation1]]
 
@@ -109,6 +116,8 @@ END INTERFACE GetInterpolation
 !
 ! Interpolates `val` like [[GetInterpolation1]], but does not initiate
 ! `ans`. It only sets the values of `ans`.
+! It gives the same result as [[GetInterpolation_1a]] with
+! `scale = 1` and `addContribution = .FALSE.`.
 !
 ! @note
 ! `ans` must already be a quadrature `FEVariable_` with the rank and
@@ -119,6 +128,8 @@ END INTERFACE GetInterpolation
 !
 ! - [test 5](|base|ElemshapeData/examples/GetInterpolation_test_5.F90)
 ! first block
+! - [test 20](|base|ElemshapeData/examples/GetInterpolation_test_20.F90)
+! first block, space-time `val` and shape data
 !
 ! See also: [[GetInterpolation1]], [[GetInterpolation_1a]]
 
@@ -308,6 +319,8 @@ END INTERFACE GetInterpolation_
 ! first block
 ! - [test 9](|base|ElemshapeData/examples/GetInterpolation_test_9.F90)
 ! second block, constant vector
+! - [test 20](|base|ElemshapeData/examples/GetInterpolation_test_20.F90)
+! third block, space-time `val` and shape data
 !
 ! See also: [[GetInterpolation1]]
 

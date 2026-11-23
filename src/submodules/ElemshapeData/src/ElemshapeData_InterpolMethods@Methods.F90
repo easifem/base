@@ -83,9 +83,8 @@ END PROCEDURE GetInterpolation1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_1
-CALL FEVariableGetInterpolation_(obj=val, ans=ans, N=obj%N, nns=obj%nns, &
-                                 nips=obj%nips, scale=math%one, &
-                                 addContribution=math%no)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, scale=math%one, &
+                       addContribution=math%no)
 END PROCEDURE GetInterpolation_1
 
 !----------------------------------------------------------------------------

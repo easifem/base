@@ -68,13 +68,15 @@ BLOCK
   CALL OK(ALL(ABS(ans%val(1:2)) .LT. tol), "addContribution: u - u = 0")
 END BLOCK
 
-! Test 2: without scale, only the first time slice of val is used
+! Test 2: without scale, a space-time val is also interpolated in time
 BLOCK
   TYPE(FEVariable_) :: ans
+  REAL(DFP) :: T2
 
   CALL GetInterpolation(obj=stelemsd(2), ans=ans, val=val)
-  CALL OK(ALL(ABS(ans%val(1:2) - (3.0_DFP + xi)) .LT. tol), &
-          "no scale: u = 3 + xi, first time slice")
+  T2 = 0.5_DFP * (1.0_DFP + tt(2))
+  CALL OK(ALL(ABS(ans%val(1:2) - (3.0_DFP + xi + 4.0_DFP * T2)) &
+              .LT. tol), "no scale: u = 3 + xi + 4 T2")
 END BLOCK
 
 CONTAINS
