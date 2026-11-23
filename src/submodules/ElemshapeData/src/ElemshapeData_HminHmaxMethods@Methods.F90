@@ -16,7 +16,13 @@
 !
 
 SUBMODULE(ElemshapeData_HminHmaxMethods) Methods
-USE BaseMethod
+USE BaseType, ONLY: TypeFEVariableScalar
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+USE EigenUtility, ONLY: SymEigenValuesUpto3
+USE FEVariable_Method, ONLY: QuadratureVariable
+USE InvUtility, ONLY: Inv
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
 
@@ -27,8 +33,8 @@ CONTAINS
 MODULE PROCEDURE elemsd_GetHminHmax1
 INTEGER(I4B) :: ii, nips, nsd
 REAL(DFP), ALLOCATABLE :: G(:, :), w(:)
-!! shape is (nsd, nsd, nips), it contains inverse of FFT
-REAL(DFP) :: areal
+!! G: inverse of J * TRANSPOSE(J) at one point, shape (nsd, nsd)
+!! w: eigenvalues of G
 !!
 !! Main
 !!
@@ -36,7 +42,6 @@ nips = SIZE(obj%N, 2)
 nsd = obj%nsd
 !!
 CALL Reallocate(G, nsd, nsd)
-CALL Reallocate(w, nsd)
 CALL Reallocate(hmax, nips, hmin, nips)
 !!
 !! FFT and G
@@ -52,7 +57,8 @@ DO ii = 1, nips
   hmin(ii) = 2.0_DFP / SQRT(MAXVAL(w))
 END DO
 !!
-DEALLOCATE (w, G)
+DEALLOCATE (G)
+IF (ALLOCATED(w)) DEALLOCATE (w)
 !!
 END PROCEDURE elemsd_GetHminHmax1
 
@@ -61,19 +67,17 @@ END PROCEDURE elemsd_GetHminHmax1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetHminHmax2
-INTEGER(I4B) :: ii, nips, nsd
+INTEGER(I4B) :: ii, nips
 REAL(DFP), ALLOCATABLE :: w(:)
-!! shape is (nsd, nsd, nips), it contains inverse of FFT
+!! eigenvalues of G(:, :, ii)
 !!
 !! Main
 !!
 nips = SIZE(obj%N, 2)
-nsd = obj%nsd
 !!
-CALL Reallocate(w, nsd)
 CALL Reallocate(hmax, nips, hmin, nips)
 !!
-!! FFT and G
+!! eigenvalues of the given G at each point
 !!
 DO ii = 1, nips
   w = SymEigenValuesUpto3(G(:, :, ii))
@@ -81,7 +85,7 @@ DO ii = 1, nips
   hmin(ii) = 2.0_DFP / SQRT(MAXVAL(w))
 END DO
 !!
-DEALLOCATE (w)
+IF (ALLOCATED(w)) DEALLOCATE (w)
 !!
 END PROCEDURE elemsd_GetHminHmax2
 
