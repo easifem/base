@@ -65,6 +65,11 @@ PUBLIC :: Interpolation
 !
 ! If `ans` is already initiated, it only sets the values.
 !
+! If `ans` is not initiated and the rank of `val` is not scalar, vector
+! or matrix (for example, `val` is not initiated), a debug build stops
+! with an error. A release build gives `ans` an empty shape and zero
+! length.
+!
 ! @note
 ! It treats a space-time `val` as a space variable and uses only its
 ! first time slice. For space-time, use [[GetInterpolation2]].
@@ -189,6 +194,11 @@ END INTERFACE GetInterpolation_
 !
 ! Then it fills each time point `ipt` from `obj(ipt)`.
 ! If `ans` is already initiated, it only sets the values.
+!
+! If `ans` is not initiated and the rank of `val` is not scalar, vector
+! or matrix (for example, `val` is not initiated), a debug build stops
+! with an error. A release build gives `ans` an empty shape and zero
+! length.
 !
 ! Examples
 !

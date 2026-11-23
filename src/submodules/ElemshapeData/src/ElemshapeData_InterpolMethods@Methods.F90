@@ -39,6 +39,7 @@ ELSE
 
   myrank = FEVariableGetRank(val)
   totalShape = 0
+  mylen = 0
 
   SELECT CASE (myrank)
   CASE (TypeFEVariableOpt%scalar)
@@ -60,6 +61,9 @@ ELSE
     mylen = s(1) * s(2) * s(3)
 
   CASE DEFAULT
+#ifdef DEBUG_VER
+    ERROR STOP 'GetInterpolation1: unknown rank of val'
+#endif
 
   END SELECT
 
@@ -67,7 +71,7 @@ ELSE
                           s=s(1:totalShape), &
                           defineon=TypeFEVariableOpt%quadrature, &
                           vartype=TypeFEVariableOpt%space, &
-                          rank=FEVariableGetRank(val), &
+                          RANK=FEVariableGetRank(val), &
                           len=mylen)
 
   CALL GetInterpolation_(obj=obj, ans=ans, val=val)
@@ -119,6 +123,7 @@ ELSE
 
   myrank = FEVariableGetRank(val)
   totalShape = 0
+  mylen = 0
   nipt = SIZE(obj)
 
   SELECT CASE (myrank)
@@ -145,6 +150,9 @@ ELSE
     mylen = s(1) * s(2) * s(3) * s(4)
 
   CASE DEFAULT
+#ifdef DEBUG_VER
+    ERROR STOP 'GetInterpolation2: unknown rank of val'
+#endif
 
   END SELECT
 
@@ -152,7 +160,7 @@ ELSE
                           s=s(1:totalShape), &
                           defineon=TypeFEVariableOpt%quadrature, &
                           vartype=TypeFEVariableOpt%spacetime, &
-                          rank=FEVariableGetRank(val), &
+                          RANK=FEVariableGetRank(val), &
                           len=mylen)
 
   CALL GetInterpolation_(obj=obj, ans=ans, val=val)
