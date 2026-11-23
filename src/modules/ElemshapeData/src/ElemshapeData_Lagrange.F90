@@ -110,7 +110,7 @@ INTERFACE LagrangeElemShapeData
     !! Default value is Monomial
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
     !! Coefficient of Lagrange polynomials, coeff(nns, nns)
-    LOGICAL(LGT), OPTIONAL :: firstCall
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: firstCall
     !! If `firstCall` is true, the routine computes `coeff`.
     !! If `firstCall` is false, the routine reuses `coeff`.
     !! Default is `.TRUE.`.
@@ -162,7 +162,7 @@ INTERFACE LagrangeElemShapeData
     !! Default value is Monomial
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
     !! Coefficient of Lagrange polynomials, coeff(nns, nns)
-    LOGICAL(LGT), OPTIONAL :: firstCall
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: firstCall
     !! If `firstCall` is true, the routine computes `coeff`.
     !! If `firstCall` is false, the routine reuses `coeff`.
     !! Default is `.TRUE.`.
@@ -218,7 +218,7 @@ INTERFACE LagrangeElemShapeData
     !! Default value is Monomial
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
     !! Coefficient of Lagrange polynomials, coeff(nns, nns)
-    LOGICAL(LGT), OPTIONAL :: firstCall
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: firstCall
     !! If `firstCall` is true, the routine computes `coeff`.
     !! If `firstCall` is false, the routine reuses `coeff`.
     !! Default is `.TRUE.`.
@@ -301,7 +301,7 @@ INTERFACE LagrangeFacetElemShapeData
     !! Default value is Monomial
     REAL(DFP), OPTIONAL, INTENT(INOUT) :: coeff(:, :)
     !! Coefficient of Lagrange polynomials, coeff(nns, nns)
-    LOGICAL(LGT), OPTIONAL :: firstCall
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: firstCall
     !! If `firstCall` is true, the routine computes `coeff`.
     !! If `firstCall` is false, the routine reuses `coeff`.
     !! Default is `.TRUE.`.

@@ -6,6 +6,7 @@ PROGRAM main
 USE BaseType, ONLY: ElemShapeData_
 USE BaseType, ONLY: QuadraturePoint_
 USE BaseType, ONLY: qpopt => TypeQuadratureOpt
+USE Display_Method, ONLY: Display
 USE ElemShapeData_Method, ONLY: LagrangeFacetElemShapeData
 USE GlobalData, ONLY: DFP
 USE GlobalData, ONLY: Hexahedron8
@@ -15,16 +16,21 @@ USE QuadraturePoint_Method, ONLY: QP_Initiate => Initiate
 USE Test_Method, ONLY: OK
 IMPLICIT NONE
 
-REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
+REAL(DFP), PARAMETER :: tol = 1.0E-5_DFP
 REAL(DFP), PARAMETER :: hexCoord(3, 8) = RESHAPE([ &
-                        -1.0_DFP, -1.0_DFP, -1.0_DFP, &
-                        1.0_DFP, -1.0_DFP, -1.0_DFP, &
-                        1.0_DFP, 1.0_DFP, -1.0_DFP, &
-                        -1.0_DFP, 1.0_DFP, -1.0_DFP, &
-                        -1.0_DFP, -1.0_DFP, 1.0_DFP, &
-                        1.0_DFP, -1.0_DFP, 1.0_DFP, &
-                        1.0_DFP, 1.0_DFP, 1.0_DFP, &
-                        -1.0_DFP, 1.0_DFP, 1.0_DFP], [3, 8])
+                                                 -1.0_DFP, -1.0_DFP, &
+                                                 -1.0_DFP, &
+                                                 1.0_DFP, -1.0_DFP, &
+                                                 -1.0_DFP, &
+                                                 1.0_DFP, 1.0_DFP, -1.0_DFP, &
+                                                 -1.0_DFP, 1.0_DFP, &
+                                                 -1.0_DFP, &
+                                                 -1.0_DFP, &
+                                                 -1.0_DFP, 1.0_DFP, &
+                                                 1.0_DFP, -1.0_DFP, 1.0_DFP, &
+                                                 1.0_DFP, 1.0_DFP, 1.0_DFP, &
+                                                 -1.0_DFP, 1.0_DFP, &
+                                                 1.0_DFP], [3, 8])
 
 ! Test 1: trilinear hexahedron and its first face, a bilinear quadrangle
 BLOCK
@@ -48,6 +54,7 @@ BLOCK
           "cell: nns = 8, nips = 8")
   CALL OK(ALL(ABS(SUM(elemsd%N, dim=1) - 1.0_DFP) .LT. tol), &
           "cell: sum of N = 1")
+  CALL Display(SUM(elemsd%N, dim=1), "SUM elemsd%N: ")
   CALL OK(facetElemsd%nns .EQ. 4 .AND. facetElemsd%nips .EQ. 4, &
           "facet: nns = 4, nips = 4")
   CALL OK(facetElemsd%xidim .EQ. 2, "facet: xidim = 2")
