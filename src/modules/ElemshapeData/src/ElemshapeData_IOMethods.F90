@@ -35,7 +35,6 @@ PRIVATE
 PUBLIC :: Display
 PUBLIC :: ElemshapeData_MdEncode
 PUBLIC :: MdEncode
-PUBLIC :: ElemshapeData_ReactEncode
 
 !----------------------------------------------------------------------------
 !                                                             Display@Methods
@@ -114,31 +113,6 @@ INTERFACE MdEncode
     !! encoded text
   END FUNCTION ElemshapeData_MdEncode
 END INTERFACE MdEncode
-
-!----------------------------------------------------------------------------
-!                                           ElemshapeData_ReactEncode@Methods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 2021-03-04
-! summary: React encoding of ElemShapeData_ (not implemented)
-!
-! @warning
-! It is not implemented. It returns an empty `String`.
-! @endwarning
-!
-! Examples
-!
-! - [test 1](|base|ElemshapeData/examples/ReactEncode_test_1.F90)
-
-INTERFACE
-  MODULE FUNCTION ElemshapeData_ReactEncode(obj) RESULT(ans)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    !! element shape data
-    TYPE(String) :: ans
-    !! encoded text
-  END FUNCTION ElemshapeData_ReactEncode
-END INTERFACE
 
 !----------------------------------------------------------------------------
 !                                                             Display@Methods
