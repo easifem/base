@@ -52,18 +52,19 @@ PUBLIC :: ElemshapeData_ReactEncode
 !
 ! 1. The message `msg`.
 ! 2. The sizes `nsd`, `xidim`, `nns` and `nips`.
-! 3. The arrays `N`, `dNdXi`, `dNdXt`, `jacobian`, `js`, `ws`,
-!    `thickness`, `coord` and `normal`.
+! 3. The arrays `N`, `dNdXi`, `dNdXt`, `NLaplacian`, `jacobian`, `js`,
+!    `ws`, `thickness`, `coord` and `normal`.
 !
 ! For an array that is not allocated, it writes `NOT ALLOCATED`.
-! It does not write `NLaplacian`.
 !
 ! If `obj` is an `STElemShapeData_`, the output ends with the time
-! data `jt`, `wt`, `T`, `dTdTheta`, `dNTdt` and `dNTdXt`.
+! data `jt`, `wt`, `nnt`, `T`, `dTdTheta`, `dNTdt` and `dNTdXt`.
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/Display_test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/Display_test_3.F90)
+! `NLaplacian` and `nnt`
 !
 ! See also: [[elemsd_display_2]]
 
@@ -88,19 +89,22 @@ END INTERFACE Display
 !
 ! Returns the content of `obj` as markdown text.
 !
-! - `N`, `js`, `thickness` and `normal` each get one table.
+! - `N`, `NLaplacian`, `js`, `ws`, `thickness`, `coord` and `normal`
+!   each get one table.
 ! - `dNdXi`, `dNdXt` and `jacobian` get one table per quadrature
 !   point.
 !
 ! An array that is not allocated appears as `Not ALLOCATED`.
 !
-! The arrays `ws`, `coord` and `NLaplacian` are not encoded.
+! The space-time data of an `STElemShapeData_` is not encoded.
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/MdEncode_test_1.F90)
 ! - [test 2](|base|ElemshapeData/examples/MdEncode_test_2.F90)
 ! table titles and `Not ALLOCATED` messages
+! - [test 3](|base|ElemshapeData/examples/MdEncode_test_3.F90)
+! `ws`, `coord` and `NLaplacian` tables
 
 INTERFACE MdEncode
   MODULE FUNCTION ElemshapeData_MdEncode(obj) RESULT(ans)

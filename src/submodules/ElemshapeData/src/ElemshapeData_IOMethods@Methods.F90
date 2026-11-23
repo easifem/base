@@ -110,6 +110,24 @@ ELSE
 
 END IF
 
+IF (ALLOCATED(obj%NLaplacian)) THEN
+  CALL StringReallocate(rh, SIZE(obj%NLaplacian, 1))
+  CALL StringReallocate(ch, SIZE(obj%NLaplacian, 2))
+
+  DO ii = 1, SIZE(rh)
+    rh(ii) = "$N_{"//tostring(ii)//"}$"
+  END DO
+
+  DO ii = 1, SIZE(ch)
+    ch(ii) = "$ips_{"//tostring(ii)//"}$"
+  END DO
+
+  ans = ans//"**NLaplacian**"//CHAR_LF2// &
+        Util_MdEncode(val=obj%NLaplacian, rh=rh, ch=ch)//CHAR_LF2
+ELSE
+  ans = ans//"**NLaplacian Not ALLOCATED**"//CHAR_LF2
+END IF
+
 IF (ALLOCATED(obj%jacobian)) THEN
   CALL StringReallocate(rh, obj%nsd)
   CALL StringReallocate(ch, obj%xidim)
@@ -146,6 +164,21 @@ ELSE
   ans = ans//"**js Not ALLOCATED**"//CHAR_LF2
 END IF
 
+IF (ALLOCATED(obj%ws)) THEN
+  CALL StringReallocate(rh, 1)
+  CALL StringReallocate(ch, SIZE(obj%ws))
+
+  rh(1) = "ws"
+  DO ii = 1, SIZE(ch)
+    ch(ii) = "$ips_{"//tostring(ii)//"}$"
+  END DO
+
+  ans = ans//"**ws**"//CHAR_LF2// &
+        Util_MdEncode(val=obj%ws, rh=rh, ch=ch)//CHAR_LF2
+ELSE
+  ans = ans//"**ws Not ALLOCATED**"//CHAR_LF2
+END IF
+
 IF (ALLOCATED(obj%thickness)) THEN
   CALL StringReallocate(rh, 1)
   CALL StringReallocate(ch, obj%nips)
@@ -159,6 +192,24 @@ IF (ALLOCATED(obj%thickness)) THEN
         Util_MdEncode(val=obj%thickness, rh=rh, ch=ch)//CHAR_LF2
 ELSE
   ans = ans//"**thickness Not ALLOCATED**"//CHAR_LF2
+END IF
+
+IF (ALLOCATED(obj%coord)) THEN
+  CALL StringReallocate(rh, SIZE(obj%coord, 1))
+  CALL StringReallocate(ch, SIZE(obj%coord, 2))
+
+  DO ii = 1, SIZE(rh)
+    rh(ii) = "$x_{"//tostring(ii)//"}$"
+  END DO
+
+  DO ii = 1, SIZE(ch)
+    ch(ii) = "$ips_{"//tostring(ii)//"}$"
+  END DO
+
+  ans = ans//"**coord**"//CHAR_LF2// &
+        Util_MdEncode(val=obj%coord, rh=rh, ch=ch)//CHAR_LF2
+ELSE
+  ans = ans//"**coord Not ALLOCATED**"//CHAR_LF2
 END IF
 
 IF (ALLOCATED(obj%normal)) THEN
@@ -207,6 +258,11 @@ IF (ALLOCATED(obj%dNdXt)) THEN
 ELSE
   CALL Util_Display("dNdXt: NOT ALLOCATED", unitno)
 END IF
+IF (ALLOCATED(obj%NLaplacian)) THEN
+  CALL Util_Display(obj%NLaplacian, "NLaplacian: ", unitno)
+ELSE
+  CALL Util_Display("NLaplacian: NOT ALLOCATED", unitno)
+END IF
 IF (ALLOCATED(obj%jacobian)) THEN
   CALL Util_Display(obj%Jacobian, "jacobian: ", unitno)
 ELSE
@@ -245,6 +301,7 @@ TYPE IS (STElemShapeData_)
   CALL Util_Display("SHAPE FUNCTION IN TIME: ", unitno=unitno)
   CALL Util_Display(obj%jt, "jt: ", unitno=unitno)
   CALL Util_Display(obj%wt, "wt: ", unitno=unitno)
+  CALL Util_Display(obj%nnt, "nnt: ", unitno=unitno)
   IF (ALLOCATED(obj%T)) THEN
     CALL Util_Display(obj%T, "T: ", unitno=unitno)
   ELSE
