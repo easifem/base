@@ -20,15 +20,13 @@
 ! summary: Methods for IO of [[elemshapedata_]] and [[stelemshapedata_]]
 
 SUBMODULE(ElemshapeData_IOMethods) Methods
-USE Display_Method, ONLY: Util_Display => Display, Tostring
-
-USE MdEncode_Method, ONLY: Util_MdEncode => MdEncode
-
+USE Display_Method, ONLY: Tostring
+USE Display_Method, ONLY: Util_Display => Display
 USE GlobalData, ONLY: CHAR_LF2
-
+USE MdEncode_Method, ONLY: Util_MdEncode => MdEncode
 USE String_Class, ONLY: StringReallocate => Reallocate
-
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -59,7 +57,8 @@ IF (ALLOCATED(obj%N)) THEN
     ch(ii) = "$ips_{"//tostring(ii)//"}$"
   END DO
 
-ans = ans//"**N**"//CHAR_LF2//Util_MdEncode(val=obj%N, rh=rh, ch=ch)//CHAR_LF2
+  ans = ans//"**N**"//CHAR_LF2//Util_MdEncode(val=obj%N, rh=rh, &
+                                              ch=ch)//CHAR_LF2
 
 ELSE
   ans = ans//"**N Not ALLOCATED**"//CHAR_LF2
@@ -140,7 +139,8 @@ IF (ALLOCATED(obj%js)) THEN
     ch(ii) = "$js_{"//tostring(ii)//"}$"
   END DO
 
-  ans = ans//"**Js**"//CHAR_LF2//Util_MdEncode(val=obj%js, rh=rh, ch=ch)//CHAR_LF2
+  ans = ans//"**js**"//CHAR_LF2// &
+        Util_MdEncode(val=obj%js, rh=rh, ch=ch)//CHAR_LF2
 
 ELSE
   ans = ans//"**js Not ALLOCATED**"//CHAR_LF2
@@ -176,7 +176,7 @@ IF (ALLOCATED(obj%normal)) THEN
   ans = ans//"**normal**"//CHAR_LF2// &
         Util_MdEncode(val=obj%normal, rh=rh, ch=ch)//CHAR_LF2
 ELSE
-  ans = ans//"**normal not ALLOCATED**"//CHAR_LF2
+  ans = ans//"**normal Not ALLOCATED**"//CHAR_LF2
 END IF
 
 END PROCEDURE ElemshapeData_MdEncode
@@ -240,7 +240,8 @@ IF (ALLOCATED(obj%normal)) THEN
 ELSE
   CALL Util_Display("normal: NOT ALLOCATED", unitno)
 END IF
-SELECT TYPE (obj); TYPE IS (STElemShapeData_)
+SELECT TYPE (obj)
+TYPE IS (STElemShapeData_)
   CALL Util_Display("SHAPE FUNCTION IN TIME: ", unitno=unitno)
   CALL Util_Display(obj%jt, "jt: ", unitno=unitno)
   CALL Util_Display(obj%wt, "wt: ", unitno=unitno)

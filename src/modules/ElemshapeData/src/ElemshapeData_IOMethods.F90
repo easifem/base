@@ -99,6 +99,8 @@ END INTERFACE Display
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/MdEncode_test_1.F90)
+! - [test 2](|base|ElemshapeData/examples/MdEncode_test_2.F90)
+! table titles and `Not ALLOCATED` messages
 
 INTERFACE MdEncode
   MODULE FUNCTION ElemshapeData_MdEncode(obj) RESULT(ans)
