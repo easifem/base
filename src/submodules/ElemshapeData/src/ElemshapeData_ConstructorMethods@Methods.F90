@@ -99,6 +99,11 @@ IF (isok) THEN
   obj1%N(1:nns, 1:nips) = obj2%N(1:nns, 1:nips)
 END IF
 
+isok = ALLOCATED(obj2%NLaplacian)
+IF (isok) THEN
+  obj1%NLaplacian(1:nns, 1:nips) = obj2%NLaplacian(1:nns, 1:nips)
+END IF
+
 isok = ALLOCATED(obj2%dNdXi)
 IF (isok) THEN
   obj1%dNdXi(1:nns, 1:xidim, 1:nips) = obj2%dNdXi(1:nns, 1:xidim, 1:nips)
@@ -132,18 +137,29 @@ TYPE is (STElemShapeData_)
     obj1%nnt = obj2%nnt
     nnt = obj1%nnt
 
-    DO CONCURRENT(ii=1:nnt)
-      obj1%T(ii) = obj2%T(ii)
-      obj1%dTdTheta(ii) = obj2%dTdTheta(ii)
-    END DO
+    isok = ALLOCATED(obj2%T)
+    IF (isok) THEN
+      obj1%T(1:nnt) = obj2%T(1:nnt)
+    END IF
 
-    DO CONCURRENT(ii=1:nns, jj=1:nnt, kk=1:nips)
-      obj1%dNTdt(ii, jj, kk) = obj2%dNTdt(ii, jj, kk)
-    END DO
+    isok = ALLOCATED(obj2%dTdTheta)
+    IF (isok) THEN
+      obj1%dTdTheta(1:nnt) = obj2%dTdTheta(1:nnt)
+    END IF
 
-    DO CONCURRENT(ii=1:nns, jj=1:nnt, kk=1:nsd, ll=1:nips)
-      obj1%dNTdXt(ii, jj, kk, ll) = obj2%dNTdXt(ii, jj, kk, ll)
-    END DO
+    isok = ALLOCATED(obj2%dNTdt)
+    IF (isok) THEN
+      DO CONCURRENT(ii=1:nns, jj=1:nnt, kk=1:nips)
+        obj1%dNTdt(ii, jj, kk) = obj2%dNTdt(ii, jj, kk)
+      END DO
+    END IF
+
+    isok = ALLOCATED(obj2%dNTdXt)
+    IF (isok) THEN
+      DO CONCURRENT(ii=1:nns, jj=1:nnt, kk=1:nsd, ll=1:nips)
+        obj1%dNTdXt(ii, jj, kk, ll) = obj2%dNTdXt(ii, jj, kk, ll)
+      END DO
+    END IF
 
   END SELECT
 END SELECT

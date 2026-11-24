@@ -140,14 +140,14 @@ END INTERFACE Initiate
 ! Copies the shape data of `obj2` into `obj1`.
 !
 ! 1. Allocates `obj1` with the sizes of `obj2`, see [[obj_Allocate]].
-! 2. Copies `N`, `dNdXi`, `dNdXt`, `jacobian`, `js`, `ws`, `thickness`,
-!    `coord` and `normal`.
+! 2. Copies `N`, `NLaplacian`, `dNdXi`, `dNdXt`, `jacobian`, `js`, `ws`,
+!    `thickness`, `coord` and `normal`.
 ! 3. If both are `STElemShapeData_`, it also copies `wt`, `jt`, `nnt`,
 !    `T`, `dTdTheta`, `dNTdt` and `dNTdXt`.
 !
-! @note
-! It allocates `NLaplacian` but does not copy it.
-! @endnote
+! It skips `N`, `NLaplacian`, `dNdXi`, `dNdXt`, `jacobian`, `T`,
+! `dTdTheta`, `dNTdt` and `dNTdXt` when they are not allocated in
+! `obj2`. Then `obj1` keeps the zeros set by [[obj_Allocate]].
 !
 ! You can also write it as `obj1 = obj2`.
 !
@@ -157,6 +157,10 @@ END INTERFACE Initiate
 ! `Initiate` and with `=`
 ! - [test 2](|base|ElemshapeData/examples/Initiate_test_2.F90) copies a
 ! `STElemShapeData_`
+! - [test 3](|base|ElemshapeData/examples/Initiate_test_3.F90) copies a
+! `STElemShapeData_` without `dNTdt` and `dNTdXt`
+! - [test 4](|base|ElemshapeData/examples/Initiate_test_4.F90) copies
+! `NLaplacian`
 !
 ! See also: [[obj_Allocate]]
 
