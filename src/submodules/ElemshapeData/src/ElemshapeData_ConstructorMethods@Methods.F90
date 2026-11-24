@@ -20,10 +20,9 @@
 ! summary: Constructor method for ElemshapeData_ and STElemshapeData_
 
 SUBMODULE(ElemshapeData_ConstructorMethods) Methods
+USE ErrorHandling, ONLY: Errormsg
 USE GlobalData, ONLY: stderr
 USE ReallocateUtility, ONLY: Reallocate
-USE QuadraturePoint_Method, ONLY: GetQuadraturePoints
-USE ErrorHandling, ONLY: Errormsg
 
 IMPLICIT NONE
 CONTAINS
@@ -79,7 +78,7 @@ END PROCEDURE obj_Initiate1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Initiate2
-INTEGER(I4B) :: ii, jj, kk, nns, nsd, xidim, nips, nnt, ll, nnt
+INTEGER(I4B) :: ii, jj, kk, nns, nsd, xidim, nips, nnt, ll
 LOGICAL(LGT) :: isok
 
 nns = obj2%nns
@@ -112,7 +111,8 @@ END IF
 
 isok = ALLOCATED(obj2%jacobian)
 IF (isok) THEN
- obj1%jacobian(1:nsd, 1:xidim, 1:nips) = obj2%jacobian(1:nsd, 1:xidim, 1:nips)
+  obj1%jacobian(1:nsd, 1:xidim, 1:nips) = obj2%jacobian(1:nsd, &
+                                                        1:xidim, 1:nips)
 END IF
 
 DO CONCURRENT(ii=1:nips)
@@ -128,7 +128,6 @@ TYPE is (STElemShapeData_)
   SELECT TYPE (obj2)
   TYPE is (STElemShapeData_)
     obj1%wt = obj2%wt
-    ! obj1%theta = obj2%theta
     obj1%jt = obj2%jt
     obj1%nnt = obj2%nnt
     nnt = obj1%nnt
@@ -209,8 +208,6 @@ obj%nsd = 0
 obj%xidim = 0
 obj%nips = 0
 obj%nns = 0
-! CALL DEALLOCATE (obj%Quad)
-! CALL DEALLOCATE (obj%refelem)
 SELECT TYPE (obj)
 TYPE IS (STElemShapeData_)
   obj%nnt = 0
