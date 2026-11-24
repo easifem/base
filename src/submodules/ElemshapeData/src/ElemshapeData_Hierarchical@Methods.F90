@@ -15,33 +15,17 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
-SUBMODULE(ElemShapeData_Hierarchical) Methods
-USE ErrorHandling, ONLY: Errormsg
-USE GlobalData, ONLY: stderr
-
-USE InputUtility, ONLY: Input
-
-USE ReferenceElement_Method, ONLY: Refelem_Initiate => Initiate, &
-                                 Refelem_GetFaceElemType => GetFaceElemType, &
-                                   Refelem_RefCoord_ => RefCoord_
-
+SUBMODULE(ElemshapeData_Hierarchical) Methods
+USE BaseType, ONLY: math => TypeMathOpt
 USE ElemShapeData_Method, ONLY: Elemsd_Allocate => ALLOCATE
-
-USE HierarchicalPolynomialUtility, ONLY: HierarchicalDOF, &
-                                         HierarchicalEvalAll_, &
-                                         HierarchicalGradientEvalAll_
-
-USE QuadraturePoint_Method, ONLY: GetQuadraturePoints, &
-                                  QuadraturePoint_Size => Size, &
-                                  GetTotalQuadraturePoints, &
-                                  GetQuadratureWeights_
-
-USE BaseType, ONLY: TypeQuadratureOpt, &
-                    TypePolynomialOpt
-
+USE HierarchicalPolynomialUtility, ONLY: HierarchicalDOF
+USE HierarchicalPolynomialUtility, ONLY: HierarchicalEvalAll_
+USE HierarchicalPolynomialUtility, ONLY: HierarchicalGradientEvalAll_
+USE QuadraturePoint_Method, ONLY: GetQuadratureWeights_
+USE QuadraturePoint_Method, ONLY: GetTotalQuadraturePoints
+USE ReferenceElement_Method, ONLY: Refelem_GetFaceElemType => GetFaceElemType
+USE ReferenceElement_Method, ONLY: Refelem_RefCoord_ => RefCoord_
 USE SwapUtility, ONLY: SWAP_
-
-USE Display_Method, ONLY: Display
 
 IMPLICIT NONE
 
@@ -58,8 +42,6 @@ CONTAINS
 MODULE PROCEDURE HierarchicalElemShapeData1
 REAL(DFP), ALLOCATABLE :: temp(:, :, :)
 INTEGER(I4B) :: nips, nns, ii, jj, kk
-
-! CALL DEALLOCATE (obj)
 
 nips = GetTotalQuadraturePoints(obj=quad)
 
@@ -88,7 +70,8 @@ DO CONCURRENT(ii=1:nns, jj=1:nips)
 END DO
 
 CALL HierarchicalGradientEvalAll_(elemType=elemType, &
-                                 xij=quad%points(1:xidim, 1:nips), ans=temp, &
+                                  xij=quad%points(1:xidim, 1:nips), &
+                                  ans=temp, &
                                   dim1=ii, dim2=jj, dim3=kk, &
                                   domainName=domainName, &
                                   cellOrder=cellOrder, &
@@ -99,7 +82,6 @@ CALL HierarchicalGradientEvalAll_(elemType=elemType, &
                                   edgeOrient=edgeOrient)
 
 CALL SWAP_(a=obj%dNdXi, b=temp(1:ii, 1:jj, 1:kk), i1=2, i2=3, i3=1)
-! CALL SWAP_(a=obj%dNdXi, b=temp(1:ii, 1:jj, 1:jj), i1=3, i2=1, i3=2)
 
 IF (ALLOCATED(temp)) DEALLOCATE (temp)
 
@@ -158,7 +140,8 @@ CALL Refelem_RefCoord_(elemType=faceElemType, refElem=domainName, &
                        ans=faceRefelemCoord, nrow=nrow, ncol=ncol)
 
 #ifdef DEBUG_VER
-CALL AssertError1(.FALSE., myName, modName, __LINE__, &
+CALL AssertError1(math%no, myName, &
+                  modName, __LINE__, &
                   "This is routine is under development")
 #endif
 

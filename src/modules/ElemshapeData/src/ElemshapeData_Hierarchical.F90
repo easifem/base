@@ -22,7 +22,6 @@ USE BaseType, ONLY: QuadraturePoint_
 USE BaseType, ONLY: ReferenceElement_
 USE GlobalData, ONLY: DFP
 USE GlobalData, ONLY: I4B
-USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 
 PRIVATE
