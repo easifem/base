@@ -16,15 +16,13 @@
 !
 
 SUBMODULE(ElemshapeData_GetMethods) Methods
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+USE BaseType, ONLY: TypeFEVariableVector
+USE FEVariable_Method, ONLY: QuadratureVariable
 USE ReallocateUtility, ONLY: Reallocate
-
-USE FEVariable_Method, ONLY: QuadratureVariable, NodalVariable
-
-USE BaseType, ONLY: TypeFEVariableSpace, &
-                    TypeFEVariableVector, &
-                    TypeFEVariableSpaceTime
-
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
