@@ -402,6 +402,8 @@ END INTERFACE GetSpatialGradient
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
 ! @endnote
 !
 ! Examples
@@ -480,6 +482,8 @@ END INTERFACE GetSpatialGradient
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
 ! @endnote
 !
 ! Examples
@@ -690,6 +694,8 @@ END INTERFACE GetSpatialGradient_
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
 ! @endnote
 !
 ! Examples
@@ -732,6 +738,8 @@ END INTERFACE GetSpatialGradient
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
 ! @endnote
 !
 ! Changes:
@@ -824,6 +832,8 @@ END INTERFACE GetSpatialGradient
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
 ! @endnote
 !
 ! Examples
@@ -907,6 +917,8 @@ END INTERFACE GetSpatialGradient
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
 ! @endnote
 !
 ! Examples
@@ -994,6 +1006,8 @@ END INTERFACE GetSpatialGradient
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
 ! @endnote
 !
 ! Examples

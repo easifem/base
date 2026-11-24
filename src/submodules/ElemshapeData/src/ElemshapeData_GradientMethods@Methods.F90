@@ -207,6 +207,10 @@ END PROCEDURE obj_GetSpatialGradient5
 MODULE PROCEDURE obj_GetSpatialGradient_5
 INTEGER(I4B) :: i1
 
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
+
 SELECT CASE (val%varType)
 CASE (fevaropt%space)
   CALL FEVariableGet_( &
@@ -251,6 +255,10 @@ END PROCEDURE obj_GetSpatialGradient6
 
 MODULE PROCEDURE obj_GetSpatialGradient_6
 INTEGER(I4B) :: s(1), i1, i2
+
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
 
 SELECT CASE (val%varType)
 CASE (fevaropt%space)
@@ -369,6 +377,10 @@ MODULE PROCEDURE obj_GetSpatialGradient9
 ! Allocate and zero ans first, so every path that does not compute a
 ! gradient (constant val, space-time val with a space-only obj, other
 ! varType) returns zeros of shape (nrow, ncol, nsd, nips).
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
+
 CALL Reallocate(ans, val%s(1), val%s(2), obj%nsd, obj%nips)
 
 SELECT CASE (val%varType)
@@ -396,6 +408,10 @@ END PROCEDURE obj_GetSpatialGradient9
 
 MODULE PROCEDURE obj_GetSpatialGradient_9
 INTEGER(I4B) :: s(2), i1, i2, i3
+
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
 
 s = FEVariableShape(val)
 dim1 = s(1)
@@ -443,6 +459,10 @@ END PROCEDURE obj_GetSpatialGradient10
 
 MODULE PROCEDURE obj_GetSpatialGradient_10
 INTEGER(I4B) :: i1, i2
+
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
 
 SELECT CASE (val%varType)
 CASE (fevaropt%space)
@@ -498,6 +518,10 @@ END PROCEDURE obj_GetSpatialGradient11
 
 MODULE PROCEDURE obj_GetSpatialGradient_11
 INTEGER(I4B) :: s(1), i1, i2, i3
+
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
 
 SELECT CASE (val%varType)
 CASE (fevaropt%space)
@@ -559,6 +583,10 @@ END PROCEDURE obj_GetSpatialGradient12
 MODULE PROCEDURE obj_GetSpatialGradient_12
 INTEGER(I4B) :: s(2), i1, i2, i3, i4
 
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
+
 SELECT CASE (val%varType)
 
 CASE (fevaropt%space)
@@ -590,6 +618,21 @@ CASE DEFAULT
 
 END SELECT
 END PROCEDURE obj_GetSpatialGradient_12
+
+!----------------------------------------------------------------------------
+!                                             obj_CheckSpatialGradientInput
+!----------------------------------------------------------------------------
+
+#ifdef DEBUG_VER
+PURE SUBROUTINE obj_CheckSpatialGradientInput(val)
+  TYPE(FEVariable_), INTENT(IN) :: val
+  !! FEVariable whose spatial gradient is requested
+
+  IF (val%defineOn .NE. fevaropt%nodal) THEN
+    ERROR STOP 'GetSpatialGradient: unsupported FEVariable; use nodal values'
+  END IF
+END SUBROUTINE obj_CheckSpatialGradientInput
+#endif
 
 !----------------------------------------------------------------------------
 !
