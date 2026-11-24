@@ -21,20 +21,14 @@ USE BaseType, ONLY: math => TypeMathOpt
 USE BaseType, ONLY: TypeFEVariableScalar
 USE BaseType, ONLY: TypeFEVariableVector
 USE BaseType, ONLY: TypeFEVariableMatrix
-USE BaseType, ONLY: TypeFEVariableConstant
 USE BaseType, ONLY: TypeFEVariableSpace
 USE BaseType, ONLY: TypeFEVariableSpaceTime
 USE ContractionUtility, ONLY: Contraction
 USE FEVariable_Method, ONLY: FEVariableGet => Get
 USE FEVariable_Method, ONLY: FEVariableGet_ => Get_
-USE FEVariable_Method, ONLY: FEVariableSize => Size
 USE FEVariable_Method, ONLY: FEVariableShape => Shape
-USE FEVariable_Method, ONLY: FEVariableSet => Set
-USE FEVariable_Method, ONLY: QuadratureVariable
 USE MatmulUtility, ONLY: MyMatmul => MATMUL
 USE ReallocateUtility, ONLY: Reallocate
-USE SwapUtility, ONLY: SWAP
-USE SwapUtility, ONLY: SWAP_
 
 CONTAINS
 
@@ -168,7 +162,6 @@ LOGICAL(LGT) :: isok
 dim1 = SIZE(val, 1)
 dim2 = obj%nsd
 dim3 = obj%nips
-ans(1:dim1, 1:dim2, 1:dim3) = math%zero
 
 isok = obj%nsd .EQ. obj%xidim
 IF (isok) THEN
