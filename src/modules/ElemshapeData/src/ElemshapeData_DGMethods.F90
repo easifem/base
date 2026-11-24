@@ -78,13 +78,16 @@ INTERFACE Initiate
     !! Default value is Monomial
     REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: coeff(:, :)
     !! Coefficient of Lagrange polynomials
-    LOGICAL(LGT), OPTIONAL :: firstCall
+    LOGICAL(LGT), OPTIONAL, INTENT(IN) :: firstCall
     !! If `firstCall` is true, the routine builds `coeff`.
     !! If `firstCall` is false, it uses the given `coeff`.
     !! Default is true.
-    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-    !! alpha and beta are Jacobi polynomial param
-    !! lambda is Ultraspherical polynomial param
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter alpha
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter beta
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter lambda
   END SUBROUTINE DG_Lagrange1
 END INTERFACE Initiate
 
@@ -131,9 +134,14 @@ INTERFACE Initiate
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Basis function type
     !! This argument is not needed
-    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-    !! alpha and beta are Jacobi polynomial param
-    !! lambda is Ultraspherical polynomial param
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter alpha
+    !! This argument is not needed
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter beta
+    !! This argument is not needed
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter lambda
     !! This argument is not needed
   END SUBROUTINE DG_Hierarchy1
 END INTERFACE Initiate
@@ -179,9 +187,12 @@ INTERFACE Initiate
     !! Interpolation type
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Basis function type
-    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-    !! alpha and beta are Jacobi polynomial param
-    !! lambda is Ultraspherical polynomial param
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter alpha
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter beta
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter lambda
   END SUBROUTINE DG_Orthogonal1
 END INTERFACE Initiate
 
@@ -226,9 +237,12 @@ INTERFACE Initiate
     !! Interpolation type
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Basis function type
-    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-    !! alpha and beta are Jacobi polynomial param
-    !! lambda is Ultraspherical polynomial param
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter alpha
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter beta
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter lambda
   END SUBROUTINE DG_Hermit1
 END INTERFACE Initiate
 
@@ -273,9 +287,12 @@ INTERFACE Initiate
     !! Interpolation type
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: basisType
     !! Basis function type
-    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha, beta, lambda
-    !! alpha and beta are Jacobi polynomial param
-    !! lambda is Ultraspherical polynomial param
+    REAL(DFP), OPTIONAL, INTENT(IN) :: alpha
+    !! Jacobi polynomial parameter alpha
+    REAL(DFP), OPTIONAL, INTENT(IN) :: beta
+    !! Jacobi polynomial parameter beta
+    REAL(DFP), OPTIONAL, INTENT(IN) :: lambda
+    !! Ultraspherical polynomial parameter lambda
   END SUBROUTINE DG_Serendipity1
 END INTERFACE Initiate
 
