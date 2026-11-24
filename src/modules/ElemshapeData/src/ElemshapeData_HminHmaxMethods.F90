@@ -47,6 +47,13 @@ PUBLIC :: GetHminHmax
 !
 ! The routine reallocates `hmax` and `hmin` to size `nips`.
 !
+! @note
+! The factor 2 is the edge length of the biunit reference element
+! `[-1, 1]^d`. The routine assumes that `obj` uses a biunit
+! reference domain. For shape data built with `domainName = "UNIT"`,
+! the results are twice the physical lengths; multiply them by 0.5.
+! @endnote
+!
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetHminHmax_test_1.F90)
@@ -87,6 +94,13 @@ END INTERFACE GetHminHmax
 ! 3. Sets `hmin = 2 / SQRT(MAX(eigenvalues))`.
 !
 ! The routine reallocates `hmax` and `hmin` to size `nips`.
+!
+! @note
+! The factor 2 is the edge length of the biunit reference element
+! `[-1, 1]^d`. The routine assumes that `G` comes from a biunit
+! reference domain. For a unit reference domain, the results are twice
+! the physical lengths; multiply them by 0.5.
+! @endnote
 !
 ! @note
 ! The routine reads `nips` from `obj`, so `G` must hold at least `nips`
