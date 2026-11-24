@@ -109,7 +109,8 @@ END INTERFACE GetNormal
 !
 ! @note
 ! All `obj(ipt)` should have the same `nips`.
-! Otherwise, it does not set the missing values.
+! If `obj(ipt)%nips` is smaller than the largest `nips`, the missing
+! entries `(:, obj(ipt)%nips+1:nips, ipt)` are zero.
 ! @endnote
 !
 ! Examples

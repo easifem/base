@@ -72,7 +72,7 @@ END DO
 nsd0 = 3
 IF (PRESENT(nsd)) nsd0 = nsd
 
-ALLOCATE (m3(nsd0, nips, nipt))
+CALL Reallocate(m3, nsd0, nips, nipt)
 
 DO ii = 1, nipt
   m3(1:nsd0, 1:obj(ii)%nips, ii) = obj(ii)%normal(1:nsd0, 1:obj(ii)%nips)
