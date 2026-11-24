@@ -51,11 +51,11 @@ PUBLIC :: Initiate
 ! 4. It stores the basis values in `obj%N` and the gradients in
 !    `obj%dNdXi`.
 !
-! The orders and orientations are optional, but the element needs some.
-! Pass `cellOrder` and `cellOrient` for every element.
-! Pass `faceOrient` for 2D elements.
-! Pass `faceOrder` for 2D and 3D elements.
-! Pass `edgeOrder` for 3D elements.
+! Always pass `cellOrder`.
+! Pass `faceOrder` for 2D elements; the routine has no default for it.
+! `cellOrient` and `faceOrient` are optional. When absent, every
+! orientation is +1.
+! The routine does not use `edgeOrder` or `edgeOrient`.
 !
 ! @note
 ! The routine does not use `refelemCoord`.
@@ -66,6 +66,7 @@ PUBLIC :: Initiate
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/HierarchicalElemShapeData_test_1.F90)
+! - [test 2](|base|ElemshapeData/examples/HierarchicalElemShapeData_test_2.F90)
 !
 ! See also: [[HierarchicalElemShapeData2]], [[HierarchicalElemShapeData3]]
 
@@ -87,18 +88,18 @@ INTERFACE HierarchicalElemShapeData
     !! coordinate of reference element
     CHARACTER(*), INTENT(IN) :: domainName
     !! name of reference element domain
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrder(:)
-    !! cell order, always needed
+    INTEGER(I4B), INTENT(IN) :: cellOrder(:)
+    !! cell order
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrder(:, :)
-    !! face order, needed for 2D and 3D elements
+    !! face order, required for 2D elements
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrder(:)
-    !! edge order, needed for 3D elements only
+    !! edge order, not used
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrient(:)
-    !! orientation of cell
+    !! orientation of cell, default +1
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrient(:, :)
-    !! orientation of face
+    !! orientation of face, default +1
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrient(:)
-    !! edge orientation
+    !! edge orientation, not used
   END SUBROUTINE HierarchicalElemShapeData1
 END INTERFACE HierarchicalElemShapeData
 
@@ -115,9 +116,9 @@ END INTERFACE HierarchicalElemShapeData
 ! The routine reads the element data from `refelem`.
 ! Then it calls [[HierarchicalElemShapeData1]].
 !
-! Pass `cellOrder` for every element.
-! Pass `faceOrder` for 2D and 3D elements.
-! Pass `edgeOrder` for 3D elements.
+! Always pass `cellOrder`.
+! Pass `faceOrder` for 2D elements; the routine has no default for it.
+! Absent orientations default to +1.
 !
 ! Examples
 !
@@ -135,18 +136,18 @@ INTERFACE HierarchicalElemShapeData
     !! quadrature points and weights
     CLASS(ReferenceElement_), INTENT(IN) :: refelem
     !! reference element
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrder(:)
-    !! cell order, always needed
+    INTEGER(I4B), INTENT(IN) :: cellOrder(:)
+    !! cell order
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrder(:, :)
-    !! face order, needed for 2D and 3D elements
+    !! face order, required for 2D elements
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrder(:)
-    !! edge order, needed for 3D elements only
+    !! edge order, not used
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrient(:)
-    !! orientation of cell
+    !! orientation of cell, default +1
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrient(:, :)
-    !! orientation of face
+    !! orientation of face, default +1
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrient(:)
-    !! edge orientation
+    !! edge orientation, not used
   END SUBROUTINE HierarchicalElemShapeData2
 END INTERFACE HierarchicalElemShapeData
 
@@ -170,9 +171,9 @@ END INTERFACE HierarchicalElemShapeData
 ! The result does not depend on `baseContinuity` or `baseInterpolation`.
 ! @endnote
 !
-! Pass `cellOrder` for every element.
-! Pass `faceOrder` for 2D and 3D elements.
-! Pass `edgeOrder` for 3D elements.
+! Always pass `cellOrder`.
+! Pass `faceOrder` for 2D elements; the routine has no default for it.
+! Absent orientations default to +1.
 !
 ! Examples
 !
@@ -195,18 +196,18 @@ INTERFACE HierarchicalElemShapeData
     !! base continuity, not used
     TYPE(HierarchyInterpolation_), INTENT(IN) :: baseInterpolation
     !! base interpolation, not used
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrder(:)
-    !! cell order, always needed
+    INTEGER(I4B), INTENT(IN) :: cellOrder(:)
+    !! cell order
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrder(:, :)
-    !! face order, needed for 2D and 3D elements
+    !! face order, required for 2D elements
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrder(:)
-    !! edge order, needed for 3D elements only
+    !! edge order, not used
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: cellOrient(:)
-    !! orientation of cell
+    !! orientation of cell, default +1
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: faceOrient(:, :)
-    !! orientation of face
+    !! orientation of face, default +1
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: edgeOrient(:)
-    !! edge orientation
+    !! edge orientation, not used
   END SUBROUTINE HierarchicalElemShapeData3
 END INTERFACE HierarchicalElemShapeData
 

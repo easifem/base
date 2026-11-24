@@ -42,6 +42,21 @@ CONTAINS
 MODULE PROCEDURE HierarchicalElemShapeData1
 REAL(DFP), ALLOCATABLE :: temp(:, :, :)
 INTEGER(I4B) :: nips, nns, ii, jj, kk
+INTEGER(I4B), ALLOCATABLE :: cellOrient0(:), faceOrient0(:, :)
+!! orientations; default +1 when the caller omits them
+
+IF (PRESENT(cellOrient)) THEN
+  cellOrient0 = cellOrient
+ELSE
+  cellOrient0 = [1_I4B, 1_I4B, 1_I4B]
+END IF
+
+IF (PRESENT(faceOrient)) THEN
+  faceOrient0 = faceOrient
+ELSE
+  ALLOCATE (faceOrient0(3, 4))
+  faceOrient0 = 1_I4B
+END IF
 
 nips = GetTotalQuadraturePoints(obj=quad)
 
@@ -61,8 +76,8 @@ CALL HierarchicalEvalAll_(elemType=elemType, &
                           cellOrder=cellOrder, &
                           faceOrder=faceOrder, &
                           edgeOrder=edgeOrder, &
-                          cellOrient=cellOrient, &
-                          faceOrient=faceOrient, &
+                          cellOrient=cellOrient0, &
+                          faceOrient=faceOrient0, &
                           edgeOrient=edgeOrient)
 
 DO CONCURRENT(ii=1:nns, jj=1:nips)
@@ -77,8 +92,8 @@ CALL HierarchicalGradientEvalAll_(elemType=elemType, &
                                   cellOrder=cellOrder, &
                                   faceOrder=faceOrder, &
                                   edgeOrder=edgeOrder, &
-                                  cellOrient=cellOrient, &
-                                  faceOrient=faceOrient, &
+                                  cellOrient=cellOrient0, &
+                                  faceOrient=faceOrient0, &
                                   edgeOrient=edgeOrient)
 
 CALL SWAP_(a=obj%dNdXi, b=temp(1:ii, 1:jj, 1:kk), i1=2, i2=3, i3=1)
