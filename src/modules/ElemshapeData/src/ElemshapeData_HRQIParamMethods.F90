@@ -48,21 +48,39 @@ PUBLIC :: GetHRQIParam
 ! `val` holds nodal values of a scalar or a vector.
 ! For a scalar `p`, `r` is `sign(p) grad(p) / |grad(p)|`.
 ! For a vector, `r` comes from the gradient of the vector.
-! For a matrix `val`, `r` stays unallocated.
+! A matrix `val` gives no direction. Then `r` is zero and `h` is zero.
 ! Where the direction is zero, `r` is zero and `h` is zero.
 !
 ! Here `J` is the Jacobian of the element at the quadrature point.
-! The value `hmax` uses the smallest eigenvalue of `G` in place of
-! `r^T G r`. The value `hmin` uses the largest eigenvalue.
+! `J` has shape `(nsd, xidim)` and `C = J^T J` has shape
+! `(xidim, xidim)`. `G` is the pseudo-inverse of `J J^T`. For
+! `xidim = nsd`, `G` equals the inverse of `J J^T`. For `xidim < nsd`,
+! such as a line in 2D, `G` measures only the part of `r` along the
+! element.
+! The value `hmax` uses the largest eigenvalue of `C` in place of
+! `1 / (r^T G r)`. The value `hmin` uses the smallest eigenvalue.
 !
 ! Formula:
-!   $$ h = \frac{2}{\sqrt{r^T G r}}, \quad G = (J J^T)^{-1} $$
+!   $$ h = \frac{2}{\sqrt{r^T G r}}, \quad G = J C^{-2} J^T,
+!   \quad C = J^T J $$
+!
+! @note
+! The factor 2 is the edge length of the biunit reference element
+! `[-1, 1]^d`. The routine assumes that `obj` uses a biunit
+! reference domain. For shape data built with `domainName = "UNIT"`,
+! `h`, `hmax` and `hmin` are twice the physical lengths; multiply
+! them by 0.5.
+! @endnote
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetHRQIParam_test_1.F90)
 ! - [test 5](|base|ElemshapeData/examples/GetHRQIParam_test_5.F90),
 !   shape data with no quadrature points
+! - [test 6](|base|ElemshapeData/examples/GetHRQIParam_test_6.F90),
+!   line element in 2D
+! - [test 7](|base|ElemshapeData/examples/GetHRQIParam_test_7.F90),
+!   matrix `val`
 !
 ! See also: [[elemsd_GetHRQIParam2]], [[elemsd_GetHRQIParam3]]
 
@@ -74,7 +92,7 @@ INTERFACE
     !! Element length, size(h) = nips
     TYPE(FEVariable_), INTENT(IN) :: val
     !! Nodal values of a scalar or a vector. They define the direction.
-    !! A matrix is not supported, and `r` stays unallocated.
+    !! A matrix gives no direction: `r` is zero and `h` is zero.
     REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmax(:)
     !! Maximum directional length, size(hmax) = nips
     REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: hmin(:)

@@ -25,15 +25,17 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_getHRQIParam1
-INTEGER(I4B) :: ii, nips, nsd
+INTEGER(I4B) :: ii, nips, nsd, xidim
 REAL(DFP), ALLOCATABLE :: r0(:, :)
 !! unitNormal (nsd, nips)
-REAL(DFP), ALLOCATABLE :: G(:, :, :)
-!! shape is (nsd, nsd, nips), it contains inverse of FFT
-REAL(DFP), ALLOCATABLE :: FFT(:, :)
-!! (nsd, nsd)
-REAL(DFP), ALLOCATABLE :: rr(:, :)
-!! outer product of unitNormal (nsd, nsd)
+REAL(DFP), ALLOCATABLE :: C(:, :)
+!! TRANSPOSE(J) * J, shape (xidim, xidim)
+REAL(DFP), ALLOCATABLE :: invC(:, :)
+!! inverse of C, shape (xidim, xidim)
+REAL(DFP), ALLOCATABLE :: v(:)
+!! invC * TRANSPOSE(J) * r, shape (xidim)
+REAL(DFP), ALLOCATABLE :: w(:)
+!! eigenvalues of C, shape (xidim)
 REAL(DFP) :: areal
 LOGICAL(LGT) :: ismin, ismax
 !!
@@ -41,9 +43,10 @@ LOGICAL(LGT) :: ismin, ismax
 !!
 nips = SIZE(obj%N, 2)
 nsd = obj%nsd
+xidim = SIZE(obj%jacobian, 2)
 CALL Reallocate(h, nips)
-CALL Reallocate(G, nsd, nsd, nips)
-CALL Reallocate(FFT, nsd, nsd)
+CALL Reallocate(C, xidim, xidim)
+CALL Reallocate(invC, xidim, xidim)
 !!
 !! hmax
 !!
@@ -66,55 +69,53 @@ END IF
 !! r and unitNormal
 !!
 CALL GetUnitNormal(obj=obj, val=val, r=r0)
+!!
+!! GetUnitNormal leaves r0 unallocated for a val that is neither a
+!! scalar nor a vector. Then there is no direction: r0 = 0, so h = 0.
+!!
+IF (.NOT. ALLOCATED(r0)) THEN
+  CALL Reallocate(r0, nsd, nips)
+  r0 = 0.0_DFP
+END IF
 IF (PRESENT(r)) r = r0
 !!
-!! FFT and G
+!! C = TRANSPOSE(J) * J is xidim x xidim and regular when the map is
+!! regular, also for xidim < nsd. The metric G = J * invC**2 *
+!! TRANSPOSE(J) is the pseudo-inverse of J * TRANSPOSE(J), so
+!! r^T G r = |invC * TRANSPOSE(J) * r|**2.
 !!
 DO ii = 1, nips
   !!
-  FFT = MATMUL(obj%jacobian(:, :, ii), &
-    & TRANSPOSE(obj%jacobian(:, :, ii)))
+  C = MATMUL(TRANSPOSE(obj%jacobian(:, :, ii)), obj%jacobian(:, :, ii))
   !!
-  CALL Inv(invA=G(:, :, ii), A=FFT)
+  CALL Inv(invA=invC, A=C)
   !!
-  rr = OUTERPROD(a=r0(1:nsd, ii), b=r0(1:nsd, ii))
+  v = MATMUL(invC, MATMUL(r0(1:nsd, ii), obj%jacobian(:, :, ii)))
   !!
-  areal = Contraction(a1=G(:, :, ii), a2=rr)
+  areal = DOT_PRODUCT(v, v)
   !!
-  IF (areal.APPROXEQ.zero) THEN
+  !! zero direction: areal is zero up to round-off
+  IF (areal .LE. zero) THEN
     h(ii) = 0.0_DFP
   ELSE
     h(ii) = 2.0_DFP / SQRT(areal)
   END IF
   !!
+  !! eigenvalues of C are the reciprocals of the nonzero eigenvalues of G
+  !!
+  IF (ismin .OR. ismax) THEN
+    w = SymEigenValuesUpto3(C)
+    IF (ismax) hmax(ii) = 2.0_DFP * SQRT(MAXVAL(w))
+    IF (ismin) hmin(ii) = 2.0_DFP * SQRT(MINVAL(w))
+  END IF
+  !!
 END DO
 !!
-!! reset FFT to reuse it
-!!
-FFT = 0.0_DFP; r0 = 0.0_DFP
-!!
-IF (ismin .OR. ismax) THEN
-  DO ii = 1, nips
-    r0(:, ii) = SymEigenValuesUpto3(G(:, :, ii))
-  END DO
-END IF
-!!
-IF (ismax) THEN
-  DO ii = 1, nips
-    hmax(ii) = 2.0_DFP / SQRT(MINVAL(r0(:, ii)))
-  END DO
-END IF
-!!
-IF (ismin) THEN
-  DO ii = 1, nips
-    hmin(ii) = 2.0_DFP / SQRT(MAXVAL(r0(:, ii)))
-  END DO
-END IF
-!!
 IF (ALLOCATED(r0)) DEALLOCATE (r0)
-IF (ALLOCATED(G)) DEALLOCATE (G)
-IF (ALLOCATED(FFT)) DEALLOCATE (FFT)
-IF (ALLOCATED(rr)) DEALLOCATE (rr)
+IF (ALLOCATED(C)) DEALLOCATE (C)
+IF (ALLOCATED(invC)) DEALLOCATE (invC)
+IF (ALLOCATED(v)) DEALLOCATE (v)
+IF (ALLOCATED(w)) DEALLOCATE (w)
 END PROCEDURE elemsd_getHRQIParam1
 
 !----------------------------------------------------------------------------
