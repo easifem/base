@@ -21,7 +21,6 @@ USE BaseType, ONLY: STElemshapeData_
 USE BaseType, ONLY: FEVariable_
 USE GlobalData, ONLY: DFP
 USE GlobalData, ONLY: I4B
-USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -55,6 +54,9 @@ PUBLIC :: GetHRGNParam
 ! `val` must hold nodal values. For other values, `r` is not valid.
 ! @endnote
 !
+! A `val` that is neither a scalar nor a vector, such as a matrix,
+! gives no direction. Then `r` is zero and `h` is `hmin`.
+!
 ! `obj` can be an [[ElemshapeData_]] or an [[STElemshapeData_]]. For
 ! an [[STElemshapeData_]], the sum also runs over the time nodes.
 !
@@ -70,6 +72,8 @@ PUBLIC :: GetHRGNParam
 !   with an [[ElemshapeData_]]
 ! - [test 2](|base|ElemshapeData/examples/GetHRGNParam_test_2.F90)
 !   with an [[STElemshapeData_]]
+! - [test 3](|base|ElemshapeData/examples/GetHRGNParam_test_3.F90)
+!   with a matrix `val`
 !
 ! See also: [[elemsd_GetHRGNParam2]], [[elemsd_GetHRGNParam3]]
 
@@ -150,6 +154,8 @@ END INTERFACE GetHRGNParam
 !
 ! The routine allocates `h` with the shape
 ! `[SIZE(obj(1)%N, 2), SIZE(obj)]`.
+! All `obj(ii)` must have the same number of space quadrature points.
+! If `obj` is empty, `h` has the shape `[0, 0]`.
 !
 ! @note
 ! `opt` is not used at present.
@@ -159,6 +165,8 @@ END INTERFACE GetHRGNParam
 !
 ! - [test 2](|base|ElemshapeData/examples/GetHRGNParam_test_2.F90)
 !   second block
+! - [test 4](|base|ElemshapeData/examples/GetHRGNParam_test_4.F90)
+!   empty `obj`
 !
 ! See also: [[elemsd_GetHRGNParam1]], [[elemsd_GetHRGNParam4]]
 
