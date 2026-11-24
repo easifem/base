@@ -684,7 +684,9 @@ END INTERFACE GetSpatialGradient_
 ! - A space-time `val` works like [[obj_GetSpatialGradient_8]].
 !   Then `obj` must be a `STElemShapeData_`.
 !
-! For other variable types, it leaves `ans` unchanged.
+! If the routine cannot compute a gradient, `ans` is zero. This happens
+! for a space-time `val` with an `obj` that is not a `STElemShapeData_`,
+! and for other variable types.
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
@@ -695,6 +697,8 @@ END INTERFACE GetSpatialGradient_
 ! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
 ! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90)
 ! with constant and space-time `val`
+! - [test 4](|base|ElemshapeData/examples/GetSpatialGradient_test_4.F90)
+! with a space-time `val` and a space-only `obj`
 !
 ! See also: [[obj_GetSpatialGradient_9]]
 

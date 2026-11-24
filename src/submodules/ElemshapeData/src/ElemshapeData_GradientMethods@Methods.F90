@@ -366,13 +366,12 @@ END PROCEDURE obj_GetSpatialGradient_8
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetSpatialGradient9
-INTEGER(I4B) :: s(2)
+! Allocate and zero ans first, so every path that does not compute a
+! gradient (constant val, space-time val with a space-only obj, other
+! varType) returns zeros of shape (nrow, ncol, nsd, nips).
+CALL Reallocate(ans, val%s(1), val%s(2), obj%nsd, obj%nips)
 
 SELECT CASE (val%varType)
-CASE (fevaropt%constant)
-  s = FEVariableShape(val)
-  CALL Reallocate(ans, s(1), s(2), obj%nsd, obj%nips)
-
 CASE (fevaropt%space)
   CALL GetSpatialGradient(obj=obj, ans=ans, &
                           Val=FEVariableGet( &
