@@ -56,6 +56,7 @@ USE SwapUtility
 USE SymUtility
 USE TailUtility
 USE TriagUtility
+USE VoigtUtility
 USE ZerosUtility
 USE RandomUtility
 END MODULE Utility

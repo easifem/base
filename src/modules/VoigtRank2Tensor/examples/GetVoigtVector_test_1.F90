@@ -9,6 +9,7 @@ USE GlobalData, ONLY: StressTypeVoigt
 USE GlobalData, ONLY: VoigtForm3D
 USE GlobalData, ONLY: VoigtFormAxisymmetric
 USE GlobalData, ONLY: VoigtFormPlaneStrain
+USE GlobalData, ONLY: VoigtFormPlaneStrainFull
 USE GlobalData, ONLY: VoigtFormPlaneStress
 USE Test_Method, ONLY: OK
 USE VoigtRank2Tensor_Method, ONLY: GetVoigtVector
@@ -52,6 +53,16 @@ BLOCK
   CALL OK(SIZE(v) .EQ. 4, "axisymmetric: size")
   CALL OK(MAXVAL(ABS(v - [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP])) &
           .LT. tol, "axisymmetric: values")
+END BLOCK
+
+! Test 4: plane strain full keeps the 33 component, [11,22,12,33]
+BLOCK
+  REAL(DFP), ALLOCATABLE :: v(:)
+
+  v = GetVoigtVector(obj, VoigtFormPlaneStrainFull)
+  CALL OK(SIZE(v) .EQ. 4, "plane strain full: size")
+  CALL OK(MAXVAL(ABS(v - [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP])) &
+          .LT. tol, "plane strain full: values")
 END BLOCK
 
 END PROGRAM main

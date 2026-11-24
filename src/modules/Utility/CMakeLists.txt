@@ -54,6 +54,7 @@ target_sources(
         ${src_path}/SymUtility.F90
         ${src_path}/TailUtility.F90
         ${src_path}/TriagUtility.F90
+        ${src_path}/VoigtUtility.F90
         ${src_path}/Utility.F90
         ${src_path}/ZerosUtility.F90
         ${src_path}/MappingUtility.F90

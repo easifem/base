@@ -28,17 +28,17 @@ CONTAINS
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_Initiate1
+MODULE PROCEDURE obj_Initiate1
 obj%voigtType = voigtType
 obj%V = vec
 obj%scale = GetScale(voigtType)
-END PROCEDURE VoigtRank2Tensor_Initiate1
+END PROCEDURE obj_Initiate1
 
 !----------------------------------------------------------------------------
 !                                                                   Initiate
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_Initiate2
+MODULE PROCEDURE obj_Initiate2
 REAL(DFP) :: s
 
 obj%voigtType = voigtType
@@ -53,47 +53,47 @@ obj%V(3) = T(3, 3)
 obj%V(4) = 0.5_DFP * s * (T(1, 2) + T(2, 1))
 obj%V(5) = 0.5_DFP * s * (T(2, 3) + T(3, 2))
 obj%V(6) = 0.5_DFP * s * (T(1, 3) + T(3, 1))
-END PROCEDURE VoigtRank2Tensor_Initiate2
+END PROCEDURE obj_Initiate2
 
 !----------------------------------------------------------------------------
 !                                                           VoigtRank2Tensor
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_Constructor1
+MODULE PROCEDURE obj_VoigtRank2Tensor1
 CALL Initiate(obj=ans, vec=vec, voigtType=voigtType)
-END PROCEDURE VoigtRank2Tensor_Constructor1
+END PROCEDURE obj_VoigtRank2Tensor1
 
 !----------------------------------------------------------------------------
 !                                                           VoigtRank2Tensor
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_Constructor2
+MODULE PROCEDURE obj_VoigtRank2Tensor2
 CALL Initiate(obj=ans, T=T, voigtType=voigtType)
-END PROCEDURE VoigtRank2Tensor_Constructor2
+END PROCEDURE obj_VoigtRank2Tensor2
 
 !----------------------------------------------------------------------------
 !                                                   VoigtRank2Tensor_Pointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_Pointer1
+MODULE PROCEDURE obj_VoigtRank2Tensor_Pointer1
 ALLOCATE (ans)
 CALL Initiate(obj=ans, vec=vec, voigtType=voigtType)
-END PROCEDURE VoigtRank2Tensor_Pointer1
+END PROCEDURE obj_VoigtRank2Tensor_Pointer1
 
 !----------------------------------------------------------------------------
 !                                                   VoigtRank2Tensor_Pointer
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_Pointer2
+MODULE PROCEDURE obj_VoigtRank2Tensor_Pointer2
 ALLOCATE (ans)
 CALL Initiate(obj=ans, T=T, voigtType=voigtType)
-END PROCEDURE VoigtRank2Tensor_Pointer2
+END PROCEDURE obj_VoigtRank2Tensor_Pointer2
 
 !----------------------------------------------------------------------------
 !                                                                 Assignment
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_MatEqObj
+MODULE PROCEDURE obj_Assign1
 T(1, 1) = obj%V(1)
 T(2, 2) = obj%V(2)
 T(3, 3) = obj%V(3)
@@ -103,15 +103,15 @@ T(2, 3) = obj%scale * obj%V(5)
 T(3, 2) = T(2, 3)
 T(1, 3) = obj%scale * obj%V(6)
 T(3, 1) = T(1, 3)
-END PROCEDURE VoigtRank2Tensor_MatEqObj
+END PROCEDURE obj_Assign1
 
 !----------------------------------------------------------------------------
 !                                                                 Assignment
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE VoigtRank2Tensor_VecEqObj
+MODULE PROCEDURE obj_Assign2
 vec = obj%V
-END PROCEDURE VoigtRank2Tensor_VecEqObj
+END PROCEDURE obj_Assign2
 
 !----------------------------------------------------------------------------
 !                                                                   GetScale

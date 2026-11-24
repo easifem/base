@@ -12,4 +12,5 @@ TARGET_SOURCES(
   ${src_path}/VoigtRank2Tensor_Method@ConstructorMethods.F90
   ${src_path}/VoigtRank2Tensor_Method@IOMethods.F90
   ${src_path}/VoigtRank2Tensor_Method@VoigtFormMethods.F90
+  ${src_path}/VoigtRank2Tensor_Method@TensorMethods.F90
 )

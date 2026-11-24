@@ -11,7 +11,7 @@ USE GlobalData, ONLY: VoigtFormPlaneStress
 USE Test_Method, ONLY: OK
 USE VoigtRank2Tensor_Method, ONLY: GetVoigtVector
 USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-USE VoigtRank2Tensor_Method, ONLY: VoigtSize
+USE VoigtUtility, ONLY: VoigtSize
 IMPLICIT NONE
 
 REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP

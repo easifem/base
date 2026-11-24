@@ -4,7 +4,7 @@
 
 PROGRAM main
 USE Test_Method, ONLY: OK
-USE VoigtRank2Tensor_Method, ONLY: VoigtSize
+USE VoigtUtility, ONLY: VoigtSize
 IMPLICIT NONE
 
 ! Test 1: unknown forms fall back to the 3D size
