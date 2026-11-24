@@ -28,7 +28,7 @@ MODULE PROCEDURE H1_Serendipity1
 CALL Errormsg( &
   & msg="[WORK IN PROGRESS] This method is currently not available",  &
   & line=__LINE__,  &
-  & routine="H1_Serendipity()",  &
+  & routine="H1_Serendipity1()",  &
   & unitno=stderr,  &
   & file=__FILE__)
 END PROCEDURE H1_Serendipity1

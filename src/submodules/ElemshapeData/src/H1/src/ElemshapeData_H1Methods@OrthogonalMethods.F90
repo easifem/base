@@ -151,7 +151,7 @@ CASE DEFAULT
   CALL Errormsg( &
     & msg="[NO CASE FOUND] no case found for elemType",  &
     & unitno=stderr,  &
-    & routine="H1_Hierarchy1()",  &
+    & routine="H1_Orthogonal1()",  &
     & file=__FILE__, &
     & line=__LINE__)
 END SELECT
