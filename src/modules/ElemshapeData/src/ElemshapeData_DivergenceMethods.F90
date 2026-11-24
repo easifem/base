@@ -385,17 +385,23 @@ END INTERFACE GetDivergence
 ! - A vector `val` gives a scalar with shape `[nips, nipt]`.
 ! - A matrix `val` gives a vector with shape `[nrow, nips, nipt]`.
 !
+! If `obj(ipt)` has fewer quadrature points than `nips`, the entries
+! for the missing points of time point `ipt` are zero.
 ! For any other rank of `val`, the routine leaves `ans` unchanged.
 !
 ! Changes:
 !   - 2026-11-14: for a vector `val`, the result used `obj(nipt + 1)`
 !     after the loop. It now uses the largest `nips`.
+!   - 2026-11-24: for a matrix `val`, the missing points are zero.
+!     Before, they were not set.
 !
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
 ! - [test 2](|base|ElemshapeData/examples/GetDivergence_test_2.F90) with a
 !   matrix `val`
+! - [test 4](|base|ElemshapeData/examples/GetDivergence_test_4.F90) with a
+!   different `nips` at each time point
 !
 ! See also: [[elemsd_GetDivergence_7]], [[elemsd_Divergence_2]]
 
