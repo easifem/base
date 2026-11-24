@@ -111,7 +111,10 @@ IF (ismin) THEN
   END DO
 END IF
 !!
-DEALLOCATE (r0, G, FFT, rr)
+IF (ALLOCATED(r0)) DEALLOCATE (r0)
+IF (ALLOCATED(G)) DEALLOCATE (G)
+IF (ALLOCATED(FFT)) DEALLOCATE (FFT)
+IF (ALLOCATED(rr)) DEALLOCATE (rr)
 END PROCEDURE elemsd_getHRQIParam1
 
 !----------------------------------------------------------------------------
@@ -119,147 +122,21 @@ END PROCEDURE elemsd_getHRQIParam1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetHRQIParam2
-  !!
-INTEGER(I4B) :: ii
 REAL(DFP), ALLOCATABLE :: h0(:), hmax0(:), hmin0(:), r0(:, :)
-CHARACTER(LEN=3) :: cod
-  !!
-  !! main
-  !!
-cod = "FFF"
-  !!
-IF (PRESENT(hmax)) THEN
-  cod(1:1) = "T"
-END IF
-  !!
-IF (PRESENT(hmin)) THEN
-  cod(2:2) = "T"
-END IF
-  !!
-IF (PRESENT(r)) THEN
-  cod(3:3) = "T"
-END IF
-  !!
-SELECT CASE (cod)
-CASE ("FFF")
-    !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & val=val, &
-    & opt=opt)
-    !!
-  h = QuadratureVariable(h0, TypeFEVariableScalar, TypeFEVariableSpace)
-    !!
-CASE ("TFF")
-      !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & hmax=hmax0, &
-    & val=val, &
-    & opt=opt)
-      !!
-  h = QuadratureVariable(h0, TypeFEVariableScalar, TypeFEVariableSpace)
-  hmax = QuadratureVariable(hmax0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
-      !!
-CASE ("FTF")
-      !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & hmin=hmin0, &
-    & val=val, &
-    & opt=opt)
-      !!
-  h = QuadratureVariable(h0, TypeFEVariableScalar, TypeFEVariableSpace)
-  hmin = QuadratureVariable(hmin0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
-      !!
-CASE ("TTF")
-      !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & hmax=hmax0, &
-    & hmin=hmin0, &
-    & val=val, &
-    & opt=opt)
-      !!
-  h = QuadratureVariable(h0, TypeFEVariableScalar, TypeFEVariableSpace)
-  hmax = QuadratureVariable(hmax0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
-  hmin = QuadratureVariable(hmin0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
-      !!
-CASE ("FFT")
-      !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & r=r0, &
-    & val=val, &
-    & opt=opt)
-      !!
-  h = QuadratureVariable(h0, TypeFEVariableScalar, TypeFEVariableSpace)
-  r = QuadratureVariable(r0, TypeFEVariableVector, TypeFEVariableSpace)
-      !!
-CASE ("TFT")
-      !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & hmax=hmax0, &
-    & r=r0, &
-    & val=val, &
-    & opt=opt)
-      !!
-  h = QuadratureVariable(h0, TypeFEVariableScalar, TypeFEVariableSpace)
-  hmax = QuadratureVariable(hmax0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
-  r = QuadratureVariable(r0, TypeFEVariableVector, TypeFEVariableSpace)
-      !!
-CASE ("FTT")
-      !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & hmin=hmin0, &
-    & r=r0, &
-    & val=val, &
-    & opt=opt)
-      !!
-  h = QuadratureVariable(h0, TypeFEVariableScalar, TypeFEVariableSpace)
-  hmin = QuadratureVariable(hmin0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
-  r = QuadratureVariable(r0, TypeFEVariableVector, TypeFEVariableSpace)
-      !!
-CASE ("TTT")
-      !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & hmax=hmax0, &
-    & hmin=hmin0, &
-    & r=r0, &
-    & val=val, &
-    & opt=opt)
-      !!
-  h = QuadratureVariable(h0, TypeFEVariableScalar, TypeFEVariableSpace)
-  hmax = QuadratureVariable(hmax0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
-  hmin = QuadratureVariable(hmin0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
-  r = QuadratureVariable(r0, TypeFEVariableVector, TypeFEVariableSpace)
-      !!
-END SELECT
-  !!
-IF (ALLOCATED(h0)) DEALLOCATE (h0)
-IF (ALLOCATED(hmax0)) DEALLOCATE (hmax0)
-IF (ALLOCATED(hmin0)) DEALLOCATE (hmin0)
-IF (ALLOCATED(r0)) DEALLOCATE (r0)
-  !!
+
+CALL GetHRQIParam(obj=obj, h=h0, hmax=hmax0, hmin=hmin0, r=r0, val=val, &
+                  opt=opt)
+
+h = QuadratureVariable(h0, TypeFEVariableScalar, TypeFEVariableSpace)
+
+IF (PRESENT(hmax)) hmax = QuadratureVariable(hmax0, TypeFEVariableScalar, &
+                                             TypeFEVariableSpace)
+
+IF (PRESENT(hmin)) hmin = QuadratureVariable(hmin0, TypeFEVariableScalar, &
+                                             TypeFEVariableSpace)
+
+IF (PRESENT(r)) r = QuadratureVariable(r0, TypeFEVariableVector, &
+                                       TypeFEVariableSpace)
 END PROCEDURE elemsd_GetHRQIParam2
 
 !----------------------------------------------------------------------------
@@ -267,180 +144,26 @@ END PROCEDURE elemsd_GetHRQIParam2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetHRQIParam3
-  !!
 INTEGER(I4B) :: ii, nips, nipt, nsd
 REAL(DFP), ALLOCATABLE :: h0(:), hmax0(:), hmin0(:), r0(:, :)
-CHARACTER(LEN=3) :: cod
-  !!
-  !! main
-  !!
+
 nips = SIZE(obj(1)%N, 2)
 nipt = SIZE(obj)
 nsd = obj(1)%nsd
-  !!
+
 CALL Reallocate(h, nips, nipt)
-  !!
-cod = "FFF"
-  !!
-IF (PRESENT(hmax)) THEN
-  CALL Reallocate(hmax, nips, nipt)
-  cod(1:1) = "T"
-END IF
-  !!
-IF (PRESENT(hmin)) THEN
-  CALL Reallocate(hmin, nips, nipt)
-  cod(2:2) = "T"
-END IF
-  !!
-IF (PRESENT(r)) THEN
-  CALL Reallocate(r, nsd, nips, nipt)
-  cod(3:3) = "T"
-END IF
-  !!
-SELECT CASE (cod)
-CASE ("FFF")
-    !!
-  DO ii = 1, SIZE(obj)
-      !!
-    CALL GetHRQIParam( &
-      & obj=obj(ii), &
-      & h=h0, &
-      & val=val, &
-      & opt=opt)
-      !!
-    h(:, ii) = h0(:)
-      !!
-  END DO
-    !!
-CASE ("TFF")
-    !!
-  DO ii = 1, SIZE(obj)
-      !!
-    CALL GetHRQIParam( &
-      & obj=obj(ii), &
-      & h=h0, &
-      & hmax=hmax0, &
-      & val=val, &
-      & opt=opt)
-      !!
-    h(:, ii) = h0(:)
-    hmax(:, ii) = hmax0(:)
-      !!
-  END DO
-    !!
-CASE ("FTF")
-    !!
-  DO ii = 1, SIZE(obj)
-      !!
-    CALL GetHRQIParam( &
-      & obj=obj(ii), &
-      & h=h0, &
-      & hmin=hmin0, &
-      & val=val, &
-      & opt=opt)
-      !!
-    h(:, ii) = h0(:)
-    hmin(:, ii) = hmin0(:)
-      !!
-  END DO
-    !!
-CASE ("TTF")
-    !!
-  DO ii = 1, SIZE(obj)
-      !!
-    CALL GetHRQIParam( &
-      & obj=obj(ii), &
-      & h=h0, &
-      & hmax=hmax0, &
-      & hmin=hmin0, &
-      & val=val, &
-      & opt=opt)
-      !!
-    h(:, ii) = h0(:)
-    hmax(:, ii) = hmax0(:)
-    hmin(:, ii) = hmin0(:)
-      !!
-  END DO
-    !!
-CASE ("FFT")
-    !!
-  DO ii = 1, SIZE(obj)
-      !!
-    CALL GetHRQIParam( &
-      & obj=obj(ii), &
-      & h=h0, &
-      & r=r0, &
-      & val=val, &
-      & opt=opt)
-      !!
-    h(:, ii) = h0(:)
-    r(:, :, ii) = r0(:, :)
-      !!
-  END DO
-    !!
-CASE ("TFT")
-    !!
-  DO ii = 1, SIZE(obj)
-      !!
-    CALL GetHRQIParam( &
-      & obj=obj(ii), &
-      & h=h0, &
-      & hmax=hmax0, &
-      & r=r0, &
-      & val=val, &
-      & opt=opt)
-      !!
-    h(:, ii) = h0(:)
-    hmax(:, ii) = hmax0(:)
-    r(:, :, ii) = r0(:, :)
-      !!
-  END DO
-    !!
-CASE ("FTT")
-    !!
-  DO ii = 1, SIZE(obj)
-      !!
-    CALL GetHRQIParam( &
-      & obj=obj(ii), &
-      & h=h0, &
-      & hmin=hmin0, &
-      & r=r0, &
-      & val=val, &
-      & opt=opt)
-      !!
-    h(:, ii) = h0(:)
-    hmin(:, ii) = hmin0(:)
-    r(:, :, ii) = r0(:, :)
-      !!
-  END DO
-    !!
-CASE ("TTT")
-    !!
-  DO ii = 1, SIZE(obj)
-      !!
-    CALL GetHRQIParam( &
-      & obj=obj(ii), &
-      & h=h0, &
-      & hmax=hmax0, &
-      & hmin=hmin0, &
-      & r=r0, &
-      & val=val, &
-      & opt=opt)
-      !!
-    h(:, ii) = h0(:)
-    hmax(:, ii) = hmax0(:)
-    hmin(:, ii) = hmin0(:)
-    r(:, :, ii) = r0(:, :)
-      !!
-  END DO
-    !!
-END SELECT
-  !!
-IF (ALLOCATED(h0)) DEALLOCATE (h0)
-IF (ALLOCATED(hmax0)) DEALLOCATE (hmax0)
-IF (ALLOCATED(hmin0)) DEALLOCATE (hmin0)
-IF (ALLOCATED(r0)) DEALLOCATE (r0)
-  !!
+IF (PRESENT(hmax)) CALL Reallocate(hmax, nips, nipt)
+IF (PRESENT(hmin)) CALL Reallocate(hmin, nips, nipt)
+IF (PRESENT(r)) CALL Reallocate(r, nsd, nips, nipt)
+
+DO ii = 1, nipt
+  CALL GetHRQIParam(obj=obj(ii), h=h0, hmax=hmax0, hmin=hmin0, r=r0, &
+                    val=val, opt=opt)
+  h(:, ii) = h0(:)
+  IF (PRESENT(hmax)) hmax(:, ii) = hmax0(:)
+  IF (PRESENT(hmin)) hmin(:, ii) = hmin0(:)
+  IF (PRESENT(r)) r(:, :, ii) = r0(:, :)
+END DO
 END PROCEDURE elemsd_GetHRQIParam3
 
 !----------------------------------------------------------------------------
@@ -448,213 +171,21 @@ END PROCEDURE elemsd_GetHRQIParam3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetHRQIParam4
-  !!
-REAL(DFP), ALLOCATABLE :: h0(:, :), hmax0(:, :), hmin0(:, :), &
-  & r0(:, :, :)
-CHARACTER(LEN=3) :: cod
-  !!
-  !! main
-  !!
-cod = "FFF"
-  !!
-IF (PRESENT(hmax)) THEN
-  cod(1:1) = "T"
-END IF
-  !!
-IF (PRESENT(hmin)) THEN
-  cod(2:2) = "T"
-END IF
-  !!
-IF (PRESENT(r)) THEN
-  cod(3:3) = "T"
-END IF
-  !!
-SELECT CASE (cod)
-CASE ("FFF")
-    !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & val=val, &
-    & opt=opt)
-    !!
-  h = QuadratureVariable( &
-    & h0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-    !!
-CASE ("TFF")
-    !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & hmax=hmax0, &
-    & val=val, &
-    & opt=opt)
-    !!
-  h = QuadratureVariable( &
-    & h0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-  hmax = QuadratureVariable( &
-    & hmax0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-CASE ("FTF")
-    !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & hmin=hmin0, &
-    & val=val, &
-    & opt=opt)
-    !!
-  h = QuadratureVariable( &
-    & h0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-  hmin = QuadratureVariable( &
-    & hmin0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-CASE ("TTF")
-    !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & hmax=hmax0, &
-    & hmin=hmin0, &
-    & val=val, &
-    & opt=opt)
-    !!
-  h = QuadratureVariable( &
-    & h0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-  hmax = QuadratureVariable( &
-    & hmax0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-  hmin = QuadratureVariable( &
-    & hmin0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-CASE ("FFT")
-    !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & r=r0, &
-    & val=val, &
-    & opt=opt)
-    !!
-  h = QuadratureVariable( &
-    & h0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-  r = QuadratureVariable( &
-    & r0, &
-    & TypeFEVariableVector, &
-    & TypeFEVariableSpaceTime)
-    !!
-CASE ("TFT")
-    !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & hmax=hmax0, &
-    & r=r0, &
-    & val=val, &
-    & opt=opt)
-    !!
-  h = QuadratureVariable( &
-    & h0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-  hmax = QuadratureVariable( &
-    & hmax0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-  r = QuadratureVariable( &
-    & r0, &
-    & TypeFEVariableVector, &
-    & TypeFEVariableSpaceTime)
-    !!
-CASE ("FTT")
-    !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & hmin=hmin0, &
-    & r=r0, &
-    & val=val, &
-    & opt=opt)
-    !!
-  h = QuadratureVariable( &
-    & h0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-  hmin = QuadratureVariable( &
-    & hmin0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-  r = QuadratureVariable( &
-    & r0, &
-    & TypeFEVariableVector, &
-    & TypeFEVariableSpaceTime)
-    !!
-CASE ("TTT")
-    !!
-  CALL GetHRQIParam( &
-    & obj=obj, &
-    & h=h0, &
-    & hmax=hmax0, &
-    & hmin=hmin0, &
-    & r=r0, &
-    & val=val, &
-    & opt=opt)
-    !!
-  h = QuadratureVariable( &
-    & h0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-  hmin = QuadratureVariable( &
-    & hmin0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-    !!
-  hmax = QuadratureVariable( &
-    & hmax0, &
-    & TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
-    !!
-  r = QuadratureVariable( &
-    & r0, &
-    & TypeFEVariableVector, &
-    & TypeFEVariableSpaceTime)
-    !!
-END SELECT
-  !!
-IF (ALLOCATED(h0)) DEALLOCATE (h0)
-IF (ALLOCATED(hmax0)) DEALLOCATE (hmax0)
-IF (ALLOCATED(hmin0)) DEALLOCATE (hmin0)
-IF (ALLOCATED(r0)) DEALLOCATE (r0)
-  !!
+REAL(DFP), ALLOCATABLE :: h0(:, :), hmax0(:, :), hmin0(:, :), r0(:, :, :)
+
+CALL GetHRQIParam(obj=obj, h=h0, hmax=hmax0, hmin=hmin0, r=r0, val=val, &
+                  opt=opt)
+
+h = QuadratureVariable(h0, TypeFEVariableScalar, TypeFEVariableSpaceTime)
+
+IF (PRESENT(hmax)) hmax = QuadratureVariable(hmax0, TypeFEVariableScalar, &
+                                             TypeFEVariableSpaceTime)
+
+IF (PRESENT(hmin)) hmin = QuadratureVariable(hmin0, TypeFEVariableScalar, &
+                                             TypeFEVariableSpaceTime)
+
+IF (PRESENT(r)) r = QuadratureVariable(r0, TypeFEVariableVector, &
+                                       TypeFEVariableSpaceTime)
 END PROCEDURE elemsd_GetHRQIParam4
 
 !----------------------------------------------------------------------------

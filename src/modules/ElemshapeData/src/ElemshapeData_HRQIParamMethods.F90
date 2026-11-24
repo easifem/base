@@ -61,6 +61,8 @@ PUBLIC :: GetHRQIParam
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetHRQIParam_test_1.F90)
+! - [test 5](|base|ElemshapeData/examples/GetHRQIParam_test_5.F90),
+!   shape data with no quadrature points
 !
 ! See also: [[elemsd_GetHRQIParam2]], [[elemsd_GetHRQIParam3]]
 
