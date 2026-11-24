@@ -65,11 +65,11 @@ PUBLIC :: GetHRQIParam
 !   \quad C = J^T J $$
 !
 ! @note
-! The factor 2 is the edge length of the biunit reference element
-! `[-1, 1]^d`. The routine assumes that `obj` uses a biunit
-! reference domain. For shape data built with `domainName = "UNIT"`,
-! `h`, `hmax` and `hmin` are twice the physical lengths; multiply
-! them by 0.5.
+! The factor 2 in the formula is `refLength`, the edge length of the
+! reference element. Its default 2 fits the biunit element `[-1, 1]^d`.
+! For shape data built with `domainName = "UNIT"`, pass
+! `refLength = 1`; with the default, `h`, `hmax` and `hmin` are twice
+! the physical lengths.
 ! @endnote
 !
 ! Examples
@@ -81,11 +81,14 @@ PUBLIC :: GetHRQIParam
 !   line element in 2D
 ! - [test 7](|base|ElemshapeData/examples/GetHRQIParam_test_7.F90),
 !   matrix `val`
+! - [test 8](|base|ElemshapeData/examples/GetHRQIParam_test_8.F90),
+!   UNIT reference element with `refLength`
 !
 ! See also: [[elemsd_GetHRQIParam2]], [[elemsd_GetHRQIParam3]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetHRQIParam1(obj, h, val, hmax, hmin, r, opt)
+  MODULE PURE SUBROUTINE elemsd_GetHRQIParam1(obj, h, val, hmax, hmin, r, &
+                                                opt, refLength)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! Shape function data. It can be an instance of [[STElemshapeData_]].
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: h(:)
@@ -100,6 +103,9 @@ INTERFACE
     REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: r(:, :)
     !! Unit vector, shape(r) = (nsd, nips)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    REAL(DFP), OPTIONAL, INTENT(IN) :: refLength
+    !! edge length of the reference element, default 2 (BIUNIT);
+    !! use 1 for shape data on a UNIT reference element
     !! Not used now. Kept for future use.
   END SUBROUTINE elemsd_GetHRQIParam1
 END INTERFACE
@@ -130,7 +136,8 @@ END INTERFACE GetHRQIParam
 ! See also: [[elemsd_GetHRQIParam1]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetHRQIParam2(obj, h, val, hmax, hmin, r, opt)
+  MODULE PURE SUBROUTINE elemsd_GetHRQIParam2(obj, h, val, hmax, hmin, r, &
+                                                opt, refLength)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
     !! Shape function data. It can be an instance of [[STElemshapeData_]].
     TYPE(FEVariable_), INTENT(INOUT) :: h
@@ -142,6 +149,9 @@ INTERFACE
     !! lengths, scalar variables on quadrature points.
     !! `r` is the unit vector, a vector variable on quadrature points.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    REAL(DFP), OPTIONAL, INTENT(IN) :: refLength
+    !! edge length of the reference element, default 2 (BIUNIT);
+    !! use 1 for shape data on a UNIT reference element
     !! Not used now. Kept for future use.
   END SUBROUTINE elemsd_GetHRQIParam2
 END INTERFACE
@@ -174,7 +184,8 @@ END INTERFACE GetHRQIParam
 ! See also: [[elemsd_GetHRQIParam1]], [[elemsd_GetHRQIParam4]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetHRQIParam3(obj, h, val, hmax, hmin, r, opt)
+  MODULE PURE SUBROUTINE elemsd_GetHRQIParam3(obj, h, val, hmax, hmin, r, &
+                                                opt, refLength)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     !! Space-time shape function data. `obj(ipt)` is the data at
     !! the `ipt`-th quadrature point in the time domain.
@@ -189,6 +200,9 @@ INTERFACE
     REAL(DFP), OPTIONAL, ALLOCATABLE, INTENT(INOUT) :: r(:, :, :)
     !! Unit vector, shape(r) = (nsd, nips, nipt)
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    REAL(DFP), OPTIONAL, INTENT(IN) :: refLength
+    !! edge length of the reference element, default 2 (BIUNIT);
+    !! use 1 for shape data on a UNIT reference element
     !! Not used now. Kept for future use.
   END SUBROUTINE elemsd_GetHRQIParam3
 END INTERFACE
@@ -220,7 +234,8 @@ END INTERFACE GetHRQIParam
 ! See also: [[elemsd_GetHRQIParam3]]
 
 INTERFACE
-  MODULE PURE SUBROUTINE elemsd_GetHRQIParam4(obj, h, val, hmax, hmin, r, opt)
+  MODULE PURE SUBROUTINE elemsd_GetHRQIParam4(obj, h, val, hmax, hmin, r, &
+                                                opt, refLength)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
     !! Space-time shape function data. `obj(ipt)` is the data at
     !! the `ipt`-th quadrature point in the time domain.
@@ -233,6 +248,9 @@ INTERFACE
     !! lengths, scalar variables on space-time quadrature points.
     !! `r` is the unit vector, a vector variable on the same points.
     INTEGER(I4B), OPTIONAL, INTENT(IN) :: opt
+    REAL(DFP), OPTIONAL, INTENT(IN) :: refLength
+    !! edge length of the reference element, default 2 (BIUNIT);
+    !! use 1 for shape data on a UNIT reference element
     !! Not used now. Kept for future use.
   END SUBROUTINE elemsd_GetHRQIParam4
 END INTERFACE

@@ -36,10 +36,14 @@ REAL(DFP), ALLOCATABLE :: v(:)
 !! invC * TRANSPOSE(J) * r, shape (xidim)
 REAL(DFP), ALLOCATABLE :: w(:)
 !! eigenvalues of C, shape (xidim)
-REAL(DFP) :: areal
+REAL(DFP) :: areal, fac
+!! fac: edge length of the reference element
 LOGICAL(LGT) :: ismin, ismax
 !!
 !! Main
+!!
+fac = 2.0_DFP
+IF (PRESENT(refLength)) fac = refLength
 !!
 nips = SIZE(obj%N, 2)
 nsd = obj%nsd
@@ -98,15 +102,15 @@ DO ii = 1, nips
   IF (areal .LE. zero) THEN
     h(ii) = 0.0_DFP
   ELSE
-    h(ii) = 2.0_DFP / SQRT(areal)
+    h(ii) = fac / SQRT(areal)
   END IF
   !!
   !! eigenvalues of C are the reciprocals of the nonzero eigenvalues of G
   !!
   IF (ismin .OR. ismax) THEN
     w = SymEigenValuesUpto3(C)
-    IF (ismax) hmax(ii) = 2.0_DFP * SQRT(MAXVAL(w))
-    IF (ismin) hmin(ii) = 2.0_DFP * SQRT(MINVAL(w))
+    IF (ismax) hmax(ii) = fac * SQRT(MAXVAL(w))
+    IF (ismin) hmin(ii) = fac * SQRT(MINVAL(w))
   END IF
   !!
 END DO
@@ -126,7 +130,7 @@ MODULE PROCEDURE elemsd_GetHRQIParam2
 REAL(DFP), ALLOCATABLE :: h0(:), hmax0(:), hmin0(:), r0(:, :)
 
 CALL GetHRQIParam(obj=obj, h=h0, hmax=hmax0, hmin=hmin0, r=r0, val=val, &
-                  opt=opt)
+                  opt=opt, refLength=refLength)
 
 h = QuadratureVariable(h0, TypeFEVariableScalar, TypeFEVariableSpace)
 
@@ -159,7 +163,7 @@ IF (PRESENT(r)) CALL Reallocate(r, nsd, nips, nipt)
 
 DO ii = 1, nipt
   CALL GetHRQIParam(obj=obj(ii), h=h0, hmax=hmax0, hmin=hmin0, r=r0, &
-                    val=val, opt=opt)
+                    val=val, opt=opt, refLength=refLength)
   h(:, ii) = h0(:)
   IF (PRESENT(hmax)) hmax(:, ii) = hmax0(:)
   IF (PRESENT(hmin)) hmin(:, ii) = hmin0(:)
@@ -175,7 +179,7 @@ MODULE PROCEDURE elemsd_GetHRQIParam4
 REAL(DFP), ALLOCATABLE :: h0(:, :), hmax0(:, :), hmin0(:, :), r0(:, :, :)
 
 CALL GetHRQIParam(obj=obj, h=h0, hmax=hmax0, hmin=hmin0, r=r0, val=val, &
-                  opt=opt)
+                  opt=opt, refLength=refLength)
 
 h = QuadratureVariable(h0, TypeFEVariableScalar, TypeFEVariableSpaceTime)
 
