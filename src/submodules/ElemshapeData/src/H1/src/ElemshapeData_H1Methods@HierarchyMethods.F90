@@ -112,6 +112,7 @@ CASE DEFAULT
     & routine="H1_Hierarchy1()",  &
     & file=__FILE__, &
     & line=__LINE__)
+  RETURN
 END SELECT
 
 obj%N = TRANSPOSE(N)

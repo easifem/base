@@ -154,6 +154,7 @@ CASE DEFAULT
     & routine="H1_Orthogonal1()",  &
     & file=__FILE__, &
     & line=__LINE__)
+  RETURN
 END SELECT
 
 obj%N = TRANSPOSE(N)
