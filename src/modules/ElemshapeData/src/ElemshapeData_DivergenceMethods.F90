@@ -97,11 +97,12 @@ END INTERFACE GetDivergence
 !
 ! @note
 ! `obj` must be a `STElemShapeData_` with `dNTdXt` set. Otherwise,
-! the routine leaves `ans` unchanged.
+! the routine sets `ans(1:nips)` to zero.
 ! @endnote
 !
 ! Changes:
 !   - 2026-11-14: removed a duplicate declaration
+!   - 2026-11-24: sets `ans` to zero when `obj` is not space-time
 !
 ! Formula:
 !   $$ ans(ips) = \sum_a \sum_I \sum_i val(i, I, a) \,
@@ -110,6 +111,8 @@ END INTERFACE GetDivergence
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/GetDivergence_test_3.F90) with
+!   space-only `obj`
 !
 ! See also: [[elemsd_GetDivergence_1]], [[elemsd_GetDivergence_3]]
 
@@ -144,7 +147,8 @@ END INTERFACE GetDivergence
 ! - A space-time `val` works like [[elemsd_GetDivergence_2]].
 !   Then `obj` must be a `STElemShapeData_`.
 !
-! For other variable types, the routine leaves `ans` unchanged.
+! For other variable types, or a space-time `val` with a space-only
+! `obj`, the routine sets `ans(1:nips)` to zero and `tsize = nips`.
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
@@ -155,6 +159,8 @@ END INTERFACE GetDivergence
 ! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
 ! - [test 2](|base|ElemshapeData/examples/GetDivergence_test_2.F90) with a
 !   space-time `val`
+! - [test 3](|base|ElemshapeData/examples/GetDivergence_test_3.F90) with a
+!   time `val` and a space-time `val` with space-only `obj`
 !
 ! See also: [[elemsd_GetDivergence_1]], [[elemsd_GetDivergence_2]]
 
@@ -235,12 +241,13 @@ END INTERFACE GetDivergence
 !
 ! @note
 ! `obj` must be a `STElemShapeData_` with `dNTdXt` set. Otherwise,
-! the routine leaves `ans` unchanged.
+! the routine sets `ans(1:nrow, 1:ncol)` to zero.
 ! @endnote
 !
 ! Changes:
 !   - 2026-11-14: row divergence, `SUM_j dM_ij/dx_j`. Before, it summed
 !     over the first index.
+!   - 2026-11-24: sets `ans` to zero when `obj` is not space-time
 !
 ! Formula:
 !   $$ ans(i, ips) = \sum_a \sum_I \sum_j val(i, j, I, a) \,
@@ -249,6 +256,8 @@ END INTERFACE GetDivergence
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/GetDivergence_test_3.F90) with
+!   space-only `obj`
 !
 ! See also: [[elemsd_GetDivergence_4]], [[elemsd_GetDivergence_6]]
 
@@ -285,7 +294,9 @@ END INTERFACE GetDivergence
 ! - A space-time `val` works like [[elemsd_GetDivergence_5]].
 !   Then `obj` must be a `STElemShapeData_`.
 !
-! For other variable types, the routine leaves `ans` unchanged.
+! For other variable types, or a space-time `val` with a space-only
+! `obj`, the routine sets `nrow` to the number of rows of `val`,
+! `ncol = nips`, and `ans(1:nrow, 1:ncol)` to zero.
 !
 ! @note
 ! `val` must hold nodal values. A quadrature variable is not supported.
@@ -296,6 +307,8 @@ END INTERFACE GetDivergence
 ! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
 ! - [test 2](|base|ElemshapeData/examples/GetDivergence_test_2.F90) with a
 !   constant and a space-time `val`
+! - [test 3](|base|ElemshapeData/examples/GetDivergence_test_3.F90) with a
+!   space-time `val` and space-only `obj`
 !
 ! See also: [[elemsd_GetDivergence_4]], [[elemsd_GetDivergence_5]]
 
@@ -325,6 +338,8 @@ END INTERFACE GetDivergence
 ! Returns the divergence of `val` as a quadrature, space `FEVariable_`.
 ! A vector `val` gives a scalar.
 ! A matrix `val` gives a vector of row divergences.
+! A `val` whose divergence is not supported, for example a time `val`,
+! gives zero; see [[elemsd_GetDivergence_3]].
 ! For any other rank of `val`, the routine leaves `ans` unchanged.
 !
 ! @note
@@ -336,6 +351,8 @@ END INTERFACE GetDivergence
 ! - [test 1](|base|ElemshapeData/examples/GetDivergence_test_1.F90)
 ! - [test 2](|base|ElemshapeData/examples/GetDivergence_test_2.F90) with a
 !   constant `val`
+! - [test 3](|base|ElemshapeData/examples/GetDivergence_test_3.F90) with a
+!   time `val`
 !
 ! See also: [[elemsd_GetDivergence_3]], [[elemsd_GetDivergence_6]],
 ! [[elemsd_Divergence_1]]
