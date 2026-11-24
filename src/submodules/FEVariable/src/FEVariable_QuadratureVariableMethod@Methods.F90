@@ -282,6 +282,24 @@ END PROCEDURE Quadrature_Vector_Time2
 !                                                          QuadratureVariable
 !----------------------------------------------------------------------------
 
+MODULE PROCEDURE Quadrature_Vector_Time3
+INTEGER(I4B) :: tsize, s(2)
+
+s(1) = nrow
+s(2) = ncol
+tsize = s(1) * s(2)
+
+CALL FEVariableInitiate( &
+  obj=obj, s=s, defineon=TypeFEVariableOpt%Quadrature, &
+  vartype=TypeFEVariableOpt%time, &
+  rank=TypeFEVariableOpt%vector, len=tsize)
+
+END PROCEDURE Quadrature_Vector_Time3
+
+!----------------------------------------------------------------------------
+!                                                          QuadratureVariable
+!----------------------------------------------------------------------------
+
 MODULE PROCEDURE Quadrature_Vector_SpaceTime
 INTEGER(I4B) :: s(3), tsize, ii, jj, kk, cnt
 s = SHAPE(val)

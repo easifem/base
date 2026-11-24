@@ -3,9 +3,9 @@
 ! summary: Checked example for LineInterpolationUtility.
 
 PROGRAM main
+USE BaseType, ONLY: poly => TypePolynomialOpt
 USE GlobalData, ONLY: DFP
 USE GlobalData, ONLY: I4B
-USE GlobalData, ONLY: poly
 USE LineInterpolationUtility, ONLY: BasisEvalAll_Line
 USE Test_Method, ONLY: OK
 IMPLICIT NONE

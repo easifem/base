@@ -3,9 +3,9 @@
 ! summary: Checked example for QuadrangleInterpolationUtility.
 
 PROGRAM main
+USE BaseType, ONLY: poly => TypePolynomialOpt
 USE GlobalData, ONLY: DFP
 USE GlobalData, ONLY: I4B
-USE GlobalData, ONLY: poly
 USE QuadrangleInterpolationUtility, ONLY: TensorProdBasis_Quadrangle
 USE QuadrangleInterpolationUtility, ONLY: OrthogonalBasis_Quadrangle
 USE QuadrangleInterpolationUtility, ONLY: OrthogonalBasis_Quadrangle_

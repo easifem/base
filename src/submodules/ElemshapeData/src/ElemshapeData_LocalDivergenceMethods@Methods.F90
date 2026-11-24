@@ -16,71 +16,85 @@
 !
 
 SUBMODULE(ElemshapeData_LocalDivergenceMethods) Methods
-USE BaseMethod
+USE BaseType, ONLY: TypeFEVariableMatrix
+USE BaseType, ONLY: TypeFEVariableScalar
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+USE BaseType, ONLY: TypeFEVariableVector
+USE BaseType, ONLY: TypeFEVariableOpt
+USE ContractionUtility, ONLY: Contraction
+USE FEVariable_Method, ONLY: ASSIGNMENT(=)
+USE FEVariable_Method, ONLY: Get
+USE FEVariable_Method, ONLY: QuadratureVariable
+USE FEVariable_Method, ONLY: SHAPE
+USE MatmulUtility, ONLY: MATMUL
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                        getLocalDivergence
+!                                                          GetLocalDivergence
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalDivergence_1
+MODULE PROCEDURE elemsd_GetLocalDivergence_1
 lg = Contraction(a1=TRANSPOSE(val), a2=obj%dNdXi)
-END PROCEDURE elemsd_getLocalDivergence_1
+END PROCEDURE elemsd_GetLocalDivergence_1
 
 !----------------------------------------------------------------------------
-!                                                        getLocalDivergence
-!----------------------------------------------------------------------------z
+!                                                          GetLocalDivergence
+!----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalDivergence_2
+MODULE PROCEDURE elemsd_GetLocalDivergence_2
 SELECT TYPE (obj)
 TYPE IS (STElemshapeData_)
   lg = Contraction(a1=TRANSPOSE(MATMUL(Val, obj%T)), &
-      & a2=obj%dNdXi)
+                   a2=obj%dNdXi)
 END SELECT
-END PROCEDURE elemsd_getLocalDivergence_2
+END PROCEDURE elemsd_GetLocalDivergence_2
 
 !----------------------------------------------------------------------------
-!                                                           getLocalDivergence
+!                                                          GetLocalDivergence
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalDivergence_3
+MODULE PROCEDURE elemsd_GetLocalDivergence_3
 SELECT CASE (val%varType)
-CASE (constant)
+CASE (TypeFEVariableOpt%constant)
   CALL reallocate(lg, SIZE(obj%N, 2))
-CASE (space)
-  CALL getLocalDivergence(obj=obj, lg=lg, &
-       & Val=Get(val, TypeFEVariableVector, TypeFEVariableSpace))
-CASE (spacetime)
+CASE (TypeFEVariableOpt%space)
+  CALL GetLocalDivergence(obj=obj, lg=lg, &
+                          val=Get(val, TypeFEVariableVector, &
+                                  TypeFEVariableSpace))
+CASE (TypeFEVariableOpt%spacetime)
   SELECT TYPE (obj)
   TYPE is (STElemShapeData_)
-    CALL getLocalDivergence(obj=obj, lg=lg, &
-         & Val=Get(val, TypeFEVariableVector, TypeFEVariableSpaceTime))
+    CALL GetLocalDivergence(obj=obj, lg=lg, &
+                            val=Get(val, TypeFEVariableVector, &
+                                    TypeFEVariableSpaceTime))
   END SELECT
 END SELECT
-END PROCEDURE elemsd_getLocalDivergence_3
+END PROCEDURE elemsd_GetLocalDivergence_3
 
 !----------------------------------------------------------------------------
-!                                                         getLocalDivergence
+!                                                          GetLocalDivergence
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalDivergence_4
+MODULE PROCEDURE elemsd_GetLocalDivergence_4
 INTEGER(I4B) :: ii, n
 n = SIZE(obj%N, 2)
-CALL reallocate(lg, SIZE(val, 1), n)
+CALL Reallocate(lg, SIZE(val, 1), n)
 DO ii = 1, n
-  lg(:, ii) = contraction(val, TRANSPOSE(obj%dNdXi(:, :, ii)))
+  lg(:, ii) = Contraction(val, TRANSPOSE(obj%dNdXi(:, :, ii)))
 END DO
-END PROCEDURE elemsd_getLocalDivergence_4
+END PROCEDURE elemsd_GetLocalDivergence_4
 
 !----------------------------------------------------------------------------
-!                                                           getLocalDivergence
+!                                                          GetLocalDivergence
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalDivergence_5
+MODULE PROCEDURE elemsd_GetLocalDivergence_5
 INTEGER(I4B) :: ii, n
 REAL(DFP), ALLOCATABLE :: r3(:, :, :)
-!!
+
 SELECT TYPE (obj)
 TYPE IS (STElemShapeData_)
   n = SIZE(obj%N, 2)
@@ -90,111 +104,119 @@ TYPE IS (STElemShapeData_)
     lg(:, ii) = contraction(r3, TRANSPOSE(obj%dNdXi(:, :, ii)))
   END DO
 END SELECT
-!!
+
 IF (ALLOCATED(r3)) DEALLOCATE (r3)
-END PROCEDURE elemsd_getLocalDivergence_5
+END PROCEDURE elemsd_GetLocalDivergence_5
 
 !----------------------------------------------------------------------------
-!                                                         getLocalDivergence
+!                                                          GetLocalDivergence
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalDivergence_6
+MODULE PROCEDURE elemsd_GetLocalDivergence_6
 INTEGER(I4B) :: s(2)
 SELECT CASE (val%varType)
-CASE (constant)
+CASE (TypeFEVariableOpt%constant)
   s = SHAPE(val)
-  CALL reallocate(lg, s(1), SIZE(obj%N, 2))
-CASE (space)
-  CALL getLocalDivergence(obj=obj, lg=lg, &
-       & Val=Get(val, TypeFEVariableMatrix, TypeFEVariableSpace))
-CASE (spacetime)
+  CALL Reallocate(lg, s(1), SIZE(obj%N, 2))
+CASE (TypeFEVariableOpt%space)
+  CALL GetLocalDivergence(obj=obj, lg=lg, &
+                          val=Get(val, TypeFEVariableMatrix, &
+                                  TypeFEVariableSpace))
+CASE (TypeFEVariableOpt%spacetime)
   SELECT TYPE (obj)
-  TYPE is (STElemShapeData_)
-    CALL getLocalDivergence(obj=obj, lg=lg, &
-         & Val=Get(val, TypeFEVariableMatrix, TypeFEVariableSpaceTime))
+  TYPE IS (STElemShapeData_)
+    CALL GetLocalDivergence(obj=obj, lg=lg, &
+                            val=Get(val, TypeFEVariableMatrix, &
+                                    TypeFEVariableSpaceTime))
   END SELECT
 END SELECT
-END PROCEDURE elemsd_getLocalDivergence_6
+END PROCEDURE elemsd_GetLocalDivergence_6
 
 !----------------------------------------------------------------------------
-!                                                         getLocalDivergence
+!                                                          GetLocalDivergence
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalDivergence_7
+MODULE PROCEDURE elemsd_GetLocalDivergence_7
 REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :)
-!!
-SELECT CASE (val%rank)
-CASE (vector)
-  CALL getLocalDivergence(obj=obj, lg=r1, val=val)
-  lg = QuadratureVariable(r1, typeFEVariableScalar, typeFEVariableSpace)
-  DEALLOCATE (r1)
-CASE (matrix)
-  CALL getLocalDivergence(obj=obj, lg=r2, val=val)
-  lg = QuadratureVariable(r2, typeFEVariableVector, typeFEVariableSpace)
-  DEALLOCATE (r2)
+
+SELECT CASE (val%RANK)
+CASE (TypeFEVariableOpt%vector)
+  CALL GetLocalDivergence(obj=obj, lg=r1, val=val)
+  IF (ALLOCATED(r1)) THEN
+    lg = QuadratureVariable(r1, typeFEVariableScalar, typeFEVariableSpace)
+    DEALLOCATE (r1)
+  END IF
+CASE (TypeFEVariableOpt%matrix)
+  CALL GetLocalDivergence(obj=obj, lg=r2, val=val)
+  IF (ALLOCATED(r2)) THEN
+    lg = QuadratureVariable(r2, typeFEVariableVector, typeFEVariableSpace)
+    DEALLOCATE (r2)
+  END IF
 END SELECT
-END PROCEDURE elemsd_getLocalDivergence_7
+END PROCEDURE elemsd_GetLocalDivergence_7
 
 !----------------------------------------------------------------------------
-!                                                           LocalDivergence
+!                                                          GetLocalDivergence
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getLocalDivergence_8
+MODULE PROCEDURE elemsd_GetLocalDivergence_8
 REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :), r3(:, :, :)
 INTEGER(I4B) :: ii
-!!
-SELECT CASE (val%rank)
-!!
+
+SELECT CASE (val%RANK)
+
 !! vector
-!!
-CASE (vector)
+CASE (TypeFEVariableOpt%vector)
   DO ii = 1, SIZE(obj)
-    CALL getLocalDivergence(obj=obj(ii), lg=r1, val=val)
+    CALL GetLocalDivergence(obj=obj(ii), lg=r1, val=val)
+    IF (.NOT. ALLOCATED(r1)) RETURN
     IF (.NOT. ALLOCATED(r2)) THEN
       CALL reallocate(r2, SIZE(r1, 1), SIZE(obj))
     END IF
-     !!
+
     r2(:, ii) = r1
   END DO
-  lg = QuadratureVariable(r2, typeFEVariableScalar,&
-       & typeFEVariableSpaceTime)
-  DEALLOCATE (r2, r1)
-!!
+  IF (ALLOCATED(r2)) THEN
+    lg = QuadratureVariable(r2, typeFEVariableScalar, &
+                            typeFEVariableSpaceTime)
+  END IF
+  IF (ALLOCATED(r1)) DEALLOCATE (r1)
+  IF (ALLOCATED(r2)) DEALLOCATE (r2)
+
 !! matrix
-!!
-CASE (matrix)
+CASE (TypeFEVariableOpt%matrix)
   DO ii = 1, SIZE(obj)
-    CALL getLocalDivergence(obj=obj(ii), lg=r2, val=val)
+    CALL GetLocalDivergence(obj=obj(ii), lg=r2, val=val)
+    IF (.NOT. ALLOCATED(r2)) RETURN
     IF (.NOT. ALLOCATED(r3)) THEN
       CALL reallocate(r3, SIZE(r2, 1), SIZE(r2, 2), SIZE(obj))
     END IF
-     !!
+
     r3(:, :, ii) = r2
   END DO
-  lg = QuadratureVariable(r3, typeFEVariableVector,&
-       & typeFEVariableSpaceTime)
-  DEALLOCATE (r2, r3)
+  IF (ALLOCATED(r3)) THEN
+    lg = QuadratureVariable(r3, typeFEVariableVector, &
+                            typeFEVariableSpaceTime)
+  END IF
+  IF (ALLOCATED(r2)) DEALLOCATE (r2)
+  IF (ALLOCATED(r3)) DEALLOCATE (r3)
 END SELECT
-END PROCEDURE elemsd_getLocalDivergence_8
+END PROCEDURE elemsd_GetLocalDivergence_8
 
 !----------------------------------------------------------------------------
-!                                                            LocalDivergence
+!                                                             LocalDivergence
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_LocalDivergence_1
-CALL getLocalDivergence(obj=obj, lg=ans, val=val)
+CALL GetLocalDivergence(obj=obj, lg=ans, val=val)
 END PROCEDURE elemsd_LocalDivergence_1
 
 !----------------------------------------------------------------------------
-!                                                            LocalDivergence
+!                                                             LocalDivergence
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_LocalDivergence_2
-CALL getLocalDivergence(obj=obj, lg=ans, val=val)
+CALL GetLocalDivergence(obj=obj, lg=ans, val=val)
 END PROCEDURE elemsd_LocalDivergence_2
-
-!----------------------------------------------------------------------------
-!
-!----------------------------------------------------------------------------
 
 END SUBMODULE Methods

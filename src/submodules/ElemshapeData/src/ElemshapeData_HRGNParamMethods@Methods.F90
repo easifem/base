@@ -16,7 +16,18 @@
 !
 
 SUBMODULE(ElemshapeData_HRGNParamMethods) Methods
-USE BaseMethod
+USE BaseType, ONLY: TypeFEVariableScalar
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+USE BaseType, ONLY: TypeFEVariableVector
+USE ElemshapeData_HminHmaxMethods, ONLY: GetHminHmax
+USE ElemshapeData_ProjectionMethods, ONLY: GetProjectionOfdNdXt
+USE ElemshapeData_ProjectionMethods, ONLY: GetProjectionOfdNTdXt
+USE ElemshapeData_UnitNormalMethods, ONLY: GetUnitNormal
+USE FEVariable_ConstructorMethod, ONLY: DEALLOCATE
+USE FEVariable_QuadratureVariableMethod, ONLY: QuadratureVariable
+USE GlobalData, ONLY: zero
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
 
@@ -47,6 +58,14 @@ PURE SUBROUTINE elemsd_getHRGNParam_a(obj, h, val, opt)
   !!
   CALL GetUnitNormal(obj=obj, val=val, r=q)
   !!
+  !! GetUnitNormal leaves q unallocated for a val that is neither a
+  !! scalar nor a vector. Then there is no direction: q = 0, h = hmin.
+  !!
+  IF (.NOT. ALLOCATED(q)) THEN
+    CALL Reallocate(q, obj%nsd, SIZE(obj%N, 2))
+    q = 0.0_DFP
+  END IF
+  !!
   !! Convert unit normal to [[FEVariable_]]
   !!
   rvar = QuadratureVariable(q, TypeFEVariableVector, TypeFEVariableSpace)
@@ -62,7 +81,8 @@ PURE SUBROUTINE elemsd_getHRGNParam_a(obj, h, val, opt)
   !!
   DO ii = 1, SIZE(h)
     areal = SUM(ABS(q(:, ii)))
-    IF (areal.APPROXEQ.zero) THEN
+    !! zero direction: areal is zero up to round-off
+    IF (areal .LE. zero) THEN
       h(ii) = hmin(ii)
     ELSE
       h(ii) = 2.0_DFP / areal
@@ -103,6 +123,14 @@ PURE SUBROUTINE elemsd_getHRGNParam_b(obj, h, val, opt)
   !!
   CALL GetUnitNormal(obj=obj, val=val, r=r)
   !!
+  !! GetUnitNormal leaves r unallocated for a val that is neither a
+  !! scalar nor a vector. Then there is no direction: r = 0, h = hmin.
+  !!
+  IF (.NOT. ALLOCATED(r)) THEN
+    CALL Reallocate(r, obj%nsd, SIZE(obj%N, 2))
+    r = 0.0_DFP
+  END IF
+  !!
   !! Make [[FEVariable_]]
   !!
   rvar = QuadratureVariable(r, TypeFEVariableVector, TypeFEVariableSpace)
@@ -118,7 +146,8 @@ PURE SUBROUTINE elemsd_getHRGNParam_b(obj, h, val, opt)
   !!
   DO ii = 1, SIZE(h, 1)
     areal = SUM(ABS(q(:, :, ii)))
-    IF (areal.APPROXEQ.zero) THEN
+    !! zero direction: areal is zero up to round-off
+    IF (areal .LE. zero) THEN
       h(ii) = hmin(ii)
     ELSE
       h(ii) = 2.0_DFP / areal
@@ -127,6 +156,8 @@ PURE SUBROUTINE elemsd_getHRGNParam_b(obj, h, val, opt)
   !!
   IF (ALLOCATED(r)) DEALLOCATE (r)
   IF (ALLOCATED(q)) DEALLOCATE (q)
+  IF (ALLOCATED(hmin)) DEALLOCATE (hmin)
+  IF (ALLOCATED(hmax)) DEALLOCATE (hmax)
   CALL DEALLOCATE (rvar)
   !!
 END SUBROUTINE elemsd_getHRGNParam_b
@@ -135,7 +166,7 @@ END SUBROUTINE elemsd_getHRGNParam_b
 !                                                               getHRGNParam
 !----------------------------------------------------------------------------
 
-MODULE PROCEDURE elemsd_getHRGNParam1
+MODULE PROCEDURE elemsd_GetHRGNParam1
 SELECT TYPE (obj)
 !!
 TYPE IS (ElemshapeData_)
@@ -155,7 +186,7 @@ CLASS IS (STElemshapeData_)
     & opt=opt)
   !!
 END SELECT
-END PROCEDURE elemsd_getHRGNParam1
+END PROCEDURE elemsd_GetHRGNParam1
 
 !----------------------------------------------------------------------------
 !                                                               getHRGNParam
@@ -179,6 +210,14 @@ INTEGER(I4B) :: ii
 REAL(DFP), ALLOCATABLE :: avec(:)
 !!
 !! main
+!!
+!! empty obj: return an empty h, do not read obj(1)
+!!
+IF (SIZE(obj) .EQ. 0) THEN
+  IF (ALLOCATED(h)) DEALLOCATE (h)
+  ALLOCATE (h(0, 0))
+  RETURN
+END IF
 !!
 CALL Reallocate(h, SIZE(obj(1)%N, 2), SIZE(obj))
 !!

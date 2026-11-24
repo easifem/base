@@ -5,7 +5,7 @@
 PROGRAM main
 USE GlobalData, ONLY: DFP
 USE GlobalData, ONLY: I4B
-USE GlobalData, ONLY: poly
+USE BaseType, ONLY: poly => TypePolynomialOpt
 USE TriangleInterpolationUtility, ONLY: LagrangeGradientEvalAll_Triangle
 USE Test_Method, ONLY: OK
 IMPLICIT NONE

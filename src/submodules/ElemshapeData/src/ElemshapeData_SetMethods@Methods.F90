@@ -17,11 +17,10 @@
 
 SUBMODULE(ElemshapeData_SetMethods) Methods
 USE BaseType, ONLY: math => TypeMathOpt
-USE ProductUtility, ONLY: VectorProduct, OuterProd
 USE InvUtility, ONLY: Det, Inv
+USE MatmulUtility, ONLY: MyMatmul => Matmul
+USE ProductUtility, ONLY: OuterProd, VectorProduct
 USE ReallocateUtility, ONLY: Reallocate
-USE MatmulUtility
-
 IMPLICIT NONE
 
 CONTAINS
@@ -49,7 +48,7 @@ END PROCEDURE stsd_SetThickness
 MODULE PROCEDURE elemsd_SetBarycentricCoord
 INTEGER(I4B) :: valNNS
 
-valNNS = SIZE(val, 2)
+valNNS = MIN(SIZE(val, 2), SIZE(N, 1))
 obj%coord(1:obj%nsd, 1:obj%nips) = MATMUL(val(1:obj%nsd, 1:valNNS), &
                                           N(1:valNNS, 1:obj%nips))
 END PROCEDURE elemsd_SetBarycentricCoord
@@ -61,7 +60,7 @@ END PROCEDURE elemsd_SetBarycentricCoord
 MODULE PROCEDURE stsd_SetBarycentricCoord
 ! TODO: Improve this function by removing the temporary variable
 ! It is better to store a temporary variable in obj itself
-CALL SetBarycentricCoord(obj=obj, val=MATMUL(val, T), N=N)
+CALL SetBarycentricCoord(obj=obj, val=MyMatmul(val, T), N=N)
 END PROCEDURE stsd_SetBarycentricCoord
 
 !----------------------------------------------------------------------------
@@ -165,7 +164,8 @@ minNNS = MIN(valNNS, obj%nns)
 DO ips = 1, obj%nips
   obj%jacobian(1:obj%nsd, 1:obj%xidim, ips) = MATMUL( &
                                               val(1:obj%nsd, 1:minNNS), &
-                                            dNdXi(1:minNNS, 1:obj%xidim, ips))
+                                              dNdXi(1:minNNS, &
+                                                    1:obj%xidim, ips))
 END DO
 END PROCEDURE elemsd_SetJacobian
 
@@ -175,8 +175,8 @@ END PROCEDURE elemsd_SetJacobian
 
 MODULE PROCEDURE stsd_SetJacobian
 obj%jacobian(1:obj%nsd, 1:obj%xidim, 1:obj%nips) = &
-  MATMUL(MATMUL(val(1:obj%nsd, :, :), T), &
-         dNdXi(:, 1:obj%xidim, 1:obj%nips))
+  MyMatmul(MyMatmul(val(1:obj%nsd, :, :), T), &
+           dNdXi(:, 1:obj%xidim, 1:obj%nips))
 END PROCEDURE stsd_SetJacobian
 
 !----------------------------------------------------------------------------
@@ -197,17 +197,21 @@ areal = 1.0_DFP / obj%jt
 tsize = MAX(obj%nns, obj%nips)
 ALLOCATE (v(3, tsize), mat2(obj%nns, obj%nnt))
 
-v(1:obj%nsd, 1:obj%nns) = MATMUL(val, obj%dTdTheta)
+v(1:obj%nsd, 1:obj%nns) = MyMatmul(val, obj%dTdTheta)
 v(1:obj%nsd, 1:obj%nns) = v(1:obj%nsd, 1:obj%nns) * areal
 v(1:obj%nsd, 1:obj%nips) = MATMUL(v(1:obj%nsd, 1:obj%nns), &
                                   obj%N(1:obj%nns, 1:obj%nips))
 
 DO ip = 1, obj%nips
-  mat2(1:obj%nns, 1:obj%nnt) = OUTERPROD(obj%N(1:obj%nns, ip), obj%dTdTheta(1:obj%nnt))
+  mat2(1:obj%nns, 1:obj%nnt) = OUTERPROD(obj%N(1:obj%nns, ip), &
+                                         obj%dTdTheta(1:obj%nnt))
   mat2 = mat2 * areal
 
   obj%dNTdt(1:obj%nns, 1:obj%nnt, ip) = mat2 - &
-     MATMUL(obj%dNTdXt(1:obj%nns, 1:obj%nnt, 1:obj%nsd, ip), v(1:obj%nsd, ip))
+                                        MyMatmul(obj%dNTdXt(1:obj%nns, &
+                                                            1:obj%nnt, &
+                                                            1:obj%nsd, ip), &
+                                                 v(1:obj%nsd, ip))
 
 END DO
 

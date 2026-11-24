@@ -1,199 +1,263 @@
 # easifemBase
 
-![](./figures/what-is-easifem.svg)
+**The foundation of [EASIFEM](https://www.easifem.com): kinds, containers,
+geometry, interpolation, quadrature, sparse matrices and finite element
+kernels — written in fast, modern Fortran.**
 
-![](./figures/banner.jpeg)
+[![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE.gpl3.md)
+[![Fortran 2018](https://img.shields.io/badge/Fortran-2018-734f96.svg)](https://fortran-lang.org/)
+[![Version](https://img.shields.io/badge/version-26.4.0-blue.svg)](CMakeLists.txt)
+[![Part of EASIFEM](https://img.shields.io/badge/part%20of-EASIFEM-orange.svg)](https://www.easifem.com)
 
-easifemBase (or, Base) library is the low level component in easifem. It contains routines and derived types which are helpful for implementing numerical methods for solving differential equation.|
+`easifemBase` is the lowest layer of the EASIFEM platform. Everything
+above it — [easifemClasses](https://github.com/easifem/classes), the
+physics kernels
+([elasticity](https://github.com/easifem/elasticityKernel),
+[seepage](https://github.com/easifem/seepageKernel),
+[diffusion](https://github.com/easifem/diffusionKernel)) and your own
+applications — is built from the types and routines defined here.
 
-In Base library, we do not use object-oriented programming concepts and mainly use [multiple dispatch approach](https://en.wikipedia.org/wiki/Multiple_dispatch). This approach improves the flexibility and speed of easifemBase. All user-defined datatypes are declared in the `BaseType` module, and all methods are exposed through `BaseMethods` modules. In the Base library `string_class` is the only exception, wherein Object-oriented paradigm has been used. Currently, easifemBase has interface with BLAS95, Lapack95, Sparsekit, Metis, PlPlot, SuperLU, ARPACK, etc.
+The library uses a **multiple dispatch** style rather than class
+hierarchies: every derived type is declared in `BaseType`, and methods
+are generic interfaces in `*_Method` modules. `BaseMethod` re-exports
+the standard set of those modules; a few specialist ones (`Kdtree2`,
+`TriangleInterface`, `Projection`, `RaylibInterface`) are used directly.
+`String_Class` is the only object-oriented type.
 
-## Usage
+> EASIFEM stands for **E**xpandable **A**nd **S**calable
+> **I**nfrastructure for **F**inite **E**lement **M**ethods.
 
-### Use association
+## Where it fits
+
+![Where easifemBase fits: easifemClasses, the physics kernels and
+applications build on easifemBase, which links with external numerical
+packages](figures/easifem-base-layers.svg)
+
+`easifemBase` has no EASIFEM dependencies. It wraps BLAS, LAPACK95,
+Sparsekit, SuperLU, METIS, HDF5, toml-f and other libraries, and exposes
+one consistent Fortran API to the rest of the platform.
+
+## Why use it
+
+- **Batteries-included numerics.** BLAS and LAPACK95 wrappers, sparse
+  CSR storage, eigensolvers through ARPACK, and FFTs through FFTW.
+- **A finite element toolkit, not just a library of arrays.** Reference
+  elements, Lagrange/Hermite/hierarchical interpolation, quadrature,
+  shape-function data, FE variables, and element mass, stiffness,
+  diffusion and force operators.
+- **One data model for the whole stack.** All types live in `BaseType`,
+  methods are generic, and `Display`, error handling, and kind
+  parameters (`I4B`, `DFP`, `LGT`, …) behave the same everywhere.
+- **Flexible builds without rewriting code.** Real32/real64 and
+  int32/int64 variants, plus optional external packages, are selected
+  with CMake options and preprocessor macros.
+
+## What's inside
+
+| Area                  | Representative types                                              | What it gives you                                 |
+| --------------------- | ----------------------------------------------------------------- | ------------------------------------------------- |
+| **Foundation**        | `GlobalData`, `BaseType`, `ErrorHandling`, `String_Class`         | Kinds, every derived type, errors and strings     |
+| **Containers**        | `IntVector_`, `RealVector_`, `RealMatrix_`, `KeyValue_`           | Growable arrays, matrices and key-value maps      |
+| **Geometry**          | `ReferenceLine_`, `ReferenceTriangle_`, `ReferenceHexahedron_`    | Reference elements and physical mappings          |
+| **Approximation**     | `QuadraturePoint_`, `ElemshapeData_`, `FEVariable_`               | Quadrature rules, shape data and field values     |
+| **Polynomials**       | `LagrangeInterpolation_`, `HermitInterpolation_`                  | Lagrange, Hermite and hierarchical bases          |
+| **Element assembly**  | `MassMatrix`, `StiffnessMatrix`, `DiffusionMatrix`, `ForceVector` | Element matrices and vectors                      |
+| **Sparse algebra**    | `DOF_`, `CSRSparsity_`, `CSRMatrix_`                              | DOF maps, sparsity patterns and CSR matrices      |
+| **Dense LA and FFT**  | LAPACK95, ARPACK and FFTW interfaces                              | Dense solvers, eigensolvers and transforms        |
+| **Utilities**         | `Utility` umbrella, `Kdtree2`, `MultiIndices`, `MdEncode`         | Sorting, appending, k-d trees and Markdown output |
+| **Optional bindings** | `SuperLUInterface`, `MetisInterface`, `TriangleInterface`         | SuperLU, METIS, Triangle, LIS, Lua and Raylib     |
+
+The tree contains 2,289 Fortran sources, 74 topic directories, and over
+1,100 example programs that check their own results with `OK` and `IS`
+from `Test_Method`.
+
+## Using the library
+
+The public entry point re-exports `BaseType` and the standard method
+modules via `BaseMethod`:
 
 ```fortran
 USE easifemBase
 ```
 
-or
+For tighter namespaces, use the two halves directly:
 
 ```fortran
-USE BaseType
-USE BaseMethods
+USE BaseType      ! derived types and kind parameters
+USE BaseMethod    ! re-exports the standard method modules
 ```
 
-## System requirements
+A new derived type is declared in `BaseType`, its interface goes into the
+matching `*_Method` module, and that module is added to `BaseMethod` so
+downstream code sees it through `USE easifemBase`.
 
-EASIFEM requires following software packages to be installed on the system.
+## Quick start
 
-| Component | Version | Latest tested version | Comment |
-|:--- | :---: | :---: | :--- |
-| **Gfortran**| >=9.0 | 12.0  | GNU Fortran compiler |
-| **GCC**| >=9.0 | 12.0 | GNU-compiler collection|
-| **OpenMP**| >= 4.5 |  | Multithread shared memory parallelisation|
-| **Curl**| >=7.87 | 7.87 | A command-line utility for transferring data from or to a remote server|
-| **Git**| >=2.34 | 2.34.1 | A version control system and command-line utility for downloading packages from GitHub |
-| **Cmake** | >=3.19 | 3.22.4 | Cross-platform family of tools designed to build, test and package software |
-| **Ninja-build** | >=1.10 | 1.11.0 | Build system |
-| **Python3** | >=3.7 | 3.11.0 | Scripting language |
-| **Pip** | >=20 | 23.1.0 | Command line tool for downloading python packages |
-| **LAPACK** | >=3.11.0 | 3.11.0 | Linear algebra package |
-| **OpenBlas** | >= 0.3.20| 0.3.30 | Optimize BLAS library |
-| **HDF5** | >=1.10  | 1.10.7 | High-performance data software-library and file-format |
-| **PlPlot** | >=5.15.0 | 5.15.0 | Cross-platform, scientific graphics plotting library |
-| **Boost** | | | |
-| **Gnuplot** | >=5.0 | 5.4 | Portable command-line driven graphing utility |
-| **Doxygen** | >=1.9.1 | 1.9.1 | documentation generation |
-| **GTK-4** |  | | n |
+### Requirements
 
-## External packages
+| Requirement            | Notes                               |
+| ---------------------- | ----------------------------------- |
+| GFortran 9+            | GNU builds use `-std=f2018`         |
+| CMake 3.28+            | Ninja is recommended                |
+| BLAS and LAPACK        | OpenBLAS is recommended             |
+| LAPACK95 and Sparsekit | Installed by the EASIFEM tooling    |
+| HDF5 and toml-f        | Fortran components must be findable |
 
-EASIFEM depends upon the following external packages (extpkgs) that are not shipped with the source-code.
+### Install with the EASIFEM CLI
 
-| extpkg| description | command  |
-|:--- | :--- | :--- |
-| [OpenBlas](https://www.openblas.net/) | Highly optimized BLAS | easifem install openblas |
-| [SuperLU](https://github.com/xiaoyeli/superlu.git) |  Direct solution of large, sparse, nonsymmetric systems of linear equations  | easifem install superlu |
-| [LIS](https://github.com/anishida/lis.git) | Linear interative solver | easifem install lis|
-| [METIS](https://github.com/KarypisLab/METIS) | Mesh partitioning library | easifem install metis |
-| [SCOTCH](https://gitlab.inria.fr/scotch/scotch) | Mesh partitioning library | easifem install scotch |
-| [ARPACK](https://github.com/opencollab/arpack-ng) | Eigensolver for sparse matrices | easifem install arpack |
-| [FFTW](https://www.fftw.org/) | Fast Fourier Transform| easifem install fftw |
-| [GTK-Fortran](https://github.com/vmagnin/gtk-fortran) | Fortran bindings for GTK-4 library  | easifem install gtk-fortran |
-| [LAPACK95](https://github.com/vickysharma0812/LAPACK95.git) | Fortran 95 interface for Lapack library | easifem install lapack95 |
-| [Sparsekit](https://github.com/vickysharma0812/Sparsekit.git) | Fortran library for sparse matrices | easifem install sparsekit |
-| [Gmsh](https://gmsh.info/) | Finite element mesh generator| easifem install gmsh |
+```bash
+# 1. Install the external packages once
+easifem install extpkgs
 
-## Installation
+# 2. Install the base library
+easifem install base
+```
 
-You can use following instructions to install easifemBase depending upon your system.
+If the EASIFEM directories are not configured yet, run `easifem setenv`
+once first; see `easifem setenv --help`.
 
-- [Linux](./pages/Install_Linux.md)
-- [MacOSX](./pages/Install_MacOSX.md)
-- [Windows](./pages/Install_Windows.md)
+### Build with CMake
 
-## Structure
+```bash
+cmake -S . -B build -G Ninja -D CMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+cmake --install build --prefix /path/to/easifem
+```
 
-The Base library consists two components:
+If CMake cannot find HDF5, toml-f, LAPACK95 or Sparsekit, add their
+install prefixes to `CMAKE_PREFIX_PATH`.
 
-1. BaseType `BaseType.F90`, which contains the user-defined data-type. You can see the list of user-defined data type [here](./pages/BaseType.md)
-2. BaseMethods `BaseMethods.F90`, contains the modules (each module defines the routines for data-types defined in `BaseType.F90`.) The list of modules defined in BaseMethods can be found [here](./pages/BaseMethods.md)
+### Use it from another project
 
-The source directory is shown in figure given below. The source directory has two directories
+```cmake
+find_package(easifemBase REQUIRED)
+target_link_libraries(my_app PRIVATE easifemBase::easifemBase)
+```
 
-1. 📁 `modules`
-2. 📁 `submodules`
+### A first program
 
-The `modules` directory mainly contains header and interface of methods. The implementation is given in submodules directory.
-
-:::info
-Both `BaseType.F90` and `BaseMethods.F90` are included in `modules` directory.
-:::
-
-Let us understand the structure of the Base library by an example of `CSRSparsity_` data type.
-
-1. First, we define `CSRSparsity_` in `BaseType.F90` as
+This builds an integer vector with appended values and prints it. The
+same `Append` interface accepts a scalar, an array, or another vector.
 
 ```fortran
-TYPE :: CSRSparsity_
-  INTEGER(I4B) :: nnz = 0
-  INTEGER(I4B) :: ncol = 0
-  INTEGER(I4B) :: nrow = 0
-  LOGICAL(LGT) :: isSorted = .FALSE.
-  LOGICAL(LGT) :: isInitiated = .FALSE.
-  LOGICAL(LGT) :: isSparsityLock = .FALSE.
-  LOGICAL(LGT) :: isDiagStored = .FALSE.
-  INTEGER(I4B), ALLOCATABLE :: IA(:)
-  INTEGER(I4B), ALLOCATABLE :: JA(:)
-  INTEGER(I4B), ALLOCATABLE :: idiag(:)
-  TYPE(IntVector_), ALLOCATABLE :: row(:)
-  TYPE(DOF_) :: idof
-  !! DOF for row
-  TYPE(DOF_) :: jdof
-  !! DOF for columns
-END TYPE CSRSparsity_
+PROGRAM main
+  USE easifemBase
+  IMPLICIT NONE
+
+  TYPE(IntVector_) :: v
+  INTEGER(I4B) :: ii
+
+  DO ii = 1, 5
+    CALL Append(v, 10_I4B * ii)
+  END DO
+
+  PRINT *, "size = ", Size(v)
+  CALL Display(v%val(1:Size(v)), "v = ")
+END PROGRAM main
 ```
 
-2. Then we create a directory called `CSRSparsity` in both `modules` and `submodules` directory.
-3. In `modules/CSRSparsity` we create `CSRSparsity_Method.F90` file.
-4. In `modules/CSRSparsity/CSRSparsity_Method.F90` we define a module `CSRSparsity_Method` (same name as file).
-5. In `CSRSparsity_Method` module, we only define interface of methods. In this way, this file can be considered as header file. See, the example given below:
-6. In `submodules/CSRSparsity`, we create `CSRSparsity_Method@ConstructorMethods.F90`, which contains the contruction related routines.
-7. Also, we create `CSRSparsity_Method@IOMethods.F90`, which include methods related to input and output.
+Adapted from `src/modules/IntVector/examples/Append_test_1.F90`.
 
-```fortran
-MODULE CSRSparsity_Method
-USE GlobalData
-USE BaseType
-IMPLICIT NONE
-PRIVATE
+## Developing the library
 
-INTERFACE Initiate
-  MODULE SUBROUTINE csr_initiate1(obj, ncol, nrow, idof, jdof)
-    TYPE(CSRSparsity_), INTENT(INOUT) :: obj
-    INTEGER(I4B), INTENT(IN) :: ncol, nrow
-    TYPE(DOF_), OPTIONAL, INTENT(IN) :: idof
-    !! DOF for row
-    TYPE(DOF_), OPTIONAL, INTENT(IN) :: jdof
-    !! DOF for column
-  END SUBROUTINE csr_initiate1
-END INTERFACE Initiate
+Build this checkout in debug mode, with bounds checks and nothing
+installed:
 
-INTERFACE Display
-  MODULE SUBROUTINE csr_Display(obj, Msg, UnitNo)
-    TYPE(CSRSparsity_), INTENT(IN) :: obj
-    CHARACTER(*), INTENT(IN) :: Msg
-    INTEGER(I4B), OPTIONAL, INTENT(IN) :: UnitNo
-  END SUBROUTINE csr_Display
-END INTERFACE Display
-
-END MODULE CSRSparsity_Method
+```bash
+easifem dev base
 ```
 
-CSRSparsity_Method@ConstructorMethods.F90
+Run one module's examples. Most `examples/` directories have a
+`runner.toml`; the programs assert their own results and double as tests.
 
-```fortran
-SUBMODULE(CSRSparsity_Method) ConstructorMethods
-USE BaseMethod
-IMPLICIT NONE
-CONTAINS
-
-MODULE PROCEDURE csr_initiate1
-obj%nnz = 0
-obj%ncol = ncol
-obj%nrow = nrow
-END PROCEDURE csr_initiate1
-
-END SUBMODULE ConstructorMethods
+```bash
+cd src/modules/IntVector/examples
+easifem test ./
 ```
 
-CSRSparsity_Method@IOMethods.F90
+Lint changed sources (78-column lines, C and S rules):
 
-```fortran
-SUBMODULE(CSRSparsity_Method) IOMethods
-USE BaseMethod
-IMPLICIT NONE
-CONTAINS
-
-MODULE PROCEDURE csr_Display
-CALL Display(Msg, unitNo=unitNo)
-CALL Display(obj%nnz, "# NNZ : ", unitNo=unitNo)
-END PROCEDURE csr_Display
-
-END SUBMODULE IOMethods
+```bash
+fortitude check --no-fix <changed files>
 ```
 
-![](./figures/figure-2.svg)
+Generate the API reference with [FORD](https://forddocs.readthedocs.io/):
 
-## Run on Cloud
+```bash
+formal generate --project ford.md
+```
 
-Coming soon.
+## Repository layout
+
+```text
+src/modules/BaseType/src/BaseType.F90        every derived type, in one file
+src/modules/<Topic>/src/<Name>_Method.F90    public interfaces
+src/modules/<Topic>/examples/                runnable examples and tests
+src/submodules/<Topic>/src/                  implementations
+src/modules/BaseMethod/src/BaseMethod.F90    re-exports method modules
+cmake/add<Pkg>.cmake                         optional external packages
+```
+
+Every source file is listed explicitly in its directory's
+`CMakeLists.txt`; there is no globbing. See
+[architecture.md](architecture.md) for the dependency order, the module
+map and the known gotchas.
+
+## Optional features
+
+| Option         | Default | Adds                      |
+| -------------- | ------- | ------------------------- |
+| `USE_SUPERLU`  | ON      | Sparse direct solver      |
+| `USE_METIS`    | ON      | Graph partitioning        |
+| `USE_OPENMP`   | OFF     | Shared-memory parallelism |
+| `USE_ARPACK`   | OFF     | Sparse eigensolvers       |
+| `USE_FFTW`     | OFF     | Fast Fourier transforms   |
+| `USE_LIS`      | OFF     | Iterative linear solvers  |
+| `USE_PLPLOT`   | OFF     | Plotting                  |
+| `USE_LUA`      | OFF     | Lua scripting             |
+| `USE_RAYLIB`   | OFF     | Simple graphics           |
+| `USE_GMSH_SDK` | OFF     | Gmsh mesh generation      |
+| `USE_GTK`      | OFF     | GTK-4 graphical interface |
+
+Enable an option only when the library is installed and can be found by
+CMake, for example `-D USE_FFTW=ON`.
+
+The numeric model is also selectable at build time:
+
+- `USE_REAL64` (default ON) or `USE_REAL32`
+- `USE_INT32` (default ON) or `USE_INT64`
+- `USE_COLORDISP` (default ON) for ANSI-coloured terminal output
+
+## Documentation and community
+
+- **Website and guides:** <https://www.easifem.com>
+- **API reference:** generate locally with `formal` (see above)
+- **Cookbook:** <https://github.com/easifem/cookbook>
+- **Issues and questions:** <https://github.com/easifem/base/issues>
+- **Object-oriented layer:** <https://github.com/easifem/classes>
 
 ## Contributing
 
-## Credits
+Contributions are welcome. Development happens on the `dev` branch, so
+please base pull requests there.
+
+- Read [architecture.md](architecture.md) before adding a type, and
+  [AGENTS.md](AGENTS.md) for the repository conventions.
+- Declare new types in `BaseType.F90`; keep the multiple-dispatch style.
+- Add the interface to `src/modules/<Topic>/src/<Name>_Method.F90` and the
+  implementation to a submodule in `src/submodules/<Topic>/src/`.
+- Register every new file in the matching `CMakeLists.txt`.
+- Add a `<Method>_test_<N>.F90` example; the examples are the tests.
+- Run `fortitude check --no-fix` on the files you changed.
 
 ## License
 
-[License](LICENSE)
+easifemBase is free software under the GNU General Public License,
+version 3 or later. See [LICENSE.gpl3.md](LICENSE.gpl3.md) and
+[LICENSE](LICENSE).
+
+---
+
+**EASIFEM** — Expandable And Scalable Infrastructure for Finite Element
+Methods. Written in modern Fortran; the foundation everything else is
+built on.

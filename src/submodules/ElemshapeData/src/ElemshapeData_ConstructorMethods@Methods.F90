@@ -20,10 +20,9 @@
 ! summary: Constructor method for ElemshapeData_ and STElemshapeData_
 
 SUBMODULE(ElemshapeData_ConstructorMethods) Methods
+USE ErrorHandling, ONLY: Errormsg
 USE GlobalData, ONLY: stderr
 USE ReallocateUtility, ONLY: Reallocate
-USE QuadraturePoint_Method, ONLY: GetQuadraturePoints
-USE ErrorHandling, ONLY: Errormsg
 
 IMPLICIT NONE
 CONTAINS
@@ -79,7 +78,7 @@ END PROCEDURE obj_Initiate1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_Initiate2
-INTEGER(I4B) :: ii, jj, kk, nns, nsd, xidim, nips, nnt, ll, nnt
+INTEGER(I4B) :: ii, jj, kk, nns, nsd, xidim, nips, nnt, ll
 LOGICAL(LGT) :: isok
 
 nns = obj2%nns
@@ -100,6 +99,11 @@ IF (isok) THEN
   obj1%N(1:nns, 1:nips) = obj2%N(1:nns, 1:nips)
 END IF
 
+isok = ALLOCATED(obj2%NLaplacian)
+IF (isok) THEN
+  obj1%NLaplacian(1:nns, 1:nips) = obj2%NLaplacian(1:nns, 1:nips)
+END IF
+
 isok = ALLOCATED(obj2%dNdXi)
 IF (isok) THEN
   obj1%dNdXi(1:nns, 1:xidim, 1:nips) = obj2%dNdXi(1:nns, 1:xidim, 1:nips)
@@ -112,7 +116,8 @@ END IF
 
 isok = ALLOCATED(obj2%jacobian)
 IF (isok) THEN
- obj1%jacobian(1:nsd, 1:xidim, 1:nips) = obj2%jacobian(1:nsd, 1:xidim, 1:nips)
+  obj1%jacobian(1:nsd, 1:xidim, 1:nips) = obj2%jacobian(1:nsd, &
+                                                        1:xidim, 1:nips)
 END IF
 
 DO CONCURRENT(ii=1:nips)
@@ -128,23 +133,33 @@ TYPE is (STElemShapeData_)
   SELECT TYPE (obj2)
   TYPE is (STElemShapeData_)
     obj1%wt = obj2%wt
-    ! obj1%theta = obj2%theta
     obj1%jt = obj2%jt
     obj1%nnt = obj2%nnt
     nnt = obj1%nnt
 
-    DO CONCURRENT(ii=1:nnt)
-      obj1%T(ii) = obj2%T(ii)
-      obj1%dTdTheta(ii) = obj2%dTdTheta(ii)
-    END DO
+    isok = ALLOCATED(obj2%T)
+    IF (isok) THEN
+      obj1%T(1:nnt) = obj2%T(1:nnt)
+    END IF
 
-    DO CONCURRENT(ii=1:nns, jj=1:nnt, kk=1:nips)
-      obj1%dNTdt(ii, jj, kk) = obj2%dNTdt(ii, jj, kk)
-    END DO
+    isok = ALLOCATED(obj2%dTdTheta)
+    IF (isok) THEN
+      obj1%dTdTheta(1:nnt) = obj2%dTdTheta(1:nnt)
+    END IF
 
-    DO CONCURRENT(ii=1:nns, jj=1:nnt, kk=1:nsd, ll=1:nips)
-      obj1%dNTdXt(ii, jj, kk, ll) = obj2%dNTdXt(ii, jj, kk, ll)
-    END DO
+    isok = ALLOCATED(obj2%dNTdt)
+    IF (isok) THEN
+      DO CONCURRENT(ii=1:nns, jj=1:nnt, kk=1:nips)
+        obj1%dNTdt(ii, jj, kk) = obj2%dNTdt(ii, jj, kk)
+      END DO
+    END IF
+
+    isok = ALLOCATED(obj2%dNTdXt)
+    IF (isok) THEN
+      DO CONCURRENT(ii=1:nns, jj=1:nnt, kk=1:nsd, ll=1:nips)
+        obj1%dNTdXt(ii, jj, kk, ll) = obj2%dNTdXt(ii, jj, kk, ll)
+      END DO
+    END IF
 
   END SELECT
 END SELECT
@@ -209,8 +224,6 @@ obj%nsd = 0
 obj%xidim = 0
 obj%nips = 0
 obj%nns = 0
-! CALL DEALLOCATE (obj%Quad)
-! CALL DEALLOCATE (obj%refelem)
 SELECT TYPE (obj)
 TYPE IS (STElemShapeData_)
   obj%nnt = 0

@@ -34,6 +34,7 @@ ELSE
   obj%val(1:obj%len) = scale * val(1:obj%len)
 END IF
 obj%varType = fevaropt%constant
+obj%tshape = 1
 END PROCEDURE obj_Set4
 
 !----------------------------------------------------------------------------
@@ -64,6 +65,7 @@ ELSE
   END DO
 END IF
 obj%varType = fevaropt%space
+obj%tshape = 2
 END PROCEDURE obj_Set5
 
 !----------------------------------------------------------------------------
@@ -97,6 +99,7 @@ ELSE
   END DO
 END IF
 obj%varType = fevaropt%spaceTime
+obj%tshape = 3
 END PROCEDURE obj_Set6
 
 !----------------------------------------------------------------------------
@@ -128,6 +131,7 @@ ELSE
 END IF
 
 obj%varType = fevaropt%time
+obj%tshape = 2
 END PROCEDURE obj_Set11
 
 !----------------------------------------------------------------------------

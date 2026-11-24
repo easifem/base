@@ -16,21 +16,17 @@
 !
 
 SUBMODULE(ElemShapeData_Orthogonal) Methods
-USE LagrangePolynomialUtility, ONLY: LagrangeDOF
-
 USE ElemShapeData_Method, ONLY: Elemsd_Allocate => ALLOCATE
-
-USE OrthogonalPolynomialUtility, ONLY: OrthogonalEvalAll_, &
-                                       OrthogonalGradientEvalAll_
-
+USE LagrangePolynomialUtility, ONLY: LagrangeDOF
+USE OrthogonalPolynomialUtility, ONLY: OrthogonalEvalAll_
+USE OrthogonalPolynomialUtility, ONLY: OrthogonalGradientEvalAll_
 USE SwapUtility, ONLY: SWAP_
-
 IMPLICIT NONE
 
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                         ElemshapeData_InitiateOrthogonal
+!                                                   OrthogonalElemShapeData1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE OrthogonalElemShapeData1
@@ -55,8 +51,10 @@ END DO
 ALLOCATE (temp(nips, nns, 3))
 
 CALL OrthogonalEvalAll_(elemType=elemType, xij=quad%points(1:xidim, 1:nips), &
-    ans=temp(:, :, 1), nrow=ii, ncol=jj, domainName=domainName, order=order, &
-                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
+                        ans=temp(:, :, 1), nrow=ii, ncol=jj, &
+                        domainName=domainName, order=order, &
+                        basisType=basisType, alpha=alpha, beta=beta, &
+                        lambda=lambda)
 
 DO CONCURRENT(ii=1:nns, jj=1:nips)
   obj%N(ii, jj) = temp(jj, ii, 1)
@@ -66,34 +64,37 @@ CALL OrthogonalGradientEvalAll_(elemType=elemType, &
                                 xij=quad%points(1:xidim, 1:nips), ans=temp, &
                                 dim1=ii, dim2=jj, dim3=kk, &
                                 domainName=domainName, order=order, &
-                   basisType=basisType, alpha=alpha, beta=beta, lambda=lambda)
+                                basisType=basisType, alpha=alpha, beta=beta, &
+                                lambda=lambda)
 
 CALL SWAP_(a=obj%dNdXi, b=temp(1:ii, 1:jj, 1:kk), i1=2, i2=3, i3=1)
 ! CALL SWAP_(a=obj%dNdXi, b=temp(1:ii, 1:jj, 1:jj), i1=3, i2=1, i3=2)
 
 DEALLOCATE (temp)
-
 END PROCEDURE OrthogonalElemShapeData1
 
 !----------------------------------------------------------------------------
-!
+!                                                  OrthogonalElemShapeData2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE OrthogonalElemShapeData2
 CALL OrthogonalElemShapeData1(obj=obj, quad=quad, nsd=refelem%nsd, &
- xidim=refelem%xidimension, elemType=refelem%name, refelemCoord=refelem%xij, &
-            domainName=refelem%domainName, order=order, basisType=basisType, &
+                              xidim=refelem%xidimension, &
+                              elemType=refelem%name, &
+                              refelemCoord=refelem%xij, &
+                              domainName=refelem%domainName, order=order, &
+                              basisType=basisType, &
                               alpha=alpha, beta=beta, lambda=lambda)
 END PROCEDURE OrthogonalElemShapeData2
 
 !----------------------------------------------------------------------------
-!
+!                                                  OrthogonalElemShapeData3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE OrthogonalElemShapeData3
 CALL OrthogonalElemShapeData2(obj=obj, quad=quad, refelem=refelem, &
-                   order=order, basisType=basisType, alpha=alpha, beta=beta, &
-                              lambda=lambda)
+                              order=order, basisType=basisType, alpha=alpha, &
+                              beta=beta, lambda=lambda)
 END PROCEDURE OrthogonalElemShapeData3
 
 END SUBMODULE Methods

@@ -16,18 +16,16 @@
 !
 
 SUBMODULE(ElemshapeData_DivergenceMethods) Methods
-USE ContractionUtility, ONLY: Contraction
-
-USE SwapUtility, ONLY: Swap
-
-USE ReallocateUtility, ONLY: Reallocate
-
-USE FEVariable_Method, ONLY: QuadratureVariable, NodalVariable, shape, Get
-
-USE Basetype, ONLY: TypeFEVariableOpt, TypeFEVariableScalar, &
-         TypeFEVariableVector, TypeFEVariableMatrix, TypeFEVariableConstant, &
-              TypeFEVariableSpace, TypeFEVariableTime, TypeFEVariableSpaceTime
-
+USE BaseType, ONLY: TypeFEVariableConstant
+USE BaseType, ONLY: TypeFEVariableMatrix
+USE BaseType, ONLY: TypeFEVariableOpt
+USE BaseType, ONLY: TypeFEVariableScalar
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+USE BaseType, ONLY: TypeFEVariableVector
+USE FEVariable_Method, ONLY: Get
+USE FEVariable_Method, ONLY: QuadratureVariable
+USE FEVariable_Method, ONLY: Shape
 IMPLICIT NONE
 
 CONTAINS
@@ -58,11 +56,12 @@ END PROCEDURE elemsd_GetDivergence_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetDivergence_2
-INTEGER(I4B) :: ips, I, ii, a, ips
+INTEGER(I4B) :: ips, I, ii, a
 
 tsize = obj%nips
 
-SELECT TYPE (obj); TYPE is (STElemShapeData_)
+SELECT TYPE (obj)
+TYPE IS (STElemShapeData_)
 
   DO ips = 1, tsize
     ans(ips) = 0.0_DFP
@@ -77,6 +76,9 @@ SELECT TYPE (obj); TYPE is (STElemShapeData_)
 
   END DO
 
+CLASS DEFAULT
+  ans(1:tsize) = 0.0_DFP
+
 END SELECT
 
 END PROCEDURE elemsd_GetDivergence_2
@@ -90,20 +92,25 @@ tsize = obj%nips
 
 SELECT CASE (val%varType)
 CASE (TypeFEVariableOpt%constant)
-  ! CALL Reallocate(lg, SIZE(obj%N, 2))
-  ans(1:tsize) = 0.0
+  ans(1:tsize) = 0.0_DFP
 
 CASE (TypeFEVariableOpt%space)
   CALL GetDivergence(obj=obj, ans=ans, tsize=tsize, &
-                     Val=Get(val, TypeFEVariableVector, TypeFEVariableSpace))
+                     Val=Get(val, TypeFEVariableVector, &
+                             TypeFEVariableSpace))
 
 CASE (TypeFEVariableOpt%spacetime)
-
-  SELECT TYPE (obj); TYPE is (STElemShapeData_)
-
+  SELECT TYPE (obj)
+  TYPE IS (STElemShapeData_)
     CALL GetDivergence(obj=obj, ans=ans, tsize=tsize, &
-                  Val=Get(val, TypeFEVariableVector, TypeFEVariableSpaceTime))
+                       Val=Get(val, TypeFEVariableVector, &
+                               TypeFEVariableSpaceTime))
+  CLASS DEFAULT
+    ans(1:tsize) = 0.0_DFP
   END SELECT
+
+CASE DEFAULT
+  ans(1:tsize) = 0.0_DFP
 
 END SELECT
 END PROCEDURE elemsd_GetDivergence_3
@@ -125,7 +132,8 @@ DO ips = 1, ncol
 
     DO I = 1, obj%nns
       DO ii = 1, obj%nsd
-        ans(jj, ips) = ans(jj, ips) + val(ii, jj, I) * obj%dNdXt(I, ii, ips)
+        ans(jj, ips) = ans(jj, ips) + val(jj, ii, I) * &
+                       obj%dNdXt(I, ii, ips)
       END DO
     END DO
   END DO
@@ -143,7 +151,8 @@ INTEGER(I4B) :: ii, jj, ips, I, a
 nrow = SIZE(val, 1)
 ncol = obj%nips
 
-SELECT TYPE (obj); TYPE IS (STElemShapeData_)
+SELECT TYPE (obj)
+TYPE IS (STElemShapeData_)
 
   DO ips = 1, ncol
     DO jj = 1, nrow
@@ -154,12 +163,17 @@ SELECT TYPE (obj); TYPE IS (STElemShapeData_)
         DO I = 1, obj%nns
           DO ii = 1, obj%nsd
             ans(jj, ips) = ans(jj, ips) + &
-                           val(ii, jj, I, a) * obj%dNTdXt(I, a, ii, ips)
+                           val(jj, ii, I, a) * obj%dNTdXt(I, &
+                                                          a, ii, &
+                                                          ips)
           END DO
         END DO
       END DO
     END DO
   END DO
+
+CLASS DEFAULT
+  ans(1:nrow, 1:ncol) = 0.0_DFP
 
 END SELECT
 
@@ -176,22 +190,32 @@ SELECT CASE (val%varType)
 
 CASE (TypeFEVariableOpt%constant)
   s = SHAPE(val)
-  ! CALL Reallocate(lg, s(1), SIZE(obj%N, 2))
   nrow = s(1)
   ncol = obj%nips
-  ans(1:nrow, 1:ncol) = 0.0
+  ans(1:nrow, 1:ncol) = 0.0_DFP
 
 CASE (TypeFEVariableOpt%space)
   CALL GetDivergence(obj=obj, ans=ans, nrow=nrow, ncol=ncol, &
-                     Val=Get(val, TypeFEVariableMatrix, TypeFEVariableSpace))
+                     Val=Get(val, TypeFEVariableMatrix, &
+                             TypeFEVariableSpace))
 
 CASE (TypeFEVariableOpt%spacetime)
-  SELECT TYPE (obj); TYPE IS (STElemShapeData_)
-
-    CALL GetDivergence(obj=obj, ans=ans, nrow=nrow, ncol=ncol, &
-                  Val=Get(val, TypeFEVariableMatrix, TypeFEVariableSpaceTime))
-
+  SELECT TYPE (obj)
+  TYPE IS (STElemShapeData_)
+    CALL GetDivergence(obj=obj, ans=ans, nrow=nrow, &
+                       ncol=ncol, &
+                       Val=Get(val, TypeFEVariableMatrix, &
+                               TypeFEVariableSpaceTime))
+  CLASS DEFAULT
+    nrow = val%s(1)
+    ncol = obj%nips
+    ans(1:nrow, 1:ncol) = 0.0_DFP
   END SELECT
+
+CASE DEFAULT
+  nrow = val%s(1)
+  ncol = obj%nips
+  ans(1:nrow, 1:ncol) = 0.0_DFP
 
 END SELECT
 END PROCEDURE elemsd_GetDivergence_6
@@ -202,21 +226,23 @@ END PROCEDURE elemsd_GetDivergence_6
 
 MODULE PROCEDURE elemsd_GetDivergence_7
 REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :)
-INTEGER(I4B) :: ii, jj, s(2)
+INTEGER(I4B) :: ii, jj
 
-SELECT CASE (val%rank)
+SELECT CASE (val%RANK)
 
 CASE (TypeFEVariableOpt%vector)
   ALLOCATE (r1(obj%nips))
   CALL GetDivergence(obj=obj, ans=r1, val=val, tsize=ii)
-  ans = QuadratureVariable(r1, typeFEVariableScalar, typeFEVariableSpace)
+  ans = QuadratureVariable(r1, typeFEVariableScalar, &
+                           typeFEVariableSpace)
   DEALLOCATE (r1)
 
 CASE (TypeFEVariableOpt%matrix)
-  s = SHAPE(val)
-  ALLOCATE (r2(s(1), obj%nips))
-  CALL GetDivergence(obj=obj, ans=r2, val=val, nrow=ii, ncol=jj)
-  ans = QuadratureVariable(r2, typeFEVariableVector, typeFEVariableSpace)
+  ALLOCATE (r2(val%s(1), obj%nips))
+  CALL GetDivergence(obj=obj, ans=r2, val=val, &
+                     nrow=ii, ncol=jj)
+  ans = QuadratureVariable(r2, typeFEVariableVector, &
+                           typeFEVariableSpace)
   DEALLOCATE (r2)
 
 END SELECT
@@ -228,11 +254,11 @@ END PROCEDURE elemsd_GetDivergence_7
 
 MODULE PROCEDURE elemsd_GetDivergence_8
 REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :), r3(:, :, :)
-INTEGER(I4B) :: ii, nipt, jj, kk, s(2)
+INTEGER(I4B) :: ii, nipt, jj, maxnips, nrow, ncol, valRow
 
 nipt = SIZE(obj)
 
-SELECT CASE (val%rank)
+SELECT CASE (val%RANK)
 
 CASE (TypeFEVariableOpt%vector)
 
@@ -241,37 +267,43 @@ CASE (TypeFEVariableOpt%vector)
     IF (obj(jj)%nips .GT. ii) ii = obj(jj)%nips
   END DO
 
+  maxnips = ii
   ALLOCATE (r1(ii), r2(ii, nipt))
+  r2 = 0.0_DFP
 
   DO ii = 1, nipt
-    CALL GetDivergence(obj=obj(ii), ans=r1(1:obj(ii)%nips), val=val, tsize=jj)
+    CALL GetDivergence(obj=obj(ii), &
+                       ans=r1(1:obj(ii)%nips), &
+                       val=val, tsize=jj)
     r2(1:obj(ii)%nips, ii) = r1(1:obj(ii)%nips)
   END DO
 
-  ans = QuadratureVariable(r2(1:obj(ii)%nips, 1:nipt), typeFEVariableScalar, &
+  ans = QuadratureVariable(r2(1:maxnips, 1:nipt), &
+                           typeFEVariableScalar, &
                            typeFEVariableSpaceTime)
   DEALLOCATE (r2, r1)
 
 CASE (TypeFEVariableOpt%matrix)
 
-  nipt = SIZE(obj)
-
-  ii = 0
+  maxnips = 0
   DO jj = 1, nipt
-    IF (obj(jj)%nips .GT. ii) ii = obj(jj)%nips
+    IF (obj(jj)%nips .GT. maxnips) maxnips = obj(jj)%nips
   END DO
 
-  s = SHAPE(val)
-  kk = s(1)
+  valRow = val%s(1)
 
-  ALLOCATE (r2(kk, ii), r3(kk, ii, nipt))
+  ALLOCATE (r2(valRow, maxnips), r3(valRow, maxnips, nipt))
+  ! a time point with fewer quadrature points leaves zeros
+  r3 = 0.0_DFP
 
   DO ii = 1, nipt
-    CALL GetDivergence(obj=obj(ii), ans=r2, val=val, nrow=jj, ncol=kk)
-    r3(1:jj, 1:kk, ii) = r2(1:jj, 1:kk)
+    CALL GetDivergence(obj=obj(ii), ans=r2, val=val, &
+                       nrow=nrow, ncol=ncol)
+    r3(1:nrow, 1:ncol, ii) = r2(1:nrow, 1:ncol)
   END DO
 
-  ans = QuadratureVariable(r3, typeFEVariableVector, typeFEVariableSpaceTime)
+  ans = QuadratureVariable(r3, typeFEVariableVector, &
+                           typeFEVariableSpaceTime)
   DEALLOCATE (r2, r3)
 END SELECT
 END PROCEDURE elemsd_GetDivergence_8

@@ -16,15 +16,13 @@
 !
 
 SUBMODULE(ElemshapeData_GetMethods) Methods
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+USE BaseType, ONLY: TypeFEVariableVector
+USE FEVariable_Method, ONLY: QuadratureVariable
 USE ReallocateUtility, ONLY: Reallocate
-
-USE FEVariable_Method, ONLY: QuadratureVariable, NodalVariable
-
-USE BaseType, ONLY: TypeFEVariableSpace, &
-                    TypeFEVariableVector, &
-                    TypeFEVariableSpaceTime
-
 IMPLICIT NONE
+
 CONTAINS
 
 !----------------------------------------------------------------------------
@@ -74,7 +72,7 @@ END DO
 nsd0 = 3
 IF (PRESENT(nsd)) nsd0 = nsd
 
-ALLOCATE (m3(nsd0, nips, nipt))
+CALL Reallocate(m3, nsd0, nips, nipt)
 
 DO ii = 1, nipt
   m3(1:nsd0, 1:obj(ii)%nips, ii) = obj(ii)%normal(1:nsd0, 1:obj(ii)%nips)

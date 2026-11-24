@@ -16,6 +16,7 @@ t2 = RESHAPE([0.0_DFP, 0.0_DFP, 2.0_DFP, &
 t3 = 0.0_DFP
 t3(1:2, :) = t2
 y = triangle_diameter_2d(t2)
-CALL OK(ABS(y-2.0_DFP) < 1.0E-11_DFP, &
-  "Current implementation result for this triangle")
+! right triangle: the diameter is the hypotenuse, SQRT(5)
+CALL OK(ABS(y-SQRT(5.0_DFP)) < 1.0E-11_DFP, &
+  "Diameter of a right triangle is its hypotenuse")
 END PROGRAM main

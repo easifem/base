@@ -16,105 +16,119 @@
 !
 
 SUBMODULE(ElemshapeData_UnitNormalMethods) Methods
-USE BaseMethod
+USE BaseType, ONLY: TypeFEVariableScalar
+USE BaseType, ONLY: TypeFEVariableVector
+USE BaseType, ONLY: TypeFEVariableOpt
+USE BaseType, ONLY: math => TypeMathOpt
+USE ElemshapeData_GradientMethods, ONLY: GetSpatialGradient
+USE ElemshapeData_ScalarInterpolMethods, ONLY: GetInterpolation
+USE ElemshapeData_VectorInterpolMethods, ONLY: GetInterpolation
+! USE GlobalData, ONLY: Scalar
+! USE GlobalData, ONLY: Vector
+! USE GlobalData, ONLY: Zero
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
 
 !----------------------------------------------------------------------------
-!                                                             getUnitNormal
+!                                                            getUnitNormal_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getUnitNormal_1
-! Define internal variables
-REAL(DFP), ALLOCATABLE :: dp(:, :), p(:), pnorm(:)
-INTEGER(I4B) :: ii
-!! main
-CALL GetInterpolation(obj=obj, Val=val, ans=p)
-CALL getSpatialGradient(obj=obj, ans=dp, Val=Val)
+REAL(DFP), ALLOCATABLE :: dp(:, :), p(:)
+
+CALL GetInterpolation(obj=obj, val=val, ans=p)
+CALL GetSpatialGradient(obj=obj, ans=dp, val=val)
 CALL Reallocate(R, obj%nsd, obj%nips)
-pnorm = NORM2(dp, DIM=1)
-!!
-DO ii = 1, SIZE(p)
-  IF (pnorm(ii) .GT. zero) THEN
-    IF (p(ii) .GE. 0.0_DFP) THEN
-      R(:, ii) = dp(:, ii) / pnorm(ii)
-    ELSE
-      R(:, ii) = -dp(:, ii) / pnorm(ii)
-    END IF
-  END IF
-END DO
-!!
-IF (ALLOCATED(dp)) DEALLOCATE (dp)
-IF (ALLOCATED(p)) DEALLOCATE (p)
-IF (ALLOCATED(pnorm)) DEALLOCATE (pnorm)
+CALL obj_ScalarUnitNormal(p, dp, R)
 END PROCEDURE getUnitNormal_1
 
 !----------------------------------------------------------------------------
-!                                                             getUnitNormal
+!                                                            getUnitNormal_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getUnitNormal_2
-REAL(DFP), ALLOCATABLE :: dp(:, :, :)
-REAL(DFP), ALLOCATABLE :: p(:, :)
-REAL(DFP), ALLOCATABLE :: mv(:)
-REAL(DFP), ALLOCATABLE :: pnorm(:)
-REAL(DFP) :: nrm
-INTEGER(I4B) :: i
-!! main
-!! interpolate the vector
-CALL getInterpolation(obj=obj, ans=p, val=val)
-!! get gradient of nodal values
-CALL getSpatialGradient(obj=obj, ans=dp, val=val)
-pnorm = NORM2(p, DIM=1)
+REAL(DFP), ALLOCATABLE :: dp(:, :, :), p(:, :)
+
+CALL GetInterpolation(obj=obj, ans=p, val=val)
+CALL GetSpatialGradient(obj=obj, ans=dp, val=val)
 CALL Reallocate(R, obj%nsd, obj%nips)
-DO i = 1, SIZE(pnorm)
-  IF (pnorm(i) .GT. Zero) THEN
-    p(:, i) = p(:, i) / pnorm(i)
-  ELSE
-    p(:, i) = 1.0
-  END IF
-  mv = MATMUL(p(:, i), dp(:, :, i))
-  nrm = NORM2(mv)
-  IF (nrm .GT. Zero) THEN
-    R(:, i) = mv / nrm
-  END IF
-END DO
-IF (ALLOCATED(dp)) DEALLOCATE (dp)
-IF (ALLOCATED(p)) DEALLOCATE (p)
-IF (ALLOCATED(mv)) DEALLOCATE (mv)
-IF (ALLOCATED(pnorm)) DEALLOCATE (pnorm)
+CALL obj_VectorUnitNormal(p, dp, R)
 END PROCEDURE getUnitNormal_2
 
 !----------------------------------------------------------------------------
-!                                                             getUnitNormal
+!                                                            getUnitNormal_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE getUnitNormal_3
-  !!
-IF (val%rank .EQ. scalar) THEN
-  CALL scalar_getUnitNormal_3(obj=obj, r=r, val=val)
-ELSEIF (val%rank .EQ. vector) THEN
-  CALL vector_getUnitNormal_3(obj=obj, r=r, val=val)
+IF (val%RANK .EQ. TypeFEVariableOpt%Scalar) THEN
+  CALL obj_ScalarFEUnitNormal(obj, R, val)
+ELSE IF (val%RANK .EQ. TypeFEVariableOpt%Vector) THEN
+  CALL obj_VectorFEUnitNormal(obj, R, val)
 END IF
-  !!
-CONTAINS
-  !!
-PURE SUBROUTINE scalar_getUnitNormal_3(obj, r, val)
-  CLASS(ElemshapeData_), INTENT(IN) :: obj
-  REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: r(:, :)
-  TYPE(FEVariable_), INTENT(IN) :: val
-! Define internal variables
-  REAL(DFP), ALLOCATABLE :: dp(:, :), p(:), pnorm(:)
-  INTEGER(I4B) :: ii
+END PROCEDURE getUnitNormal_3
 
-  CALL GetInterpolation(obj=obj, Val=val, ans=p)
+!----------------------------------------------------------------------------
+!                                                     obj_ScalarFEUnitNormal
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE obj_ScalarFEUnitNormal(obj, R, val)
+  CLASS(ElemshapeData_), INTENT(IN) :: obj
+  !! element shape data
+  REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
+  !! unit normal at quadrature points
+  TYPE(FEVariable_), INTENT(IN) :: val
+  !! scalar nodal FEVariable
+
+  REAL(DFP), ALLOCATABLE :: dp(:, :), p(:)
+
+  CALL GetInterpolation(obj=obj, val=val, ans=p)
   CALL GetSpatialGradient(obj=obj, ans=dp, val=val, &
                           valRank=TypeFEVariableScalar)
   CALL Reallocate(R, obj%nsd, obj%nips)
+  CALL obj_ScalarUnitNormal(p, dp, R)
+END SUBROUTINE obj_ScalarFEUnitNormal
+
+!----------------------------------------------------------------------------
+!                                                     obj_VectorFEUnitNormal
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE obj_VectorFEUnitNormal(obj, R, val)
+  CLASS(ElemshapeData_), INTENT(IN) :: obj
+  !! element shape data
+  REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: R(:, :)
+  !! unit normal at quadrature points
+  TYPE(FEVariable_), INTENT(IN) :: val
+  !! vector nodal FEVariable
+
+  REAL(DFP), ALLOCATABLE :: dp(:, :, :), p(:, :)
+
+  CALL GetInterpolation(obj=obj, ans=p, val=val)
+  CALL GetSpatialGradient(obj=obj, ans=dp, val=val, &
+                          valRank=TypeFEVariableVector)
+  CALL Reallocate(R, obj%nsd, obj%nips)
+  CALL obj_VectorUnitNormal(p, dp, R)
+END SUBROUTINE obj_VectorFEUnitNormal
+
+!----------------------------------------------------------------------------
+!                                                       obj_ScalarUnitNormal
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE obj_ScalarUnitNormal(p, dp, R)
+  REAL(DFP), INTENT(IN) :: p(:)
+  !! scalar values at quadrature points
+  REAL(DFP), INTENT(IN) :: dp(:, :)
+  !! spatial gradients, dp(nsd, nips)
+  REAL(DFP), INTENT(INOUT) :: R(:, :)
+  !! existing output buffer, R(nsd, nips)
+
+  ! Internal variables
+  REAL(DFP), ALLOCATABLE :: pnorm(:)
+  INTEGER(I4B) :: ii
+
   pnorm = NORM2(dp, DIM=1)
-!!
   DO ii = 1, SIZE(p)
-    IF (pnorm(ii) .GT. zero) THEN
+    IF (pnorm(ii) .GT. math%zero) THEN
       IF (p(ii) .GE. 0.0_DFP) THEN
         R(:, ii) = dp(:, ii) / pnorm(ii)
       ELSE
@@ -122,53 +136,39 @@ PURE SUBROUTINE scalar_getUnitNormal_3(obj, r, val)
       END IF
     END IF
   END DO
-!!
-  IF (ALLOCATED(dp)) DEALLOCATE (dp)
-  IF (ALLOCATED(p)) DEALLOCATE (p)
-  IF (ALLOCATED(pnorm)) DEALLOCATE (pnorm)
-END SUBROUTINE scalar_getUnitNormal_3
-  !!
-PURE SUBROUTINE vector_getUnitNormal_3(obj, r, val)
-  CLASS(ElemshapeData_), INTENT(IN) :: obj
-  REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: r(:, :)
-  TYPE(FEVariable_), INTENT(IN) :: val
-!! Define internal variables
-  REAL(DFP), ALLOCATABLE :: dp(:, :, :)
-  REAL(DFP), ALLOCATABLE :: p(:, :)
-  REAL(DFP), ALLOCATABLE :: mv(:)
+END SUBROUTINE obj_ScalarUnitNormal
+
+!----------------------------------------------------------------------------
+!                                                       obj_VectorUnitNormal
+!----------------------------------------------------------------------------
+
+PURE SUBROUTINE obj_VectorUnitNormal(p, dp, R)
+  REAL(DFP), INTENT(INOUT) :: p(:, :)
+!! vector values, normalized in place, p(ncomp, nips)
+  REAL(DFP), INTENT(IN) :: dp(:, :, :)
+!! spatial gradients, dp(ncomp, nsd, nips)
+  REAL(DFP), INTENT(INOUT) :: R(:, :)
+!! existing output buffer, R(nsd, nips)
+
+  ! Internal variables
   REAL(DFP), ALLOCATABLE :: pnorm(:)
-  REAL(DFP) :: nrm
+  REAL(DFP) :: mv(SIZE(dp, 2)), nrm
   INTEGER(I4B) :: i
-!! main
-
-  !! interpolate the vector
-  CALL GetInterpolation(obj=obj, ans=p, Val=val)
-
-  !! get gradient of nodal values
-  CALL GetSpatialGradient(obj=obj, ans=dp, val=val, &
-                          valRank=TypeFEVariableVector)
 
   pnorm = NORM2(p, DIM=1)
-  CALL Reallocate(R, obj%nsd, obj%nips)
-  DO i = 1, SIZE(pnorm)
-    IF (pnorm(i) .GT. Zero) THEN
+  quadraturePoints: DO i = 1, SIZE(pnorm)
+    IF (pnorm(i) .GT. math%zero) THEN
       p(:, i) = p(:, i) / pnorm(i)
     ELSE
-      p(:, i) = 1.0
+      R(:, i) = math%zero
+      CYCLE quadraturePoints
     END IF
     mv = MATMUL(p(:, i), dp(:, :, i))
     nrm = NORM2(mv)
-    IF (nrm .GT. Zero) THEN
+    IF (nrm .GT. math%zero) THEN
       R(:, i) = mv / nrm
     END IF
-  END DO
-
-  IF (ALLOCATED(dp)) DEALLOCATE (dp)
-  IF (ALLOCATED(p)) DEALLOCATE (p)
-  IF (ALLOCATED(mv)) DEALLOCATE (mv)
-  IF (ALLOCATED(pnorm)) DEALLOCATE (pnorm)
-END SUBROUTINE vector_getUnitNormal_3
-
-END PROCEDURE getUnitNormal_3
+  END DO quadraturePoints
+END SUBROUTINE obj_VectorUnitNormal
 
 END SUBMODULE Methods

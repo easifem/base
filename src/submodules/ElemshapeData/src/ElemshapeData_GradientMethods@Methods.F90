@@ -16,27 +16,19 @@
 !
 
 SUBMODULE(ElemshapeData_GradientMethods) Methods
-USE MatmulUtility, ONLY: MyMatmul => MATMUL
-USE ContractionUtility, ONLY: Contraction
-USE ReallocateUtility, ONLY: Reallocate
-USE SwapUtility, ONLY: SWAP
-USE SwapUtility, ONLY: SWAP_
 USE BaseType, ONLY: fevaropt => TypeFEVariableOpt
 USE BaseType, ONLY: math => TypeMathOpt
-USE FEVariable_Method, ONLY: FEVariableGet => Get
-USE FEVariable_Method, ONLY: FEVariableGet_ => Get_
-USE FEVariable_Method, ONLY: FEVariableSize => Size
-USE FEVariable_Method, ONLY: FEVariableShape => Shape
-USE FEVariable_Method, ONLY: FEVariableSet => Set
-USE FEVariable_Method, ONLY: QuadratureVariable
 USE BaseType, ONLY: TypeFEVariableScalar
 USE BaseType, ONLY: TypeFEVariableVector
 USE BaseType, ONLY: TypeFEVariableMatrix
-USE BaseType, ONLY: TypeFEVariableConstant
 USE BaseType, ONLY: TypeFEVariableSpace
 USE BaseType, ONLY: TypeFEVariableSpaceTime
-
-IMPLICIT NONE
+USE ContractionUtility, ONLY: Contraction
+USE FEVariable_Method, ONLY: FEVariableGet => Get
+USE FEVariable_Method, ONLY: FEVariableGet_ => Get_
+USE FEVariable_Method, ONLY: FEVariableShape => Shape
+USE MatmulUtility, ONLY: MyMatmul => MATMUL
+USE ReallocateUtility, ONLY: Reallocate
 
 CONTAINS
 
@@ -170,7 +162,6 @@ LOGICAL(LGT) :: isok
 dim1 = SIZE(val, 1)
 dim2 = obj%nsd
 dim3 = obj%nips
-ans(1:dim1, 1:dim2, 1:dim3) = math%zero
 
 isok = obj%nsd .EQ. obj%xidim
 IF (isok) THEN
@@ -216,10 +207,14 @@ END PROCEDURE obj_GetSpatialGradient5
 MODULE PROCEDURE obj_GetSpatialGradient_5
 INTEGER(I4B) :: i1
 
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
+
 SELECT CASE (val%varType)
 CASE (fevaropt%space)
   CALL FEVariableGet_( &
-    obj=val, rank=TypeFEVariableScalar, varType=TypeFEVariableSpace, &
+    obj=val, RANK=TypeFEVariableScalar, varType=TypeFEVariableSpace, &
     val=tempVec, tsize=i1)
 
   CALL GetSpatialGradient_(obj=obj, ans=ans, nrow=nrow, ncol=ncol, &
@@ -261,9 +256,13 @@ END PROCEDURE obj_GetSpatialGradient6
 MODULE PROCEDURE obj_GetSpatialGradient_6
 INTEGER(I4B) :: s(1), i1, i2
 
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
+
 SELECT CASE (val%varType)
 CASE (fevaropt%space)
-  CALL FEVariableGet_(obj=val, rank=TypeFEVariableVector, &
+  CALL FEVariableGet_(obj=val, RANK=TypeFEVariableVector, &
                       varType=TypeFEVariableSpace, &
                       val=tempMat2, nrow=i1, ncol=i2)
 
@@ -375,13 +374,16 @@ END PROCEDURE obj_GetSpatialGradient_8
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE obj_GetSpatialGradient9
-INTEGER(I4B) :: s(2)
+! Allocate and zero ans first, so every path that does not compute a
+! gradient (constant val, space-time val with a space-only obj, other
+! varType) returns zeros of shape (nrow, ncol, nsd, nips).
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
+
+CALL Reallocate(ans, val%s(1), val%s(2), obj%nsd, obj%nips)
 
 SELECT CASE (val%varType)
-CASE (fevaropt%constant)
-  s = FEVariableShape(val)
-  CALL Reallocate(ans, s(1), s(2), obj%nsd, obj%nips)
-
 CASE (fevaropt%space)
   CALL GetSpatialGradient(obj=obj, ans=ans, &
                           Val=FEVariableGet( &
@@ -407,6 +409,10 @@ END PROCEDURE obj_GetSpatialGradient9
 MODULE PROCEDURE obj_GetSpatialGradient_9
 INTEGER(I4B) :: s(2), i1, i2, i3
 
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
+
 s = FEVariableShape(val)
 dim1 = s(1)
 dim2 = s(2)
@@ -418,14 +424,13 @@ SELECT CASE (val%varType)
 CASE (fevaropt%space)
 
   CALL FEVariableGet_(obj=val, vartype=TypeFEVariableSpace, &
-                      rank=TypeFEVariableMatrix, val=tempMat3, &
+                      RANK=TypeFEVariableMatrix, val=tempMat3, &
                       dim1=i1, dim2=i2, dim3=i3)
 
-  CALL GetSpatialGradient_(obj=obj, ans=ans, val=tempMat3, dim1=dim1, &
+  CALL GetSpatialGradient_(obj=obj, ans=ans, &
+                           val=tempMat3(1:i1, 1:i2, 1:i3), dim1=dim1, &
                            dim2=dim2, dim3=dim3, dim4=dim4)
 CASE DEFAULT
-
-CASE (fevaropt%constant)
   ans(1:dim1, 1:dim2, 1:dim3, 1:dim4) = math%zero
 
 END SELECT
@@ -455,11 +460,15 @@ END PROCEDURE obj_GetSpatialGradient10
 MODULE PROCEDURE obj_GetSpatialGradient_10
 INTEGER(I4B) :: i1, i2
 
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
+
 SELECT CASE (val%varType)
 CASE (fevaropt%space)
 
   CALL FEVariableGet_( &
-    obj=val, rank=TypeFEVariableScalar, varType=TypeFEVariableSpace, &
+    obj=val, RANK=TypeFEVariableScalar, varType=TypeFEVariableSpace, &
     val=tempMat2(:, 1), tsize=i1)
 
   CALL GetSpatialGradient_(obj=obj, ans=ans, nrow=nrow, ncol=ncol, &
@@ -468,7 +477,7 @@ CASE (fevaropt%space)
 CASE (fevaropt%spaceTime)
 
   CALL FEVariableGet_( &
-    obj=val, rank=TypeFEVariableScalar, varType=TypeFEVariableSpaceTime, &
+    obj=val, RANK=TypeFEVariableScalar, varType=TypeFEVariableSpaceTime, &
     val=tempMat2, nrow=i1, ncol=i2)
 
   CALL GetSpatialGradient_(obj=obj, ans=ans, nrow=nrow, ncol=ncol, &
@@ -510,9 +519,13 @@ END PROCEDURE obj_GetSpatialGradient11
 MODULE PROCEDURE obj_GetSpatialGradient_11
 INTEGER(I4B) :: s(1), i1, i2, i3
 
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
+
 SELECT CASE (val%varType)
 CASE (fevaropt%space)
-  CALL FEVariableGet_(obj=val, rank=TypeFEVariableVector, &
+  CALL FEVariableGet_(obj=val, RANK=TypeFEVariableVector, &
                       varType=TypeFEVariableSpace, &
                       val=tempMat3(:, :, 1), nrow=i1, &
                       ncol=i2)
@@ -522,7 +535,7 @@ CASE (fevaropt%space)
                            dim1=dim1, dim2=dim2, dim3=dim3)
 
 CASE (fevaropt%spaceTime)
-  CALL FEVariableGet_(obj=val, rank=TypeFEVariableVector, &
+  CALL FEVariableGet_(obj=val, RANK=TypeFEVariableVector, &
                       varType=TypeFEVariableSpaceTime, &
                       val=tempMat3, dim1=i1, dim2=i2, dim3=i3)
 
@@ -570,11 +583,15 @@ END PROCEDURE obj_GetSpatialGradient12
 MODULE PROCEDURE obj_GetSpatialGradient_12
 INTEGER(I4B) :: s(2), i1, i2, i3, i4
 
+#ifdef DEBUG_VER
+CALL obj_CheckSpatialGradientInput(val)
+#endif
+
 SELECT CASE (val%varType)
 
 CASE (fevaropt%space)
   CALL FEVariableGet_(obj=val, vartype=TypeFEVariableSpace, &
-                      rank=TypeFEVariableMatrix, val=tempMat4(:, :, :, 1), &
+                      RANK=TypeFEVariableMatrix, val=tempMat4(:, :, :, 1), &
                       dim1=i1, dim2=i2, dim3=i3)
 
   CALL GetSpatialGradient_( &
@@ -583,7 +600,7 @@ CASE (fevaropt%space)
 
 CASE (fevaropt%spaceTime)
   CALL FEVariableGet_(obj=val, vartype=TypeFEVariableSpaceTime, &
-                      rank=TypeFEVariableMatrix, val=tempMat4, &
+                      RANK=TypeFEVariableMatrix, val=tempMat4, &
                       dim1=i1, dim2=i2, dim3=i3, dim4=i4)
 
   CALL GetSpatialGradient_( &
@@ -601,6 +618,21 @@ CASE DEFAULT
 
 END SELECT
 END PROCEDURE obj_GetSpatialGradient_12
+
+!----------------------------------------------------------------------------
+!                                             obj_CheckSpatialGradientInput
+!----------------------------------------------------------------------------
+
+#ifdef DEBUG_VER
+PURE SUBROUTINE obj_CheckSpatialGradientInput(val)
+  TYPE(FEVariable_), INTENT(IN) :: val
+  !! FEVariable whose spatial gradient is requested
+
+  IF (val%defineOn .NE. fevaropt%nodal) THEN
+    ERROR STOP 'GetSpatialGradient: unsupported FEVariable; use nodal values'
+  END IF
+END SUBROUTINE obj_CheckSpatialGradientInput
+#endif
 
 !----------------------------------------------------------------------------
 !

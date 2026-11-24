@@ -15,7 +15,16 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 SUBMODULE(ElemshapeData_StabilizationParamMethods) Takizawa2018
-USE BaseMethod
+USE ApproxUtility, ONLY: OPERATOR(.APPROXEQ.)
+USE BaseType, ONLY: TypeFEVariableScalar
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+USE BaseType, ONLY: math => TypeMathOpt
+USE ElemshapeData_HRQIParamMethods, ONLY: GetHRQIParam
+USE ElemshapeData_ScalarInterpolMethods, ONLY: GetInterpolation
+USE FEVariable_Method, ONLY: ASSIGNMENT(=)
+USE FEVariable_Method, ONLY: QuadratureVariable
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
 
@@ -24,61 +33,51 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_1
-!
 REAL(DFP), ALLOCATABLE :: nubar(:), h0(:), hmax0(:), hmin0(:), &
-  & r0(:, :), tau0(:)
-INTEGER(I4B) :: ii, nips
-REAL(DFP) :: areal, r2
-!
-CALL GetHRQIParam( &
-  & obj=obj, &
-  & h=h0, &
-  & val=val, &
-  & hmax=hmax0, &
-  & hmin=hmin0, &
-  & r=r0, &
-  & opt=opt)
-!
+                          r0(:, :), tau0(:)
+INTEGER(I4B) :: ii
+REAL(DFP) ::  r2
+
+CALL GetHRQIParam(obj=obj, h=h0, val=val, hmax=hmax0, hmin=hmin0, &
+                  r=r0, opt=opt)
+
 IF (PRESENT(h)) THEN
   h = QuadratureVariable(h0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
+                         TypeFEVariableSpace)
 END IF
-!
+
 IF (PRESENT(hmax)) THEN
   hmax = QuadratureVariable(hmax0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
+                            TypeFEVariableSpace)
 END IF
-!
+
 IF (PRESENT(hmin)) THEN
   hmin = QuadratureVariable(hmin0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
+                            TypeFEVariableSpace)
 END IF
-!
+
 CALL GetInterpolation(obj=obj, val=nu, ans=nubar)
 CALL Reallocate(tau0, SIZE(h0))
-!
+
 DO ii = 1, SIZE(h0)
-  !
+
   r2 = DOT_PRODUCT(r0(:, ii), r0(:, ii))
-  !
-  IF (h0(ii) .APPROXEQ.zero) THEN
-    tau0(ii) = 4.0_DFP * nubar(ii) * &
-      & (1.0_DFP - r2) / hmin0(ii)**2
+
+  IF (h0(ii) .APPROXEQ. math%zero) THEN
+    tau0(ii) = 4.0_DFP * nubar(ii) * (1.0_DFP - r2) / hmin0(ii)**2
   ELSE
-    tau0(ii) = 4.0_DFP * nubar(ii) * &
-      & ((1.0_DFP - r2) / hmin0(ii)**2 &
-      & + 1.0_DFP / h0(ii)**2)
+    tau0(ii) = 4.0_DFP * nubar(ii) * ((1.0_DFP - r2) / hmin0(ii)**2 &
+                                      + 1.0_DFP / h0(ii)**2)
   END IF
-  !
+
   tau0(ii) = 1.0_DFP / tau0(ii)
-  !
+
 END DO
-!
+
 tau = QuadratureVariable(tau0, TypeFEVariableScalar, &
-  & TypeFEVariableSpace)
-!
+                         TypeFEVariableSpace)
+
 DEALLOCATE (nubar, h0, hmax0, hmin0, r0, tau0)
-!
 END PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_1
 
 !----------------------------------------------------------------------------
@@ -86,67 +85,58 @@ END PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_2
-!
 REAL(DFP), ALLOCATABLE :: nubar(:, :), h0(:, :), hmax0(:, :), &
-  & hmin0(:, :), r0(:, :, :), tau0(:, :)
+                          hmin0(:, :), r0(:, :, :), tau0(:, :)
 INTEGER(I4B) :: ii, nipt, nips, ipt
-REAL(DFP) :: areal, r2
-!
+REAL(DFP) :: r2
+
 nipt = SIZE(obj)
-!
-CALL GetHRQIParam( &
-  & obj=obj, &
-  & h=h0, &
-  & val=val, &
-  & hmax=hmax0, &
-  & hmin=hmin0, &
-  & r=r0, &
-  & opt=opt)
-!
+
+CALL GetHRQIParam(obj=obj, h=h0, val=val, hmax=hmax0, hmin=hmin0, &
+                  r=r0, opt=opt)
+
 IF (PRESENT(h)) THEN
   h = QuadratureVariable(h0, TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
+                         TypeFEVariableSpaceTime)
 END IF
-!
+
 IF (PRESENT(hmax)) THEN
   hmax = QuadratureVariable(hmax0, TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
+                            TypeFEVariableSpaceTime)
 END IF
-!
+
 IF (PRESENT(hmin)) THEN
   hmin = QuadratureVariable(hmin0, TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
+                            TypeFEVariableSpaceTime)
 END IF
-!
+
 nips = SIZE(h0, 1)
-!
 CALL GetInterpolation(obj=obj, val=nu, ans=nubar)
 CALL Reallocate(tau0, nips, nipt)
-!
+
 DO ipt = 1, nipt
   DO ii = 1, nips
-    !
+
     r2 = DOT_PRODUCT(r0(:, ii, ipt), r0(:, ii, ipt))
-    !
-    IF (h0(ii, ipt) .APPROXEQ.zero) THEN
+
+    IF (h0(ii, ipt) .APPROXEQ. math%zero) THEN
       tau0(ii, ipt) = 4.0_DFP * nubar(ii, ipt) * &
-        & (1.0_DFP - r2) / hmin0(ii, ipt)**2
+                      (1.0_DFP - r2) / hmin0(ii, ipt)**2
     ELSE
       tau0(ii, ipt) = 4.0_DFP * nubar(ii, ipt) * &
-        & ((1.0_DFP - r2) / hmin0(ii, ipt)**2 &
-        & + 1.0_DFP / h0(ii, ipt)**2)
+                      ((1.0_DFP - r2) / hmin0(ii, ipt)**2 &
+                       + 1.0_DFP / h0(ii, ipt)**2)
     END IF
-    !
+
     tau0(ii, ipt) = 1.0_DFP / tau0(ii, ipt)
-    !
+
   END DO
 END DO
-!
+
 tau = QuadratureVariable(tau0, TypeFEVariableScalar, &
-  & TypeFEVariableSpaceTime)
-!
+                         TypeFEVariableSpaceTime)
+
 DEALLOCATE (nubar, h0, hmax0, hmin0, r0, tau0)
-!
 END PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_2
 
 !----------------------------------------------------------------------------
@@ -154,60 +144,50 @@ END PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_3
-!
 REAL(DFP), ALLOCATABLE :: h0(:), hmax0(:), hmin0(:), &
-  & r0(:, :), tau0(:)
+                          r0(:, :), tau0(:)
 INTEGER(I4B) :: ii
-REAL(DFP) :: areal, r2
-!
-CALL GetHRQIParam( &
-  & obj=obj, &
-  & h=h0, &
-  & val=val, &
-  & hmax=hmax0, &
-  & hmin=hmin0, &
-  & r=r0, &
-  & opt=opt)
-!
+REAL(DFP) ::  r2
+
+CALL GetHRQIParam(obj=obj, h=h0, val=val, hmax=hmax0, hmin=hmin0, &
+                  r=r0, opt=opt)
+
 IF (PRESENT(h)) THEN
   h = QuadratureVariable(h0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
+                         TypeFEVariableSpace)
 END IF
-!
+
 IF (PRESENT(hmax)) THEN
   hmax = QuadratureVariable(hmax0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
+                            TypeFEVariableSpace)
 END IF
-!
+
 IF (PRESENT(hmin)) THEN
   hmin = QuadratureVariable(hmin0, TypeFEVariableScalar, &
-    & TypeFEVariableSpace)
+                            TypeFEVariableSpace)
 END IF
-!
+
 CALL Reallocate(tau0, SIZE(h0))
-!
+
 DO ii = 1, SIZE(h0)
-  !
+
   r2 = DOT_PRODUCT(r0(:, ii), r0(:, ii))
-  !
-  IF (h0(ii) .APPROXEQ.zero) THEN
-    tau0(ii) = 4.0_DFP * nu * &
-      & (1.0_DFP - r2) / hmin0(ii)**2
+
+  IF (h0(ii) .APPROXEQ. math%zero) THEN
+    tau0(ii) = 4.0_DFP * nu * (1.0_DFP - r2) / hmin0(ii)**2
   ELSE
-    tau0(ii) = 4.0_DFP * nu * &
-      & ((1.0_DFP - r2) / hmin0(ii)**2 &
-      & + 1.0_DFP / h0(ii)**2)
+    tau0(ii) = 4.0_DFP * nu * ((1.0_DFP - r2) / hmin0(ii)**2 &
+                               + 1.0_DFP / h0(ii)**2)
   END IF
-  !
+
   tau0(ii) = 1.0_DFP / tau0(ii)
-  !
+
 END DO
-!
+
 tau = QuadratureVariable(tau0, TypeFEVariableScalar, &
-  & TypeFEVariableSpace)
-!
+                         TypeFEVariableSpace)
+
 DEALLOCATE (h0, hmax0, hmin0, r0, tau0)
-!
 END PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_3
 
 !----------------------------------------------------------------------------
@@ -215,66 +195,58 @@ END PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_4
-!
 REAL(DFP), ALLOCATABLE :: h0(:, :), hmax0(:, :), &
-  & hmin0(:, :), r0(:, :, :), tau0(:, :)
+                          hmin0(:, :), r0(:, :, :), tau0(:, :)
 INTEGER(I4B) :: ii, nipt, nips, ipt
-REAL(DFP) :: areal, r2
-!
+REAL(DFP) :: r2
+
 nipt = SIZE(obj)
-!
-CALL GetHRQIParam( &
-  & obj=obj, &
-  & h=h0, &
-  & val=val, &
-  & hmax=hmax0, &
-  & hmin=hmin0, &
-  & r=r0, &
-  & opt=opt)
-!
+
+CALL GetHRQIParam(obj=obj, h=h0, val=val, hmax=hmax0, hmin=hmin0, &
+                  r=r0, opt=opt)
+
 IF (PRESENT(h)) THEN
   h = QuadratureVariable(h0, TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
+                         TypeFEVariableSpaceTime)
 END IF
-!
+
 IF (PRESENT(hmax)) THEN
   hmax = QuadratureVariable(hmax0, TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
+                            TypeFEVariableSpaceTime)
 END IF
-!
+
 IF (PRESENT(hmin)) THEN
   hmin = QuadratureVariable(hmin0, TypeFEVariableScalar, &
-    & TypeFEVariableSpaceTime)
+                            TypeFEVariableSpaceTime)
 END IF
-!
+
 nips = SIZE(h0, 1)
-!
+
 CALL Reallocate(tau0, nips, nipt)
-!
+
 DO ipt = 1, nipt
   DO ii = 1, nips
-    !
+
     r2 = DOT_PRODUCT(r0(:, ii, ipt), r0(:, ii, ipt))
-    !
-    IF (h0(ii, ipt) .APPROXEQ.zero) THEN
+
+    IF (h0(ii, ipt) .APPROXEQ. math%zero) THEN
       tau0(ii, ipt) = 4.0_DFP * nu * &
-        & (1.0_DFP - r2) / hmin0(ii, ipt)**2
+                      (1.0_DFP - r2) / hmin0(ii, ipt)**2
     ELSE
       tau0(ii, ipt) = 4.0_DFP * nu * &
-        & ((1.0_DFP - r2) / hmin0(ii, ipt)**2 &
-        & + 1.0_DFP / h0(ii, ipt)**2)
+                      ((1.0_DFP - r2) / hmin0(ii, ipt)**2 &
+                       + 1.0_DFP / h0(ii, ipt)**2)
     END IF
-    !
+
     tau0(ii, ipt) = 1.0_DFP / tau0(ii, ipt)
-    !
+
   END DO
 END DO
-!
+
 tau = QuadratureVariable(tau0, TypeFEVariableScalar, &
-  & TypeFEVariableSpaceTime)
-!
+                         TypeFEVariableSpaceTime)
+
 DEALLOCATE (h0, hmax0, hmin0, r0, tau0)
-!
 END PROCEDURE elemsd_GetSUGN3Param_Takizawa2018_4
 
 !----------------------------------------------------------------------------

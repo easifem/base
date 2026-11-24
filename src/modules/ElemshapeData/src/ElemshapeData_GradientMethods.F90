@@ -1,5 +1,6 @@
 ! This program is a part of EASIFEM library
-! Copyright (C) 2020-2021  Vikas Sharma, Ph.D
+! Expandable And Scalable Infrastructure for Finite Element Methods
+! htttps://www.easifem.com
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -13,6 +14,18 @@
 !
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
+!
+
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-03-04
+! summary: Gradient with respect to the physical coordinates
+!
+! Compute the spatial gradient of a quantity at the quadrature points
+! from its nodal values and `dNdXt` (or `dNTdXt` for space-time).
+! The gradient of a scalar is a vector of size `nsd`.
+! The gradient of a vector is a matrix.
+! The gradient of a matrix is a rank-3 array.
+! Fill `dNdXt` (and `dNTdXt`) first, for example with [[Set]].
 
 MODULE ElemshapeData_GradientMethods
 USE BaseType, ONLY: ElemShapeData_
@@ -21,7 +34,9 @@ USE BaseType, ONLY: FEVariable_
 USE BaseType, ONLY: FEVariableScalar_
 USE BaseType, ONLY: FEVariableVector_
 USE BaseType, ONLY: FEVariableMatrix_
-USE GlobalData, ONLY: DFP, I4B, LGT
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 IMPLICIT NONE
 PRIVATE
 
@@ -34,20 +49,28 @@ PUBLIC :: GetSpatialGradient_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of scalar
+! summary: Spatial gradient of scalar nodal values
 !
-!# GetSpatialGradient
+! Returns the spatial gradient of scalar nodal values `val(nns)`.
+! It reallocates `ans(nsd, nips)` and then works like
+! [[obj_GetSpatialGradient_1]].
 !
-! This method returns the spatial gradient of scalar
+! Examples
 !
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90)
+! on a facet
+!
+! See also: [[obj_GetSpatialGradient_1]]
 
 INTERFACE GetSpatialGradient
   MODULE PURE SUBROUTINE obj_GetSpatialGradient1(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
-    !! Spatial gradient of scalar
+    !! spatial gradient, ans(nsd, nips)
     REAL(DFP), INTENT(IN) :: val(:)
-    !! Nodal values of scalar
+    !! nodal values, val(nns)
   END SUBROUTINE obj_GetSpatialGradient1
 END INTERFACE GetSpatialGradient
 
@@ -57,24 +80,42 @@ END INTERFACE GetSpatialGradient
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of scalar
+! summary: Spatial gradient of scalar nodal values, no allocation
 !
-!# GetSpatialGradient_
+! Computes the spatial gradient of scalar nodal values `val(nns)`
+! at the quadrature points.
+! It writes into the existing `ans`.
+! It returns the size used in `ans` in `nrow` and `ncol`.
 !
-! This method returns the spatial gradient of scalar. The result will be
-! kept in ans. The first index of ans denotes the space component, and
-! the second index of ans denotes the spatial nodal value.
+! If `nsd /= xidim`, `obj` is a facet and the routine zeroes `ans`.
 !
+! @note
+! Fill `obj%dNdXt` before the call.
+! @endnote
+!
+! Formula:
+!   $$ ans(:, ips) = \sum_I val(I) \, dNdXt(I, :, ips) $$
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! on a facet
+!
+! See also: [[obj_GetSpatialGradient1]]
 
 INTERFACE GetSpatialGradient_
   MODULE PURE SUBROUTINE obj_GetSpatialGradient_1(obj, val, ans, nrow, ncol)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), INTENT(IN) :: val(:)
-    !! Nodal values of scalar
+    !! nodal values, val(nns)
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! Spatial gradient of scalar
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! data written nrow
+    !! spatial gradient, ans(nsd, nips)
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written in ans
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of columns written in ans
   END SUBROUTINE obj_GetSpatialGradient_1
 END INTERFACE GetSpatialGradient_
 
@@ -84,28 +125,28 @@ END INTERFACE GetSpatialGradient_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of vector
+! summary: Spatial gradient of vector nodal values
 !
-!# GetSpatialGradient
+! Returns the spatial gradient of vector nodal values `val(ncomp, nns)`.
+! It reallocates `ans(ncomp, nsd, nips)` and then works like
+! [[obj_GetSpatialGradient_2]].
 !
-! This method returns the spatial gradient of vector.
-! The value of vector is kept in val.
-! The first index of val denotes the space component.
-! The second index of val denotes the nodal value.
+! Examples
 !
-! The result will returned in ans.
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90)
+! on a facet
 !
-! The first index denotes space component of val.
-! The second index of ans denote the space component
-! The third index denotes the space components.
+! See also: [[obj_GetSpatialGradient_2]]
 
 INTERFACE GetSpatialGradient
   MODULE PURE SUBROUTINE obj_GetSpatialGradient2(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :)
-    !! spatial gradient of vector at integration points
+    !! spatial gradient, ans(ncomp, nsd, nips)
     REAL(DFP), INTENT(IN) :: val(:, :)
-    !! nodal values of vector in `xiJ` format
+    !! nodal values, val(ncomp, nns)
   END SUBROUTINE obj_GetSpatialGradient2
 END INTERFACE GetSpatialGradient
 
@@ -115,32 +156,45 @@ END INTERFACE GetSpatialGradient
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of vector
+! summary: Spatial gradient of vector nodal values, no allocation
 !
-!# GetSpatialGradient_
+! Computes the spatial gradient of vector nodal values `val(ncomp, nns)`
+! at the quadrature points.
+! It writes into the existing `ans`.
+! It returns the size used in `ans` in `dim1`, `dim2` and `dim3`.
 !
-! This method returns the spatial gradient of vector.
-! The value of vector is kept in val.
-! The first index of val denotes the space component.
-! The second index of val denotes the nodal value.
+! If `nsd /= xidim`, `obj` is a facet and the routine zeroes `ans`.
 !
-! The result will returned in ans.
+! @note
+! Fill `obj%dNdXt` before the call.
+! @endnote
 !
-! The first index denotes space component of val.
-! The second index of ans denote the space component
-! The third index denotes the space components.
+! Formula:
+!   $$ ans(:, :, ips) = \sum_I val(:, I) \, dNdXt(I, :, ips) $$
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! on a facet
+!
+! See also: [[obj_GetSpatialGradient2]]
 
 INTERFACE GetSpatialGradient_
   MODULE PURE SUBROUTINE obj_GetSpatialGradient_2( &
     obj, val, ans, dim1, dim2, dim3)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), INTENT(IN) :: val(:, :)
-    !! nodal values of vector in `xiJ` format
-    !! first index is space component.
-    !! second index is spatial nodal value
+    !! nodal values, val(ncomp, nns)
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    !! spatial gradient of vector at integration points
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
+    !! spatial gradient, ans(ncomp, nsd, nips)
+    INTEGER(I4B), INTENT(OUT) :: dim1
+    !! size of dim1 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim2
+    !! size of dim2 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim3
+    !! size of dim3 written in ans
   END SUBROUTINE obj_GetSpatialGradient_2
 END INTERFACE GetSpatialGradient_
 
@@ -150,22 +204,28 @@ END INTERFACE GetSpatialGradient_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of scalar
+! summary: Spatial gradient of scalar space-time nodal values
 !
-!# GetSpatialGradient
+! Returns the spatial gradient of scalar space-time nodal values
+! `val(nns, nnt)`.
+! `obj` is the shape data at one time point.
+! It reallocates `ans(nsd, nips)` and then works like
+! [[obj_GetSpatialGradient_3]].
 !
-! This method returns the spatial gradient of scalar.
-! Here val denotes the space-time nodal values of scalar.
+! Examples
 !
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+!
+! See also: [[obj_GetSpatialGradient_3]]
 
 INTERFACE GetSpatialGradient
   MODULE PURE SUBROUTINE obj_GetSpatialGradient3(obj, ans, val)
     TYPE(STElemshapeData_), INTENT(IN) :: obj
-    !! This should be a STElemShapeData_
+    !! space-time shape data at one time point
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
-    !! Spatial gradient of scalar
+    !! spatial gradient, ans(nsd, nips)
     REAL(DFP), INTENT(IN) :: val(:, :)
-    !! space-time Nodal values of scalar
+    !! space-time nodal values, val(nns, nnt)
   END SUBROUTINE obj_GetSpatialGradient3
 END INTERFACE GetSpatialGradient
 
@@ -175,29 +235,42 @@ END INTERFACE GetSpatialGradient
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of scalar
+! summary: Spatial gradient of scalar space-time nodal values, no allocation
 !
-!# GetSpatialGradient_
+! Computes the spatial gradient of scalar space-time nodal values
+! `val(nns, nnt)` at the quadrature points.
+! `obj` is the shape data at one time point.
+! It writes into the existing `ans`.
+! It returns the size used in `ans` in `nrow` and `ncol`.
 !
-! This method returns the spatial gradient of scalar.
-! Here val denotes the space-time nodal values of scalar.
-! The first index of val denotes the spatial nodal value.
-! The second index of val denotes the temporal nodal value.
+! If `nsd /= xidim`, `obj` is a facet and the routine zeroes `ans`.
 !
-! The result will be returned in ans. The first index of ans denotes
-! the space component, and the second component denotes the
-! spatial quadrature.
+! @note
+! Fill `obj%dNTdXt` before the call.
+! @endnote
+!
+! Formula:
+!   $$ ans(:, ips) = \sum_I \sum_a val(I, a) \, dNTdXt(I, a, :, ips) $$
+!
+! Examples
+!
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+!
+! See also: [[obj_GetSpatialGradient3]]
 
 INTERFACE GetSpatialGradient_
   MODULE PURE SUBROUTINE obj_GetSpatialGradient_3( &
     obj, val, ans, nrow, ncol)
     TYPE(STElemshapeData_), INTENT(IN) :: obj
-    !! This should be a STElemShapeData_
+    !! space-time shape data at one time point
     REAL(DFP), INTENT(IN) :: val(:, :)
-    !! space-time Nodal values of scalar
+    !! space-time nodal values, val(nns, nnt)
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! Spatial gradient of scalar
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
+    !! spatial gradient, ans(nsd, nips)
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written in ans
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of columns written in ans
   END SUBROUTINE obj_GetSpatialGradient_3
 END INTERFACE GetSpatialGradient_
 
@@ -207,24 +280,28 @@ END INTERFACE GetSpatialGradient_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of vector
+! summary: Spatial gradient of vector space-time nodal values
 !
-!# GetSpatialGradient
+! Returns the spatial gradient of vector space-time nodal values
+! `val(ncomp, nns, nnt)`.
+! `obj` is the shape data at one time point.
+! It reallocates `ans(ncomp, nsd, nips)` and then works like
+! [[obj_GetSpatialGradient_4]].
 !
-! This method returns the spatial gradient of vector.
-! Here val denotes the space-time nodal values of vector.
+! Examples
 !
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
+!
+! See also: [[obj_GetSpatialGradient_4]]
 
 INTERFACE GetSpatialGradient
   MODULE PURE SUBROUTINE obj_GetSpatialGradient4(obj, ans, val)
     TYPE(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :)
-    !! spatial gradient of vector at integration points
+    !! spatial gradient, ans(ncomp, nsd, nips)
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    !! space-time nodal values of vector in `xiJa` format
-    !! first index: space component
-    !! second index: space nodal value
-    !! third index: time nodal value
+    !! space-time nodal values, val(ncomp, nns, nnt)
   END SUBROUTINE obj_GetSpatialGradient4
 END INTERFACE GetSpatialGradient
 
@@ -234,35 +311,45 @@ END INTERFACE GetSpatialGradient
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of vector
+! summary: Spatial gradient of vector space-time nodal values, no allocation
 !
-!# GetSpatialGradient_
+! Computes the spatial gradient of vector space-time nodal values
+! `val(ncomp, nns, nnt)` at the quadrature points.
+! `obj` is the shape data at one time point.
+! It writes into the existing `ans`.
+! It returns the size used in `ans` in `dim1`, `dim2` and `dim3`.
 !
-! This method returns the spatial gradient of vector.
-! Here val denotes the space-time nodal values of vector.
-! The first index of val denotes the space component of val.
-! The second index of val denotes the spatial nodal value and the
-! third index of val denotes the temporal nodal value of val.
-! The size of val should be extact
+! If `nsd /= xidim`, `obj` is a facet and the routine zeroes `ans`.
 !
-! The result will be returned in ans. The first index of ans denotes the
-! space component of val, the second index denotes the space component,
-! the thrid index of ans denotes the space quadrature value.
+! @note
+! Fill `obj%dNTdXt` before the call.
+! @endnote
 !
+! Formula:
+!   $$ ans(i, :, ips) = \sum_I \sum_a val(i, I, a) \,
+!   dNTdXt(I, a, :, ips) $$
+!
+! Examples
+!
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+!
+! See also: [[obj_GetSpatialGradient4]]
 
 INTERFACE GetSpatialGradient_
   MODULE PURE SUBROUTINE obj_GetSpatialGradient_4( &
     obj, val, ans, dim1, dim2, dim3)
     TYPE(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    !! space-time nodal values of vector in `xiJa` format
-    !! first index: space component
-    !! second index: space nodal value
-    !! third index: time nodal value
+    !! space-time nodal values, val(ncomp, nns, nnt)
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    !! spatial gradient of vector at integration points
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-    !! extent of data written in ans
+    !! spatial gradient, ans(ncomp, nsd, nips)
+    INTEGER(I4B), INTENT(OUT) :: dim1
+    !! size of dim1 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim2
+    !! size of dim2 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim3
+    !! size of dim3 written in ans
   END SUBROUTINE obj_GetSpatialGradient_4
 END INTERFACE GetSpatialGradient_
 
@@ -272,23 +359,28 @@ END INTERFACE GetSpatialGradient_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of scalar
+! summary: Spatial gradient of a scalar FEVariable
 !
-!# GetSpatialGradient
+! Returns the spatial gradient of the scalar `FEVariable_` `val`.
+! It reallocates `ans(nsd, nips)`.
+! Then it works like [[obj_GetSpatialGradient_5]].
 !
-! This method returns the spatial gradient of scalar.
-! The values of scalar field is stored inside the fevariable `val`.
-! The fevariable can be constant, space, and spacetime dependent
+! Examples
 !
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+!
+! See also: [[obj_GetSpatialGradient_5]]
 
 INTERFACE GetSpatialGradient
   MODULE PURE SUBROUTINE obj_GetSpatialGradient5(obj, ans, val, valRank)
     TYPE(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
-    !! Spatial gradient of scalar
+    !! spatial gradient, ans(nsd, nips)
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! Nodal values of scalar
+    !! scalar nodal FEVariable
     TYPE(FEVariableScalar_), INTENT(IN) :: valRank
+    !! TypeFEVariableScalar
   END SUBROUTINE obj_GetSpatialGradient5
 END INTERFACE GetSpatialGradient
 
@@ -298,39 +390,45 @@ END INTERFACE GetSpatialGradient
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of scalar
+! summary: Spatial gradient of a scalar FEVariable, no allocation
 !
-!# GetSpatialGradient_
+! Returns the spatial gradient of the scalar `FEVariable_` `val`.
+! It writes into the existing `ans` and returns the used size in
+! `nrow` and `ncol`.
 !
-! This method returns the spatial gradient of scalar.
+! A space `val` works like [[obj_GetSpatialGradient_1]].
+! For any other variable type, it sets `ans` to zero.
+! `tempVec(nns)` is a work array.
 !
-! The values of scalar field is stored inside the fevariable `val`.
-! The fevariable can be constant, space, and spacetime dependent
+! @note
+! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
+! @endnote
 !
-! Note that the FEVariable should be nodalVariable, that is, it should
-! be defined on the nodes and not on the quadrature.
+! Examples
 !
-! Note that the FEVariable cannot be a space-time variable in this case.
-! If it is a space-time variable then obj should be a STElemShapeData_
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
 !
-! The result will be stored inside ans. The first index of ans
-! denotes space component, and second index denotes spatial node.
+! See also: [[obj_GetSpatialGradient5]]
 
 INTERFACE GetSpatialGradient_
   MODULE PURE SUBROUTINE obj_GetSpatialGradient_5( &
     obj, val, valRank, ans, nrow, ncol, tempVec)
     TYPE(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! Nodal values of scalar
+    !! scalar nodal FEVariable
     TYPE(FEVariableScalar_), INTENT(IN) :: valRank
-    !! nodal value of scalar
+    !! TypeFEVariableScalar
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! Spatial gradient of scalar
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! extent of data written in ans
+    !! spatial gradient, ans(nsd, nips)
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written in ans
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of columns written in ans
     REAL(DFP), INTENT(INOUT) :: tempVec(:)
-    !! temporary vector for internal use, its size should be
-    !! atleast obj%nns
+    !! work array, SIZE >= `obj%nns`
   END SUBROUTINE obj_GetSpatialGradient_5
 END INTERFACE GetSpatialGradient_
 
@@ -340,22 +438,29 @@ END INTERFACE GetSpatialGradient_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of vector
+! summary: Spatial gradient of a vector FEVariable
 !
-!# GetSpatialGradient
+! Returns the spatial gradient of the vector `FEVariable_` `val`.
+! It reallocates `ans(ncomp, nsd, nips)`.
+! Then it works like [[obj_GetSpatialGradient_6]].
 !
-! This method returns the spatial gradient of vector.
-! The values of vector field is stored inside the fevariable `val`.
-! The fevariable can be constant, space, and spacetime dependent.
+! Examples
 !
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90) with a constant `val`
+!
+! See also: [[obj_GetSpatialGradient_6]]
+
 INTERFACE GetSpatialGradient
   MODULE PURE SUBROUTINE obj_GetSpatialGradient6(obj, ans, val, valRank)
     TYPE(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :)
-    !! spatial gradient of vector at integration points
+    !! spatial gradient, ans(ncomp, nsd, nips)
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! space-time nodal values of vector in `xiJa` format
+    !! vector nodal FEVariable
     TYPE(FEVariableVector_), INTENT(IN) :: valRank
+    !! TypeFEVariableVector
   END SUBROUTINE obj_GetSpatialGradient6
 END INTERFACE GetSpatialGradient
 
@@ -365,38 +470,49 @@ END INTERFACE GetSpatialGradient
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of vector
+! summary: Spatial gradient of a vector FEVariable, no allocation
 !
-!# GetSpatialGradient
+! Returns the spatial gradient of the vector `FEVariable_` `val`.
+! It writes into the existing `ans` and returns the used size in
+! `dim1`, `dim2` and `dim3`.
 !
-! This method returns the spatial gradient of vector.
-! The values of vector field is stored inside the fevariable `val`.
+! A space `val` works like [[obj_GetSpatialGradient_2]].
+! For any other variable type, it sets `ans` to zero.
+! `tempMat2(ncomp, nns)` is a work array.
 !
-! The fevariable can be constant, space, and spacetime dependent.
+! @note
+! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
+! @endnote
 !
-! The fevariable should be a vector which is defined on nodes.
-! The fevariable should not be space-time,
-! it can be only constant or space dependent.
+! Examples
 !
-! If fevariable is space-time then obj should be STElemShapeData_
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! with a constant `val`
 !
+! See also: [[obj_GetSpatialGradient6]]
+
 INTERFACE GetSpatialGradient_
   MODULE PURE SUBROUTINE obj_GetSpatialGradient_6( &
     obj, val, valRank, ans, dim1, dim2, dim3, tempMat2)
     TYPE(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! vector finite element variable
+    !! vector nodal FEVariable
     TYPE(FEVariableVector_), INTENT(IN) :: valRank
-    !! vector finite element variable
+    !! TypeFEVariableVector
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    !! spatial gradient of vector at integration points
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-    !! Extent of data written in ans
+    !! spatial gradient, ans(ncomp, nsd, nips)
+    INTEGER(I4B), INTENT(OUT) :: dim1
+    !! size of dim1 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim2
+    !! size of dim2 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim3
+    !! size of dim3 written in ans
     REAL(DFP), INTENT(INOUT) :: tempMat2(:, :)
-    !! two dimensional matrix for internal use. Its size should be
-    !! enough to keep the nodal value of vector from val
-    !! The first index denotes the space components.
-    !! The second index denotes the space components
+    !! work array, SHAPE >= [ncomp, nns]
   END SUBROUTINE obj_GetSpatialGradient_6
 END INTERFACE GetSpatialGradient_
 
@@ -406,21 +522,28 @@ END INTERFACE GetSpatialGradient_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of a matrix
+! summary: Spatial gradient of matrix nodal values
 !
-!# GetSpatialGradient
+! Returns the spatial gradient of matrix nodal values `val(nrow, ncol, nns)`.
+! It reallocates `ans(nrow, ncol, nsd, nips)`.
+! Then it works like [[obj_GetSpatialGradient_7]].
 !
-! This method returns the spatial gradient of matrix.
-! The values of matrix field is stored inside the fevariable `val`.
-! The fevariable can be constant, space, and spacetime dependent.
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90)
+! on a facet
+!
+! See also: [[obj_GetSpatialGradient_7]]
 
 INTERFACE GetSpatialGradient
   MODULE PURE SUBROUTINE obj_GetSpatialGradient7(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :, :)
-    !! spatial gradient at integration points
+    !! spatial gradient, ans(nrow, ncol, nsd, nips)
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    !! space nodal values of matrix in (i,j,I) format
+    !! nodal values, val(nrow, ncol, nns)
   END SUBROUTINE obj_GetSpatialGradient7
 END INTERFACE GetSpatialGradient
 
@@ -430,31 +553,45 @@ END INTERFACE GetSpatialGradient
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of a matrix
+! summary: Spatial gradient of matrix nodal values, no allocation
 !
-!# GetSpatialGradient
+! Returns the spatial gradient of matrix nodal values
+! `val(nrow, ncol, nns)`. It writes into the existing `ans` and returns
+! the used size in `dim1` to `dim4`.
+! If `nsd /= xidim`, `obj` is a facet and the routine zeroes `ans`.
 !
-! This method returns the spatial gradient of matrix.
+! @note
+! Fill `obj%dNdXt` before the call.
+! @endnote
 !
-! The values of matrix field is stored inside the `val`.
-! The first and second indices of val denotes space components of
-! matrix, and the third index denotes the space nodal value.
+! Formula:
+!   $$ ans(:, :, :, ips) = \sum_I val(:, :, I) \, dNdXt(I, :, ips) $$
 !
-! The result included in ans, which is a rank 4 array.
-! The first and second indices of ans denotes space components of
-! matrix, the third index denotes the space components, and the
-! fourth index denotes the quadrature points.
+! Examples
+!
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! on a facet
+!
+! See also: [[obj_GetSpatialGradient7]]
 
 INTERFACE GetSpatialGradient_
   MODULE PURE SUBROUTINE obj_GetSpatialGradient_7( &
     obj, val, ans, dim1, dim2, dim3, dim4)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), INTENT(IN) :: val(:, :, :)
-    !! space nodal values of matrix in (i,j,I) format
+    !! nodal values, val(nrow, ncol, nns)
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
-    !! spatial gradient at integration points
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
-    !! Extent of data written in ans
+    !! spatial gradient, ans(nrow, ncol, nsd, nips)
+    INTEGER(I4B), INTENT(OUT) :: dim1
+    !! size of dim1 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim2
+    !! size of dim2 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim3
+    !! size of dim3 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim4
+    !! size of dim4 written in ans
   END SUBROUTINE obj_GetSpatialGradient_7
 END INTERFACE GetSpatialGradient_
 
@@ -464,29 +601,27 @@ END INTERFACE GetSpatialGradient_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of a matrix
+! summary: Spatial gradient of matrix space-time nodal values
 !
-!# GetSpatialGradient
+! Returns the spatial gradient of matrix space-time nodal values
+! `val(nrow, ncol, nns, nnt)`.
+! It reallocates `ans(nrow, ncol, nsd, nips)`.
+! Then it works like [[obj_GetSpatialGradient_8]].
 !
-! This method returns the spatial gradient of matrix.
+! Examples
 !
-! The values of matrix field is stored inside the `val`.
-! The first and second indices of val denotes space components of
-! matrix, and the third index denotes the space nodal value, and
-! the fourth index denotes the time nodal value.
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
 !
-! The result included in ans, which is a rank 4 array.
-! The first and second indices of ans denotes space components of
-! matrix, the third index denotes the space components, and the
-! fourth index denotes the quadrature points.
+! See also: [[obj_GetSpatialGradient_8]]
 
 INTERFACE GetSpatialGradient
   MODULE PURE SUBROUTINE obj_GetSpatialGradient8(obj, ans, val)
     TYPE(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :, :)
-    !! spatial gradient at integration points
+    !! spatial gradient, ans(nrow, ncol, nsd, nips)
     REAL(DFP), INTENT(IN) :: val(:, :, :, :)
-    !! space-time nodal values of matrix in (i,j,I,a) format
+    !! space-time nodal values, val(nrow, ncol, nns, nnt)
   END SUBROUTINE obj_GetSpatialGradient8
 END INTERFACE GetSpatialGradient
 
@@ -496,32 +631,44 @@ END INTERFACE GetSpatialGradient
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of a matrix
+! summary: Spatial gradient of matrix space-time nodal values, no allocation
 !
-!# GetSpatialGradient_
+! Returns the spatial gradient of matrix space-time nodal values
+! `val(nrow, ncol, nns, nnt)`. It writes into the existing `ans` and
+! returns the used size in `dim1` to `dim4`.
+! If `nsd /= xidim`, `obj` is a facet and the routine zeroes `ans`.
 !
-! This method returns the spatial gradient of matrix.
+! @note
+! Fill `obj%dNTdXt` before the call.
+! @endnote
 !
-! The values of matrix field is stored inside the `val`.
-! The first and second indices of val denotes space components of
-! matrix, and the third index denotes the space nodal value, and
-! the fourth index denotes the time nodal value.
+! Formula:
+!   $$ ans(i, j, :, ips) = \sum_I \sum_a val(i, j, I, a) \,
+!   dNTdXt(I, a, :, ips) $$
 !
-! The result included in ans, which is a rank 4 array.
-! The first and second indices of ans denotes space components of
-! matrix, the third index denotes the space components, and the
-! fourth index denotes the quadrature points.
+! Examples
+!
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+!
+! See also: [[obj_GetSpatialGradient8]]
 
 INTERFACE GetSpatialGradient_
   MODULE PURE SUBROUTINE obj_GetSpatialGradient_8( &
     obj, val, ans, dim1, dim2, dim3, dim4)
     TYPE(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     REAL(DFP), INTENT(IN) :: val(:, :, :, :)
-    !! space-time nodal values of matrix in (i,j,I,a) format
+    !! space-time nodal values, val(nrow, ncol, nns, nnt)
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
-    !! spatial gradient at integration points
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
-    !! Extent of data written in ans
+    !! spatial gradient, ans(nrow, ncol, nsd, nips)
+    INTEGER(I4B), INTENT(OUT) :: dim1
+    !! size of dim1 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim2
+    !! size of dim2 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim3
+    !! size of dim3 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim4
+    !! size of dim4 written in ans
   END SUBROUTINE obj_GetSpatialGradient_8
 END INTERFACE GetSpatialGradient_
 
@@ -531,15 +678,44 @@ END INTERFACE GetSpatialGradient_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of a vector
+! summary: Spatial gradient of a matrix FEVariable
+!
+! Returns the spatial gradient of the matrix `FEVariable_` `val`.
+! It reallocates `ans(nrow, ncol, nsd, nips)`.
+!
+! - A constant `val` gives zero.
+! - A space `val` works like [[obj_GetSpatialGradient_7]].
+! - A space-time `val` works like [[obj_GetSpatialGradient_8]].
+!   Then `obj` must be a `STElemShapeData_`.
+!
+! If the routine cannot compute a gradient, `ans` is zero. This happens
+! for a space-time `val` with an `obj` that is not a `STElemShapeData_`,
+! and for other variable types.
+!
+! @note
+! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
+! @endnote
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient_test_3.F90)
+! with constant and space-time `val`
+! - [test 4](|base|ElemshapeData/examples/GetSpatialGradient_test_4.F90)
+! with a space-time `val` and a space-only `obj`
+!
+! See also: [[obj_GetSpatialGradient_9]]
 
 INTERFACE GetSpatialGradient
   MODULE PURE SUBROUTINE obj_GetSpatialGradient9(obj, ans, val)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :, :)
-    !! spatial gradient at integration points
+    !! spatial gradient, ans(nrow, ncol, nsd, nips)
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! space nodal values of matrix in (i,j,I) format
+    !! matrix nodal FEVariable
   END SUBROUTINE obj_GetSpatialGradient9
 END INTERFACE GetSpatialGradient
 
@@ -549,37 +725,56 @@ END INTERFACE GetSpatialGradient
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of matrix
+! summary: Spatial gradient of a matrix FEVariable, no allocation
 !
-!# GetSpatialGradient_
+! Returns the spatial gradient of the matrix `FEVariable_` `val`.
+! It writes into the existing `ans` and returns the used size in
+! `dim1` to `dim4`.
 !
-! This subroutine returns the spatial gradient of matrix.
+! A space `val` works like [[obj_GetSpatialGradient_7]].
+! For any other variable type, it sets `ans` to zero.
+! `tempMat3(nrow, ncol, nns)` is a work array. It can be larger than
+! needed.
 !
-! The value of matrix is stored in val, FEVariable_.
-! The FEVariable should be matrix, its varType should be constant or
-! space.
+! @note
+! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
+! @endnote
 !
-! If FEVariable is space-time, then obj should be STElemShapeData_
+! Changes:
+!   - 2026-11-14: the routine zeroes `ans` for variable types other
+!     than space. It passes on only the used part of `tempMat3`.
 !
-! The result is returned inside ans, which is a rank four array.
-! The first two index denotes the space components of matrix.
+! Examples
 !
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient__test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! with a constant `val`
+!
+! See also: [[obj_GetSpatialGradient9]]
 
 INTERFACE GetSpatialGradient_
   MODULE PURE SUBROUTINE obj_GetSpatialGradient_9( &
     obj, val, valRank, ans, dim1, dim2, dim3, dim4, tempMat3)
     TYPE(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! space nodal values of matrix in (i,j,I) format
+    !! matrix nodal FEVariable
     TYPE(FEVariableMatrix_), INTENT(IN) :: valRank
-    !! matrix finite element variable.
+    !! TypeFEVariableMatrix
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
-    !! spatial gradient at integration points
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
-    !! Extent of data written in ans
+    !! spatial gradient, ans(nrow, ncol, nsd, nips)
+    INTEGER(I4B), INTENT(OUT) :: dim1
+    !! size of dim1 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim2
+    !! size of dim2 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim3
+    !! size of dim3 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim4
+    !! size of dim4 written in ans
     REAL(DFP), INTENT(INOUT) :: tempMat3(:, :, :)
-    !! temporary matrix of rank 3, its size should be enough
-    !! to keep the matrix nodal value from val
+    !! work array, SHAPE >= [nrow, ncol, nns]
   END SUBROUTINE obj_GetSpatialGradient_9
 END INTERFACE GetSpatialGradient_
 
@@ -589,34 +784,31 @@ END INTERFACE GetSpatialGradient_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of scalar
+! summary: Spatial gradient of a scalar FEVariable, space-time
 !
-!# GetSpatialGradient
+! Returns the spatial gradient of the scalar `FEVariable_` `val` for
+! space-time shape data.
+! It reallocates `ans(nsd, nips)`.
+! Then it works like [[obj_GetSpatialGradient_10]].
 !
-! This method returns the spatial gradient of scalar.
+! Examples
 !
-! The values of scalar field is stored inside the fevariable `val`.
-! The fevariable can be constant, space, and spacetime dependent
+! - [test 1](|base|ElemshapeData/examples/GetSpatialGradient_test_1.F90)
+! with space-time nodal values
 !
-! Note that the FEVariable should be nodalVariable, that is, it should
-! be defined on the nodes and not on the quadrature.
-!
-! Note that the FEVariable cannot be a space-time variable in this case.
-! If it is a space-time variable then obj should be a STElemShapeData_
-!
-! The result will be stored inside ans. The first index of ans
-! denotes space component, and second index denotes spatial node.
+! See also: [[obj_GetSpatialGradient_10]]
 
 INTERFACE GetSpatialGradient
   MODULE PURE SUBROUTINE obj_GetSpatialGradient10( &
     obj, val, valRank, ans)
     TYPE(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! Nodal values of scalar
+    !! scalar nodal FEVariable
     TYPE(FEVariableScalar_), INTENT(IN) :: valRank
-    !! nodal value of scalar
+    !! TypeFEVariableScalar
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :)
-    !! Spatial gradient of scalar
+    !! spatial gradient, ans(nsd, nips)
   END SUBROUTINE obj_GetSpatialGradient10
 END INTERFACE GetSpatialGradient
 
@@ -626,39 +818,48 @@ END INTERFACE GetSpatialGradient
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of scalar
+! summary: Spatial gradient of a scalar FEVariable, space-time, no allocation
 !
-!# GetSpatialGradient_
+! Returns the spatial gradient of the scalar `FEVariable_` `val` for
+! space-time shape data. It writes into the existing `ans` and returns
+! the used size in `nrow` and `ncol`.
 !
-! This method returns the spatial gradient of scalar.
+! - A space `val` works like [[obj_GetSpatialGradient_1]].
+! - A space-time `val` works like [[obj_GetSpatialGradient_3]].
 !
-! The values of scalar field is stored inside the fevariable `val`.
-! The fevariable can be constant, space, and spacetime dependent
+! For any other variable type, it sets `ans` to zero.
+! `tempMat2(nns, nnt)` is a work array.
 !
-! Note that the FEVariable should be nodalVariable, that is, it should
-! be defined on the nodes and not on the quadrature.
+! @note
+! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
+! @endnote
 !
-! Note that the FEVariable cannot be a space-time variable in this case.
-! If it is a space-time variable then obj should be a STElemShapeData_
+! Examples
 !
-! The result will be stored inside ans. The first index of ans
-! denotes space component, and second index denotes spatial node.
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! with space, space-time and constant `val`
+!
+! See also: [[obj_GetSpatialGradient10]]
 
 INTERFACE GetSpatialGradient_
   MODULE PURE SUBROUTINE obj_GetSpatialGradient_10( &
     obj, val, valRank, ans, nrow, ncol, tempMat2)
     TYPE(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! Nodal values of scalar
+    !! scalar nodal FEVariable
     TYPE(FEVariableScalar_), INTENT(IN) :: valRank
-    !! nodal value of scalar
+    !! TypeFEVariableScalar
     REAL(DFP), INTENT(INOUT) :: ans(:, :)
-    !! Spatial gradient of scalar
-    INTEGER(I4B), INTENT(OUT) :: nrow, ncol
-    !! extent of data written in ans
+    !! spatial gradient, ans(nsd, nips)
+    INTEGER(I4B), INTENT(OUT) :: nrow
+    !! number of rows written in ans
+    INTEGER(I4B), INTENT(OUT) :: ncol
+    !! number of columns written in ans
     REAL(DFP), INTENT(INOUT) :: tempMat2(:, :)
-    !! temporary vector for internal use, its size should be
-    !! atleast obj%nns, obj%nnt
+    !! work array, SHAPE >= [nns, nnt]
   END SUBROUTINE obj_GetSpatialGradient_10
 END INTERFACE GetSpatialGradient_
 
@@ -668,31 +869,31 @@ END INTERFACE GetSpatialGradient_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of vector
+! summary: Spatial gradient of a vector FEVariable, space-time
 !
-!# GetSpatialGradient
+! Returns the spatial gradient of the vector `FEVariable_` `val` for
+! space-time shape data.
+! It reallocates `ans(ncomp, nsd, nips)`.
+! Then it works like [[obj_GetSpatialGradient_11]].
 !
-! This method returns the spatial gradient of vector.
-! The values of vector field is stored inside the fevariable `val`.
+! Examples
 !
-! The fevariable can be constant, space, and spacetime dependent.
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
+! with space-time `val`
 !
-! The fevariable should be a vector which is defined on nodes.
-! The fevariable should not be space-time,
-! it can be only constant or space dependent.
-!
-! If fevariable is space-time then obj should be STElemShapeData_
-!
+! See also: [[obj_GetSpatialGradient_11]]
+
 INTERFACE GetSpatialGradient
   MODULE PURE SUBROUTINE obj_GetSpatialGradient11( &
     obj, val, valRank, ans)
     TYPE(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! vector finite element variable
+    !! vector nodal FEVariable
     TYPE(FEVariableVector_), INTENT(IN) :: valRank
-    !! vector finite element variable.
+    !! TypeFEVariableVector
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :)
-    !! spatial gradient of vector at integration points
+    !! spatial gradient, ans(ncomp, nsd, nips)
   END SUBROUTINE obj_GetSpatialGradient11
 END INTERFACE GetSpatialGradient
 
@@ -702,40 +903,52 @@ END INTERFACE GetSpatialGradient
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of vector
+! summary: Spatial gradient of a vector FEVariable, space-time, no allocation
 !
-!# GetSpatialGradient
+! Returns the spatial gradient of the vector `FEVariable_` `val` for
+! space-time shape data. It writes into the existing `ans` and returns
+! the used size in `dim1`, `dim2` and `dim3`.
 !
-! This method returns the spatial gradient of vector.
-! The values of vector field is stored inside the fevariable `val`.
+! - A space `val` works like [[obj_GetSpatialGradient_2]].
+! - A space-time `val` works like [[obj_GetSpatialGradient_4]].
 !
-! The fevariable can be constant, space, and spacetime dependent.
+! For any other variable type, it sets `ans` to zero.
+! `tempMat3(ncomp, nns, nnt)` is a work array.
 !
-! The fevariable should be a vector which is defined on nodes.
-! The fevariable should not be space-time,
-! it can be only constant or space dependent.
+! @note
+! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
+! @endnote
 !
-! If fevariable is space-time then obj should be STElemShapeData_
+! Examples
 !
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! with space-time `val`
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! with a space `val`
+!
+! See also: [[obj_GetSpatialGradient11]]
+
 INTERFACE GetSpatialGradient_
   MODULE PURE SUBROUTINE obj_GetSpatialGradient_11( &
     obj, val, valRank, ans, dim1, dim2, dim3, tempMat3)
     TYPE(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! vector finite element variable
+    !! vector nodal FEVariable
     TYPE(FEVariableVector_), INTENT(IN) :: valRank
-    !! vector finite element variable.
+    !! TypeFEVariableVector
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :)
-    !! spatial gradient of vector at integration points
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3
-    !! Extent of data written in ans
+    !! spatial gradient, ans(ncomp, nsd, nips)
+    INTEGER(I4B), INTENT(OUT) :: dim1
+    !! size of dim1 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim2
+    !! size of dim2 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim3
+    !! size of dim3 written in ans
     REAL(DFP), INTENT(INOUT) :: tempMat3(:, :, :)
-    !! three dimensional matrix for internal use.
-    !! Its size should be enough to keep the space-time nodal
-    !! value of vector from val.
-    !! the first index of tempMat3 denotes the space components of
-    !! vector, the second index should be atleast obj%nns,
-    !! the third index should be atleast obj%nnt
+    !! work array, SHAPE >= [ncomp, nns, nnt]
   END SUBROUTINE obj_GetSpatialGradient_11
 END INTERFACE GetSpatialGradient_
 
@@ -745,32 +958,31 @@ END INTERFACE GetSpatialGradient_
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of matrix
+! summary: Spatial gradient of a matrix FEVariable, space-time
 !
-!# GetSpatialGradient_
+! Returns the spatial gradient of the matrix `FEVariable_` `val` for
+! space-time shape data.
+! It reallocates `ans(nrow, ncol, nsd, nips)`.
+! Then it works like [[obj_GetSpatialGradient_12]].
 !
-! This subroutine returns the spatial gradient of matrix.
+! Examples
 !
-! The value of matrix is stored in val, FEVariable_.
-! The FEVariable should be matrix, its varType should be constant or
-! space.
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient_test_2.F90)
+! with space-time `val`
 !
-! If FEVariable is space-time, then obj should be STElemShapeData_
-!
-! The result is returned inside ans, which is a rank four array.
-! The first two index denotes the space components of matrix.
-!
+! See also: [[obj_GetSpatialGradient_12]]
 
 INTERFACE GetSpatialGradient
   MODULE PURE SUBROUTINE obj_GetSpatialGradient12( &
     obj, val, valRank, ans)
     TYPE(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! space nodal values of matrix in (i,j,I) format
+    !! matrix nodal FEVariable
     TYPE(FEVariableMatrix_), INTENT(IN) :: valRank
-    !! matrix finite element variable.
+    !! TypeFEVariableMatrix
     REAL(DFP), ALLOCATABLE, INTENT(INOUT) :: ans(:, :, :, :)
-    !! spatial gradient at integration points
+    !! spatial gradient, ans(nrow, ncol, nsd, nips)
   END SUBROUTINE obj_GetSpatialGradient12
 END INTERFACE GetSpatialGradient
 
@@ -780,41 +992,59 @@ END INTERFACE GetSpatialGradient
 
 !> author: Vikas Sharma, Ph. D.
 ! date: 2021-11-26
-! summary: This subroutine returns the spatial gradient of matrix
+! summary: Spatial gradient of a matrix FEVariable, space-time, no allocation
 !
-!# GetSpatialGradient_
+! Returns the spatial gradient of the matrix `FEVariable_` `val` for
+! space-time shape data. It writes into the existing `ans` and returns
+! the used size in `dim1` to `dim4`.
 !
-! This subroutine returns the spatial gradient of matrix.
+! - A space `val` works like [[obj_GetSpatialGradient_7]].
+! - A space-time `val` works like [[obj_GetSpatialGradient_8]].
 !
-! The value of matrix is stored in val, FEVariable_.
-! The FEVariable should be matrix, its varType should be constant or
-! space.
+! For any other variable type, it sets `ans` to zero.
+! `tempMat4(nrow, ncol, nns, nnt)` is a work array.
 !
-! If FEVariable is space-time, then obj should be STElemShapeData_
+! @note
+! `val` must hold nodal values. A quadrature variable is not supported.
+! In a Debug build, a quadrature variable stops the program.
+! A Release build does not check it.
+! @endnote
 !
-! The result is returned inside ans, which is a rank four array.
-! The first two index denotes the space components of matrix.
+! Examples
 !
+! - [test 2](|base|ElemshapeData/examples/GetSpatialGradient__test_2.F90)
+! with space-time `val`
+! - [test 3](|base|ElemshapeData/examples/GetSpatialGradient__test_3.F90)
+! with a space `val`
+!
+! See also: [[obj_GetSpatialGradient12]]
 
 INTERFACE GetSpatialGradient_
   MODULE PURE SUBROUTINE obj_GetSpatialGradient_12( &
     obj, val, valRank, ans, dim1, dim2, dim3, dim4, tempMat4)
     TYPE(STElemshapeData_), INTENT(IN) :: obj
+    !! space-time shape data at one time point
     TYPE(FEVariable_), INTENT(IN) :: val
-    !! space nodal values of matrix in (i,j,I) format
+    !! matrix nodal FEVariable
     TYPE(FEVariableMatrix_), INTENT(IN) :: valRank
-    !! matrix finite element variable.
+    !! TypeFEVariableMatrix
     REAL(DFP), INTENT(INOUT) :: ans(:, :, :, :)
-    !! spatial gradient at integration points
-    INTEGER(I4B), INTENT(OUT) :: dim1, dim2, dim3, dim4
-    !! Extent of data written in ans
+    !! spatial gradient, ans(nrow, ncol, nsd, nips)
+    INTEGER(I4B), INTENT(OUT) :: dim1
+    !! size of dim1 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim2
+    !! size of dim2 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim3
+    !! size of dim3 written in ans
+    INTEGER(I4B), INTENT(OUT) :: dim4
+    !! size of dim4 written in ans
     REAL(DFP), INTENT(INOUT) :: tempMat4(:, :, :, :)
-    !! temporary matrix of rank 4, its size should be enough
-    !! to keep the matrix nodal value from val
-    !! index 1 and index 2 should be atleast shape of matrix.
-    !! index 3 and index 4 of tempMat4 should be atleast
-    !! obj%nns, obj%nnt
+    !! work array, SHAPE >= [nrow, ncol, nns, nnt]
   END SUBROUTINE obj_GetSpatialGradient_12
 END INTERFACE GetSpatialGradient_
+
+!----------------------------------------------------------------------------
+!
+!----------------------------------------------------------------------------
 
 END MODULE ElemshapeData_GradientMethods

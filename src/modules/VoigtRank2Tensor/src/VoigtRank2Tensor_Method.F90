@@ -18,7 +18,7 @@
 ! date: 2021-03-10
 ! summary: Methods for [[VoigtRank2Tensor_]]
 !
-! A symmetric rank-2 tensor $T$ is stored in Voigt notation as
+! Voigt notation keeps a symmetric rank-2 tensor $T$ as
 ! `V(6) = [T11, T22, T33, s*T12, s*T23, s*T13]`, where the factor `s`
 ! depends on `voigtType`:
 !
@@ -27,21 +27,21 @@
 ! - `StrainTypeVoigt`: `s = 2`, the shear entries are the engineering
 !   shear strains $\gamma_{ij} = 2\varepsilon_{ij}$, and `scale = 0.5`.
 !
-! In both cases the tensor component is recovered by
-! $T_{ij} = \mathrm{scale}\, V_k$ for the shear entries. An unknown
-! `voigtType` is treated as stress-like.
+! In both cases you get a shear component back with
+! $T_{ij} = \mathrm{scale}\, V_k$. An unknown `voigtType` acts as
+! stress-like.
 !
 ! Reduced forms (`VoigtForm*` constants in GlobalData) are available
-! through [[GetVoigtSize]], [[GetVoigtVector]], [[GetVoigtVector_]] and
-! the 4-argument [[Initiate]] and 3-argument [[VoigtRank2Tensor]]. The
-! orderings are given by GetVoigtIndex_ of VoigtUtility, for example
-! plane strain `[11,22,12]` and plane strain full `[11,22,12,33]`.
-! [[VoigtSize]] is in VoigtUtility.
+! through [[GetVoigtSize]], [[GetVoigtVector]], [[GetVoigtVector_]], the
+! 4-argument [[Initiate]] and the 3-argument [[VoigtRank2Tensor]].
+! `GetVoigtIndex_` of VoigtUtility gives the orderings. For example,
+! plane strain is `[11,22,12]` and plane strain full is
+! `[11,22,12,33]`. [[VoigtSize]] is in VoigtUtility.
 !
-! Tensor operations on [[VoigtRank2Tensor_]] have the same generic names
-! as for Rank2Tensor_: [[Trace]], [[Dev]], [[FrobeniusNorm]], [[Eigen]]
-! and [[Otimes]] (TensorMethods). They use the Voigt type of the tensor,
-! so a stress-like tensor and the same tensor written as an engineering
+! The tensor operations on [[VoigtRank2Tensor_]] have the same generic
+! names as for `Rank2Tensor_`: [[Trace]], [[Dev]], [[FrobeniusNorm]],
+! [[Eigen]] and [[Otimes]]. They use the Voigt type of the tensor. So a
+! stress-like tensor and the same tensor written as an engineering
 ! strain give the same result.
 !
 ! Each of them calls a PURE routine of VoigtUtility, which works on a
@@ -52,9 +52,10 @@
 ! model.
 !
 ! Changes:
-!   - 2026-10-21: renamed the specific procedures, an unknown voigtType
-!     is treated as stress-like, added the reduced 2D Voigt forms
-!   - 2026-11-02: added GetVoigtVector_
+!   - 2026-10-21: renamed the specific procedures. An unknown
+!     `voigtType` now acts as stress-like. Added the reduced 2D Voigt
+!     forms.
+!   - 2026-11-02: added `GetVoigtVector_`.
 !   - 2026-11-17: specific procedures renamed to obj_, interfaces
 !     reordered, Display rewritten (array version, orient)
 !   - 2026-11-17: added the tensor operations (TensorMethods),
@@ -92,38 +93,18 @@ PUBLIC :: Otimes
 ! date: 2021-03-13
 ! summary: Initiate [[VoigtRank2Tensor_]] from a Voigt vector
 !
-! The Voigt vector is copied as it is. The scale is set from voigtType.
+! Sets `obj` from a Voigt vector. The routine copies the vector as it is.
+!
+! The routine stores `voigtType` in `obj%voigtType`. It sets
+! `obj%scale` to 0.5 for `StrainTypeVoigt` and to 1 for every other
+! value, so an unknown `voigtType` acts as stress-like.
 !
 ! Changes:
-!   - 2026-10-21: an unknown voigtType is treated as stress-like
+!   - 2026-10-21: an unknown `voigtType` now acts as stress-like
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StressTypeVoigt
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: Initiate
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-!
-! ! Test 1: from a Voigt vector
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!   REAL(DFP) :: vec(6)
-!
-!   vec = [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, 5.0_DFP, 6.0_DFP]
-!   CALL Initiate(obj, vec, StressTypeVoigt)
-!   CALL OK(MAXVAL(ABS(obj%V - vec)) .LT. tol, "vector: V")
-!   CALL OK(obj%voigtType .EQ. StressTypeVoigt, "vector: voigtType")
-!   CALL OK(ABS(obj%scale - 1.0_DFP) .LT. tol, "vector: scale is 1")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|VoigtRank2Tensor/examples/Initiate_test_1.F90)
 !
 ! See also: [[VoigtRank2Tensor]]
 
@@ -146,11 +127,15 @@ END INTERFACE Initiate
 ! date: 2021-03-13
 ! summary: Initiate [[VoigtRank2Tensor_]] from a 3x3 matrix
 !
-! The shear entries use the symmetric part of `T`, so `T` does not need
-! to be symmetric.
+! Sets `obj` from a 3x3 matrix `T`. The shear entries use the symmetric
+! part of `T`, so `T` does not need to be symmetric.
+!
+! The routine stores `voigtType` in `obj%voigtType`. It sets
+! `obj%scale` to 0.5 for `StrainTypeVoigt` and to 1 for every other
+! value, so an unknown `voigtType` acts as stress-like.
 !
 ! Changes:
-!   - 2026-10-21: an unknown voigtType is treated as stress-like
+!   - 2026-10-21: an unknown `voigtType` now acts as stress-like
 !
 ! Formula:
 !   $$V_4 = \frac{s}{2}\left(T_{12} + T_{21}\right),\quad
@@ -158,45 +143,7 @@ END INTERFACE Initiate
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StrainTypeVoigt
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: Initiate
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP), PARAMETER :: T(3, 3) = RESHAPE([1.0_DFP, 4.0_DFP, 6.0_DFP, &
-!                                            4.0_DFP, 2.0_DFP, 5.0_DFP, &
-!                                            6.0_DFP, 5.0_DFP, 3.0_DFP], &
-!                                           [3, 3])
-!
-! ! Test 2: from a matrix, strain-like
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!
-!   CALL Initiate(obj, T, StrainTypeVoigt)
-!   CALL OK(MAXVAL(ABS(obj%V - [1.0_DFP, 2.0_DFP, 3.0_DFP, 8.0_DFP, &
-!                               10.0_DFP, 12.0_DFP])) .LT. tol, &
-!           "matrix: engineering shear")
-!   CALL OK(ABS(obj%scale - 0.5_DFP) .LT. tol, "matrix: scale is 0.5")
-! END BLOCK
-!
-! ! Test 3: a non-symmetric matrix uses its symmetric part
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!   REAL(DFP) :: T2(3, 3)
-!
-!   T2 = T
-!   T2(1, 2) = 2.0_DFP
-!   CALL Initiate(obj, T2, StrainTypeVoigt)
-!   CALL OK(ABS(obj%V(4) - 6.0_DFP) .LT. tol, "non-symmetric: V4")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|VoigtRank2Tensor/examples/Initiate_test_1.F90)
 !
 ! See also: [[VoigtRank2Tensor]]
 
@@ -219,57 +166,33 @@ END INTERFACE Initiate
 ! date: 2026-10-21
 ! summary: Initiate [[VoigtRank2Tensor_]] from a reduced Voigt vector
 !
-! Only the first `VoigtSize(voigtForm)` entries of `vec` are read.
-! Components that are not part of the reduced form are set to zero (see
-! VoigtFromForm of VoigtUtility). For VoigtFormPlaneStrain and
-! VoigtFormPlaneStress this includes the out-of-plane normal component,
-! so the 3x3 tensor from `T = obj` has `T33 = 0` even when the physical
-! value is not zero (for example $\sigma_{33}$ in plane strain). Use
-! VoigtFormPlaneStrainFull or VoigtFormPlaneStressFull to keep it.
+! Initiates `obj` from a reduced Voigt vector `vec`.
+! The routine reads only the first `VoigtSize(voigtForm)` entries of
+! `vec`.
+!
+! The routine sets components that are not part of the reduced form to
+! zero (see `VoigtFromForm` of VoigtUtility). For
+! `VoigtFormPlaneStrain` and `VoigtFormPlaneStress` this includes the
+! out-of-plane normal component. Hence the 3x3 tensor from `T = obj`
+! has `T33 = 0` even when the physical value is not zero. Examples are
+! $\sigma_{33}$ in plane strain and $\varepsilon_{33}$ in plane stress.
+! Use `VoigtFormPlaneStrainFull` or `VoigtFormPlaneStressFull` to keep
+! it.
+!
+! @note
+! `SIZE(vec)` must be at least `VoigtSize(voigtForm)`. The routine does
+! not check this. With a shorter vector, it reads out of bounds.
+! @endnote
 !
 ! Formula:
+!   With `v_k = vec(k)`, the Voigt vector `V` of `obj` is:
 !   $$\text{plane strain}: V = [v_1, v_2, 0, v_3, 0, 0],\quad
 !   \text{plane strain full}: V = [v_1, v_2, v_4, v_3, 0, 0]$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StressTypeVoigt
-! USE GlobalData, ONLY: VoigtFormPlaneStrain
-! USE GlobalData, ONLY: VoigtFormPlaneStrainFull
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: Initiate
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-!
-! ! Test 5: from a plane strain vector [11,22,12]
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!
-!   CALL Initiate(obj, [1.0_DFP, 2.0_DFP, 4.0_DFP], StressTypeVoigt, &
-!                 VoigtFormPlaneStrain)
-!   CALL OK(MAXVAL(ABS(obj%V - [1.0_DFP, 2.0_DFP, 0.0_DFP, 4.0_DFP, &
-!                               0.0_DFP, 0.0_DFP])) .LT. tol, &
-!           "plane strain: V")
-! END BLOCK
-!
-! ! Test 6: from a plane strain full vector [11,22,12,33], T33 is kept
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!
-!   CALL Initiate(obj, [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP], &
-!                 StressTypeVoigt, VoigtFormPlaneStrainFull)
-!   CALL OK(MAXVAL(ABS(obj%V - [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, &
-!                               0.0_DFP, 0.0_DFP])) .LT. tol, &
-!           "plane strain full: V")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|VoigtRank2Tensor/examples/Initiate_test_1.F90)
+! - [test 2](|base|VoigtRank2Tensor/examples/Initiate_test_2.F90)
 !
 ! See also: [[VoigtRank2Tensor]], [[VoigtSize]]
 
@@ -294,45 +217,21 @@ END INTERFACE Initiate
 ! date: 2021-03-13
 ! summary: Returns [[VoigtRank2Tensor_]] from a Voigt vector
 !
-! Function form of [[Initiate]] with a Voigt vector.
+! Returns a new tensor made from a Voigt vector. It is the function
+! form of [[Initiate]].
 !
 ! Changes:
-!   - 2026-10-21: an unknown voigtType is treated as stress-like
+!   - 2026-10-21: an unknown `voigtType` now acts as stress-like
 !
 ! Returns:
-!   ans : VoigtRank2Tensor_
+!   ans : `VoigtRank2Tensor_`
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StrainTypeVoigt
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: ASSIGNMENT(=)
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! IMPLICIT NONE
+! - [test 1](|base|VoigtRank2Tensor/examples/VoigtRank2Tensor_test_1.F90)
+! - [test 2](|base|VoigtRank2Tensor/examples/VoigtRank2Tensor_test_2.F90)
 !
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP), PARAMETER :: T(3, 3) = RESHAPE([1.0_DFP, 4.0_DFP, 6.0_DFP, &
-!                                            4.0_DFP, 2.0_DFP, 5.0_DFP, &
-!                                            6.0_DFP, 5.0_DFP, 3.0_DFP], &
-!                                           [3, 3])
-!
-! ! Test 3: strain-like tensor from a Voigt vector
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!   REAL(DFP) :: T2(3, 3)
-!
-!   obj = VoigtRank2Tensor([1.0_DFP, 2.0_DFP, 3.0_DFP, 8.0_DFP, &
-!                           10.0_DFP, 12.0_DFP], StrainTypeVoigt)
-!   T2 = obj
-!   CALL OK(MAXVAL(ABS(T2 - T)) .LT. tol, "vector: tensor components")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! See also: [[Initiate]]
 
 INTERFACE VoigtRank2Tensor
   MODULE PURE FUNCTION obj_VoigtRank2Tensor1(vec, voigtType) &
@@ -354,71 +253,24 @@ END INTERFACE VoigtRank2Tensor
 ! date: 2021-03-13
 ! summary: Returns [[VoigtRank2Tensor_]] from a 3x3 matrix
 !
-! Function form of [[Initiate]] with a matrix. The shear entries use the
-! symmetric part of `T`.
+! Returns a new tensor made from a 3x3 matrix `T`. It is the function
+! form of [[Initiate]]. The shear entries use the symmetric part of `T`.
 !
 ! Changes:
-!   - 2026-10-21: an unknown voigtType is treated as stress-like
+!   - 2026-10-21: an unknown `voigtType` now acts as stress-like
 !
 ! Returns:
-!   ans : VoigtRank2Tensor_
+!   ans : `VoigtRank2Tensor_`
 !
 ! Formula:
 !   $$V_4 = \frac{s}{2}\left(T_{12} + T_{21}\right)$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StrainTypeVoigt
-! USE GlobalData, ONLY: StressTypeVoigt
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: ASSIGNMENT(=)
-! USE VoigtRank2Tensor_Method, ONLY: Display
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! IMPLICIT NONE
+! - [test 1](|base|VoigtRank2Tensor/examples/VoigtRank2Tensor_test_1.F90)
+! - [test 2](|base|VoigtRank2Tensor/examples/VoigtRank2Tensor_test_2.F90)
 !
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP), PARAMETER :: T(3, 3) = RESHAPE([1.0_DFP, 4.0_DFP, 6.0_DFP, &
-!                                            4.0_DFP, 2.0_DFP, 5.0_DFP, &
-!                                            6.0_DFP, 5.0_DFP, 3.0_DFP], &
-!                                           [3, 3])
-!
-! ! Test 1: stress-like tensor from a matrix, shear entries are T_ij
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!   REAL(DFP) :: vec(6), T2(3, 3)
-!
-!   obj = VoigtRank2Tensor(T, StressTypeVoigt)
-!   CALL Display(obj, "stress-like tensor")
-!   vec = obj
-!   CALL OK(MAXVAL(ABS(vec - [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, &
-!                             5.0_DFP, 6.0_DFP])) .LT. tol, &
-!           "stress: Voigt vector")
-!   CALL OK(ABS(obj%scale - 1.0_DFP) .LT. tol, "stress: scale is 1")
-!   T2 = obj
-!   CALL OK(MAXVAL(ABS(T2 - T)) .LT. tol, "stress: round trip")
-! END BLOCK
-!
-! ! Test 2: strain-like tensor from a matrix, shear entries are 2*e_ij
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!   REAL(DFP) :: vec(6), T2(3, 3)
-!
-!   obj = VoigtRank2Tensor(T, StrainTypeVoigt)
-!   vec = obj
-!   CALL OK(MAXVAL(ABS(vec - [1.0_DFP, 2.0_DFP, 3.0_DFP, 8.0_DFP, &
-!                             10.0_DFP, 12.0_DFP])) .LT. tol, &
-!           "strain: engineering shear")
-!   CALL OK(ABS(obj%scale - 0.5_DFP) .LT. tol, "strain: scale is 0.5")
-!   T2 = obj
-!   CALL OK(MAXVAL(ABS(T2 - T)) .LT. tol, "strain: round trip")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! See also: [[Initiate]]
 
 INTERFACE VoigtRank2Tensor
   MODULE PURE FUNCTION obj_VoigtRank2Tensor2(T, voigtType) &
@@ -440,45 +292,32 @@ END INTERFACE VoigtRank2Tensor
 ! date: 2026-10-21
 ! summary: Returns [[VoigtRank2Tensor_]] from a reduced Voigt vector
 !
-! Function form of the 4-argument [[Initiate]]. Components that are not
-! part of the reduced form are set to zero.
+! Returns a tensor built from a reduced Voigt vector `vec`.
+! It is the function form of the 4-argument [[Initiate]].
+!
+! The routine sets components that are not part of the reduced form to
+! zero. An unknown `voigtForm` acts as `VoigtForm3D`.
+!
+! @note
+! `SIZE(vec)` must be at least `VoigtSize(voigtForm)`. The routine does
+! not check this. With a shorter vector, it reads out of bounds.
+! @endnote
 !
 ! Returns:
-!   ans : VoigtRank2Tensor_
+!   ans : `VoigtRank2Tensor_`
 !
 ! Formula:
-!   $$\text{axisymmetric}: V = [v_1, v_2, v_4, v_3, 0, 0]$$
+!   With `v_k = vec(k)`, the Voigt vector `V` of `ans` is, for the
+!   axisymmetric form:
+!   $$V = [v_1, v_2, v_4, v_3, 0, 0]$$
+!   Thus `vec = [11, 22, 12, 33]` gives `V(3) = v_4` and `V(4) = v_3`.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StrainTypeVoigt
-! USE GlobalData, ONLY: VoigtFormAxisymmetric
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: ASSIGNMENT(=)
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! IMPLICIT NONE
+! - [test 1](|base|VoigtRank2Tensor/examples/VoigtRank2Tensor_test_1.F90)
+! - [test 2](|base|VoigtRank2Tensor/examples/VoigtRank2Tensor_test_2.F90)
 !
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-!
-! ! Test 4: strain-like tensor from an axisymmetric vector [11,22,12,33]
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!   REAL(DFP) :: T2(3, 3)
-!
-!   obj = VoigtRank2Tensor([1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP], &
-!                          StrainTypeVoigt, VoigtFormAxisymmetric)
-!   T2 = obj
-!   CALL OK(ABS(T2(1, 2) - 2.0_DFP) .LT. tol, "axisymmetric: T12")
-!   CALL OK(ABS(T2(3, 3) - 3.0_DFP) .LT. tol, "axisymmetric: T33")
-!   CALL OK(ABS(T2(2, 3)) .LT. tol, "axisymmetric: T23 is zero")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! See also: [[Initiate]], [[VoigtSize]]
 
 INTERFACE VoigtRank2Tensor
   MODULE PURE FUNCTION obj_VoigtRank2Tensor3(vec, voigtType, &
@@ -502,42 +341,25 @@ END INTERFACE VoigtRank2Tensor
 ! date: 2021-03-13
 ! summary: Returns a pointer to a new [[VoigtRank2Tensor_]]
 !
-! Pointer form of [[VoigtRank2Tensor]] with a Voigt vector. The caller
-! must deallocate the pointer.
+! Allocates a new tensor from a Voigt vector and returns a pointer to
+! it. It is the pointer form of [[VoigtRank2Tensor]].
+!
+! @note
+! The caller must deallocate the pointer.
+! @endnote
 !
 ! Changes:
-!   - 2026-10-21: an unknown voigtType is treated as stress-like
+!   - 2026-10-21: an unknown `voigtType` now acts as stress-like
 !
 ! Returns:
-!   ans : CLASS(VoigtRank2Tensor_), POINTER
+!   ans : `CLASS(VoigtRank2Tensor_), POINTER`
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StressTypeVoigt
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor_Pointer
-! IMPLICIT NONE
+! - [test 1](|base|VoigtRank2Tensor/examples/VoigtRank2Tensor_Pointer_test_1.F90)
+! - [test 2](|base|VoigtRank2Tensor/examples/VoigtRank2Tensor_Pointer_test_2.F90)
 !
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-!
-! ! Test 1: pointer from a stress-like Voigt vector
-! BLOCK
-!   CLASS(VoigtRank2Tensor_), POINTER :: ptr
-!   REAL(DFP) :: vec(6)
-!
-!   vec = [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, 5.0_DFP, 6.0_DFP]
-!   ptr => VoigtRank2Tensor_Pointer(vec, StressTypeVoigt)
-!   CALL OK(ASSOCIATED(ptr), "vector: associated")
-!   CALL OK(MAXVAL(ABS(ptr%V - vec)) .LT. tol, "vector: V")
-!   DEALLOCATE (ptr)
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! See also: [[VoigtRank2Tensor]]
 
 INTERFACE VoigtRank2Tensor_Pointer
   MODULE PURE FUNCTION obj_VoigtRank2Tensor_Pointer1(vec, voigtType) &
@@ -559,46 +381,26 @@ END INTERFACE VoigtRank2Tensor_Pointer
 ! date: 2021-03-13
 ! summary: Returns a pointer to a new [[VoigtRank2Tensor_]]
 !
-! Pointer form of [[VoigtRank2Tensor]] with a matrix. The caller must
-! deallocate the pointer.
+! Allocates a new tensor from a 3x3 matrix `T` and returns a pointer to
+! it. It is the pointer form of [[VoigtRank2Tensor]]. The shear entries
+! use the symmetric part of `T`.
+!
+! @note
+! The caller must deallocate the pointer.
+! @endnote
 !
 ! Changes:
-!   - 2026-10-21: an unknown voigtType is treated as stress-like
+!   - 2026-10-21: an unknown `voigtType` now acts as stress-like
 !
 ! Returns:
-!   ans : CLASS(VoigtRank2Tensor_), POINTER
+!   ans : `CLASS(VoigtRank2Tensor_), POINTER`
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StrainTypeVoigt
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor_Pointer
-! IMPLICIT NONE
+! - [test 1](|base|VoigtRank2Tensor/examples/VoigtRank2Tensor_Pointer_test_1.F90)
+! - [test 2](|base|VoigtRank2Tensor/examples/VoigtRank2Tensor_Pointer_test_2.F90)
 !
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-!
-! ! Test 2: pointer from a strain-like matrix
-! BLOCK
-!   CLASS(VoigtRank2Tensor_), POINTER :: ptr
-!   REAL(DFP) :: T(3, 3)
-!
-!   T = RESHAPE([1.0_DFP, 4.0_DFP, 6.0_DFP, &
-!                4.0_DFP, 2.0_DFP, 5.0_DFP, &
-!                6.0_DFP, 5.0_DFP, 3.0_DFP], [3, 3])
-!   ptr => VoigtRank2Tensor_Pointer(T, StrainTypeVoigt)
-!   CALL OK(MAXVAL(ABS(ptr%V - [1.0_DFP, 2.0_DFP, 3.0_DFP, 8.0_DFP, &
-!                               10.0_DFP, 12.0_DFP])) .LT. tol, &
-!           "matrix: engineering shear")
-!   CALL OK(ABS(ptr%scale - 0.5_DFP) .LT. tol, "matrix: scale is 0.5")
-!   DEALLOCATE (ptr)
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! See also: [[VoigtRank2Tensor]]
 
 INTERFACE VoigtRank2Tensor_Pointer
   MODULE PURE FUNCTION obj_VoigtRank2Tensor_Pointer2(T, voigtType) &
@@ -620,47 +422,19 @@ END INTERFACE VoigtRank2Tensor_Pointer
 ! date: 2021-03-13
 ! summary: Matrix(3,3) = [[VoigtRank2Tensor_]]
 !
-! Returns the symmetric 3x3 tensor. The shear entries are multiplied by
-! the scale of obj.
+! Sets the 3x3 matrix `T` from a Voigt tensor `obj`. The matrix is
+! symmetric.
+!
+! The diagonal entries are `obj%V(1:3)`. The off-diagonal entries are
+! the shear entries `obj%V(4:6)` multiplied by `obj%scale`.
 !
 ! Formula:
 !   $$T_{12} = T_{21} = \mathrm{scale}\, V_4$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StrainTypeVoigt
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: ASSIGNMENT(=)
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP), PARAMETER :: T(3, 3) = RESHAPE([1.0_DFP, 4.0_DFP, 6.0_DFP, &
-!                                            4.0_DFP, 2.0_DFP, 5.0_DFP, &
-!                                            6.0_DFP, 5.0_DFP, 3.0_DFP], &
-!                                           [3, 3])
-!
-! ! Test 2: strain-like tensor from a matrix, shear entries are 2*e_ij
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!   REAL(DFP) :: vec(6), T2(3, 3)
-!
-!   obj = VoigtRank2Tensor(T, StrainTypeVoigt)
-!   vec = obj
-!   CALL OK(MAXVAL(ABS(vec - [1.0_DFP, 2.0_DFP, 3.0_DFP, 8.0_DFP, &
-!                             10.0_DFP, 12.0_DFP])) .LT. tol, &
-!           "strain: engineering shear")
-!   CALL OK(ABS(obj%scale - 0.5_DFP) .LT. tol, "strain: scale is 0.5")
-!   T2 = obj
-!   CALL OK(MAXVAL(ABS(T2 - T)) .LT. tol, "strain: round trip")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|VoigtRank2Tensor/examples/Assignment_test_1.F90)
+! - [test 2](|base|VoigtRank2Tensor/examples/VoigtRank2Tensor_test_1.F90)
 !
 ! See also: [[obj_Assign2]]
 
@@ -681,44 +455,15 @@ END INTERFACE ASSIGNMENT(=)
 ! date: 2021-03-13
 ! summary: Vector(6) = [[VoigtRank2Tensor_]]
 !
-! Returns the Voigt vector `obj%V` as it is stored, so the shear entries
-! of a strain-like tensor are engineering strains.
+! Copies the Voigt vector `obj%V` into `vec`. The routine applies no
+! scaling.
+!
+! For a strain-like tensor, the shear entries are engineering strains.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StrainTypeVoigt
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: ASSIGNMENT(=)
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP), PARAMETER :: T(3, 3) = RESHAPE([1.0_DFP, 4.0_DFP, 6.0_DFP, &
-!                                            4.0_DFP, 2.0_DFP, 5.0_DFP, &
-!                                            6.0_DFP, 5.0_DFP, 3.0_DFP], &
-!                                           [3, 3])
-!
-! ! Test 2: strain-like tensor from a matrix, shear entries are 2*e_ij
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!   REAL(DFP) :: vec(6), T2(3, 3)
-!
-!   obj = VoigtRank2Tensor(T, StrainTypeVoigt)
-!   vec = obj
-!   CALL OK(MAXVAL(ABS(vec - [1.0_DFP, 2.0_DFP, 3.0_DFP, 8.0_DFP, &
-!                             10.0_DFP, 12.0_DFP])) .LT. tol, &
-!           "strain: engineering shear")
-!   CALL OK(ABS(obj%scale - 0.5_DFP) .LT. tol, "strain: scale is 0.5")
-!   T2 = obj
-!   CALL OK(MAXVAL(ABS(T2 - T)) .LT. tol, "strain: round trip")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|VoigtRank2Tensor/examples/Assignment_test_1.F90)
+! - [test 2](|base|VoigtRank2Tensor/examples/VoigtRank2Tensor_test_1.F90)
 !
 ! See also: [[obj_Assign1]]
 
@@ -739,16 +484,17 @@ END INTERFACE ASSIGNMENT(=)
 ! date: 2021-03-13
 ! summary: Display the content of [[VoigtRank2Tensor_]]
 !
-! Description:
-!   Prints the message, the Voigt type (stress-like, strain-like, or
-!   unknown which is treated as stress-like), the scale of the shear
-!   entries and the Voigt vector V.
+! Writes the tensor to the unit `unitNo`. The output has four parts.
 !
-! Arguments:
-!   obj : VoigtRank2Tensor_ - tensor
-!   msg : CHARACTER(*) - header message
-!   unitNo : INTEGER(I4B), OPTIONAL - output unit, default is stdout
-!   orient : CHARACTER(*), OPTIONAL - "row" (default) or "col" for V
+! 1. The message `msg`.
+! 2. The Voigt type, as `voigtType: stress-like`,
+!    `voigtType: strain-like` or
+!    `voigtType: unknown (treated as stress-like)`.
+! 3. The scale of the shear entries, as `scale: `.
+! 4. The Voigt vector `obj%V`, as `V: `. It is a row by default; use
+!    `orient="col"` for a column.
+!
+! If `unitNo` is absent, the routine writes to the standard output.
 !
 ! Changes:
 !   - 2026-11-17: rewritten after IntVector_IOMethod; prints each
@@ -756,86 +502,9 @@ END INTERFACE ASSIGNMENT(=)
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: StrainTypeVoigt
-! USE GlobalData, ONLY: StressTypeVoigt
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: Display
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! IMPLICIT NONE
+! - [test 1](|base|VoigtRank2Tensor/examples/Display_test_1.F90)
 !
-! REAL(DFP), PARAMETER :: vec(6) = [1.0_DFP, 2.0_DFP, 3.0_DFP, &
-!                                   4.0_DFP, 5.0_DFP, 6.0_DFP]
-!
-! ! Test 1: stress-like tensor
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!   INTEGER(I4B) :: unitNo
-!
-!   obj = VoigtRank2Tensor(vec, StressTypeVoigt)
-!   OPEN (newunit=unitNo, status="SCRATCH", action="READWRITE")
-!   CALL Display(obj, "my tensor", unitNo=unitNo)
-!   CALL OK(Found(unitNo, "my tensor"), "stress: message")
-!   CALL OK(Found(unitNo, "voigtType: stress-like"), "stress: voigtType")
-!   CALL OK(Found(unitNo, "scale: "), "stress: scale")
-!   CALL OK(Found(unitNo, "V: "), "stress: V")
-!   CLOSE (unitNo)
-! END BLOCK
-!
-! ! Test 2: strain-like tensor, column orientation
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!   INTEGER(I4B) :: unitNo
-!
-!   obj = VoigtRank2Tensor(vec, StrainTypeVoigt)
-!   OPEN (newunit=unitNo, status="SCRATCH", action="READWRITE")
-!   CALL Display(obj, "my strain", unitNo=unitNo, orient="col")
-!   CALL OK(Found(unitNo, "voigtType: strain-like"), "strain: voigtType")
-!   CLOSE (unitNo)
-! END BLOCK
-!
-! ! Test 3: array of tensors
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj(2)
-!   INTEGER(I4B) :: unitNo
-!
-!   obj(1) = VoigtRank2Tensor(vec, StressTypeVoigt)
-!   obj(2) = VoigtRank2Tensor(vec, StrainTypeVoigt)
-!   OPEN (newunit=unitNo, status="SCRATCH", action="READWRITE")
-!   CALL Display(obj, "my tensors", unitNo=unitNo)
-!   CALL OK(Found(unitNo, "my tensors"), "array: message")
-!   CALL OK(Found(unitNo, "size: 2"), "array: size")
-!   CALL OK(Found(unitNo, "(1)"), "array: first entry")
-!   CALL OK(Found(unitNo, "(2)"), "array: second entry")
-!   CLOSE (unitNo)
-! END BLOCK
-!
-! CONTAINS
-!
-! ! Looks for text in the lines written to unitNo
-! FUNCTION Found(unitNo, text) RESULT(ans)
-!   INTEGER(I4B), INTENT(IN) :: unitNo
-!   CHARACTER(*), INTENT(IN) :: text
-!   LOGICAL :: ans
-!
-!   CHARACTER(256) :: line, errmsg
-!   INTEGER(I4B) :: ios
-!
-!   REWIND (unitNo)
-!   ans = .FALSE.
-!   scan: DO
-!     READ (unitNo, "(A)", iostat=ios, iomsg=errmsg) line
-!     IF (ios .NE. 0) EXIT scan
-!     ans = ans .OR. (INDEX(line, text) .GT. 0)
-!   END DO scan
-! END FUNCTION Found
-!
-! END PROGRAM main
-!```
+! See also: [[obj_Display2]]
 
 INTERFACE Display
   MODULE SUBROUTINE obj_Display1(obj, msg, unitNo, orient)
@@ -858,19 +527,17 @@ END INTERFACE Display
 ! date: 2026-11-17
 ! summary: Display an array of [[VoigtRank2Tensor_]]
 !
-! Description:
-!   Prints the message and the size of the array, then each tensor with
-!   the message "(j)".
+! Writes the message `msg` and the size of the array, as `size: `.
+! Then it writes each tensor like [[obj_Display1]], with the message
+! `(j)` for entry `j`.
 !
-! Arguments:
-!   obj : VoigtRank2Tensor_, rank(1) - tensors
-!   msg : CHARACTER(*) - header message
-!   unitNo : INTEGER(I4B), OPTIONAL - output unit, default is stdout
-!   orient : CHARACTER(*), OPTIONAL - "row" (default) or "col" for V
+! If `unitNo` is absent, the routine writes to the standard output.
 !
 ! Examples
 !
-! See the example of the scalar version (Test 3).
+! - [test 1](|base|VoigtRank2Tensor/examples/Display_test_1.F90)
+!
+! See also: [[obj_Display1]]
 
 INTERFACE Display
   MODULE SUBROUTINE obj_Display2(obj, msg, unitNo, orient)
@@ -893,46 +560,16 @@ END INTERFACE Display
 ! date: 2026-11-17
 ! summary: Length of the vector of a [[VoigtRank2Tensor_]] in a Voigt form
 !
-! Description:
-!   Returns the size of [[GetVoigtVector]] of `obj` for `voigtForm`. The
-!   tensor itself always stores the 6 components of the 3D form, so the
-!   result is `VoigtSize(voigtForm)` of VoigtUtility.
+! Returns the size of [[GetVoigtVector]] of `obj` for `voigtForm`.
+! The tensor always stores the 6 components of the 3D form. So the
+! result is `VoigtSize(voigtForm)` of VoigtUtility.
 !
 ! Returns:
 !   ans : INTEGER(I4B) - length of the vector of the form
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StressTypeVoigt
-! USE GlobalData, ONLY: VoigtForm3D
-! USE GlobalData, ONLY: VoigtFormPlaneStrain
-! USE GlobalData, ONLY: VoigtFormPlaneStrainFull
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: GetVoigtSize
-! USE VoigtRank2Tensor_Method, ONLY: GetVoigtVector
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! IMPLICIT NONE
-!
-! ! Test 1: size of the vector of obj in a Voigt form
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: obj
-!
-!   obj = VoigtRank2Tensor([1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, 5.0_DFP, &
-!                           6.0_DFP], StressTypeVoigt)
-!   CALL OK(GetVoigtSize(obj, VoigtForm3D) .EQ. 6, "3D: 6")
-!   CALL OK(GetVoigtSize(obj, VoigtFormPlaneStrain) .EQ. 3, &
-!           "plane strain: 3")
-!   CALL OK(GetVoigtSize(obj, VoigtFormPlaneStrainFull) .EQ. &
-!           SIZE(GetVoigtVector(obj, VoigtFormPlaneStrainFull)), &
-!           "plane strain full: same as SIZE(GetVoigtVector)")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|VoigtRank2Tensor/examples/GetVoigtSize_test_1.F90)
 !
 ! See also: [[GetVoigtVector]], [[VoigtSize]]
 
@@ -955,90 +592,31 @@ END INTERFACE GetVoigtSize
 ! date: 2026-10-21
 ! summary: Reduced Voigt vector of a [[VoigtRank2Tensor_]]
 !
-! The orderings are given by GetVoigtIndex_ of VoigtUtility, for
-! example 3D `[11,22,33,12,23,13]`, plane strain and plane stress
-! `[11,22,12]`, axisymmetric and plane strain full `[11,22,12,33]`. For
-! VoigtFormPlaneStrain and VoigtFormPlaneStress the out-of-plane normal
-! component is not returned (for example $\sigma_{33}$ in plane strain);
-! the Full forms keep it. Unknown forms give the 3D vector.
+! Returns the Voigt vector of `obj` for the given `voigtForm`.
+! `GetVoigtIndex_` of VoigtUtility gives the orderings, for example:
+!
+! - 3D: `[11,22,33,12,23,13]`
+! - plane strain and plane stress: `[11,22,12]`
+! - axisymmetric and plane strain full: `[11,22,12,33]`
+!
+! In plane strain and plane stress, the out-of-plane normal component
+! is not returned. An example is $\sigma_{33}$ in plane strain.
+! The Full forms keep it. An unknown `voigtForm` gives the 3D vector.
 !
 ! Returns:
-!   ans : REAL(DFP), ALLOCATABLE - SIZE(ans) = VoigtSize(voigtForm)
+!   ans : `REAL(DFP), ALLOCATABLE` - `SIZE(ans) = VoigtSize(voigtForm)`
 !
 ! Formula:
+!   With `V` the 6-entry Voigt vector of `obj`:
 !   $$\text{plane strain}: [V_1, V_2, V_4],\quad
 !   \text{axisymmetric}: [V_1, V_2, V_4, V_3]$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StressTypeVoigt
-! USE GlobalData, ONLY: VoigtForm3D
-! USE GlobalData, ONLY: VoigtFormAxisymmetric
-! USE GlobalData, ONLY: VoigtFormPlaneStrain
-! USE GlobalData, ONLY: VoigtFormPlaneStrainFull
-! USE GlobalData, ONLY: VoigtFormPlaneStress
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: GetVoigtVector
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! IMPLICIT NONE
+! - [test 1](|base|VoigtRank2Tensor/examples/GetVoigtVector_test_1.F90)
+! - [test 2](|base|VoigtRank2Tensor/examples/GetVoigtVector_test_2.F90)
 !
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP), PARAMETER :: v6(6) = [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, &
-!                                  5.0_DFP, 6.0_DFP]
-! TYPE(VoigtRank2Tensor_) :: obj
-!
-! obj = VoigtRank2Tensor(v6, StressTypeVoigt)
-!
-! ! Test 1: 3D form returns all 6 entries
-! BLOCK
-!   REAL(DFP), ALLOCATABLE :: v(:)
-!
-!   v = GetVoigtVector(obj, VoigtForm3D)
-!   CALL OK(SIZE(v) .EQ. 6, "3D: size")
-!   CALL OK(MAXVAL(ABS(v - v6)) .LT. tol, "3D: values")
-! END BLOCK
-!
-! ! Test 2: plane strain and plane stress return [11,22,12]
-! BLOCK
-!   REAL(DFP), ALLOCATABLE :: v(:)
-!
-!   v = GetVoigtVector(obj, VoigtFormPlaneStrain)
-!   CALL OK(SIZE(v) .EQ. 3, "plane strain: size")
-!   CALL OK(MAXVAL(ABS(v - [1.0_DFP, 2.0_DFP, 4.0_DFP])) .LT. tol, &
-!           "plane strain: values")
-!   v = GetVoigtVector(obj, VoigtFormPlaneStress)
-!   CALL OK(MAXVAL(ABS(v - [1.0_DFP, 2.0_DFP, 4.0_DFP])) .LT. tol, &
-!           "plane stress: values")
-! END BLOCK
-!
-! ! Test 3: axisymmetric returns [11,22,12,33]
-! BLOCK
-!   REAL(DFP), ALLOCATABLE :: v(:)
-!
-!   v = GetVoigtVector(obj, VoigtFormAxisymmetric)
-!   CALL OK(SIZE(v) .EQ. 4, "axisymmetric: size")
-!   CALL OK(MAXVAL(ABS(v - [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP])) &
-!           .LT. tol, "axisymmetric: values")
-! END BLOCK
-!
-! ! Test 4: plane strain full keeps the 33 component, [11,22,12,33]
-! BLOCK
-!   REAL(DFP), ALLOCATABLE :: v(:)
-!
-!   v = GetVoigtVector(obj, VoigtFormPlaneStrainFull)
-!   CALL OK(SIZE(v) .EQ. 4, "plane strain full: size")
-!   CALL OK(MAXVAL(ABS(v - [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP])) &
-!           .LT. tol, "plane strain full: values")
-! END BLOCK
-!
-! END PROGRAM main
-!```
-!
-! See also: [[GetVoigtVector_]], [[VoigtSize]]
+! See also: [[GetVoigtVector_]], [[GetVoigtSize]], [[VoigtSize]]
 
 INTERFACE GetVoigtVector
   MODULE PURE FUNCTION obj_GetVoigtVector(obj, voigtForm) &
@@ -1060,86 +638,28 @@ END INTERFACE GetVoigtVector
 ! date: 2026-11-02
 ! summary: Reduced Voigt vector of a [[VoigtRank2Tensor_]] (no allocation)
 !
-! Same as [[GetVoigtVector]] but the result is written in `ans`, which
-! is allocated by the caller. Only `ans(1:tsize)` is written. This
-! routine is intended for the quadrature point loops of finite element
-! kernels.
+! Writes the reduced Voigt vector of `obj` into `ans`.
+! It gives the same values as [[GetVoigtVector]].
+! The caller owns `ans`, so the routine allocates nothing. This suits
+! quadrature point loops of finite element kernels.
+!
+! The routine writes `ans(1:tsize)` and leaves the rest of `ans`
+! unchanged. An unknown `voigtForm` acts as `VoigtForm3D`.
+!
+! @note
+! `SIZE(ans)` must be at least `VoigtSize(voigtForm)`. The routine does
+! not check this. With a shorter array, it writes out of bounds.
+! @endnote
 !
 ! Formula:
+!   With `V` the 6-entry Voigt vector of `obj`, the entries written are:
 !   $$\text{plane strain}: [V_1, V_2, V_4],\quad
 !   \text{axisymmetric}: [V_1, V_2, V_4, V_3]$$
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: StressTypeVoigt
-! USE GlobalData, ONLY: VoigtForm3D
-! USE GlobalData, ONLY: VoigtFormAxisymmetric
-! USE GlobalData, ONLY: VoigtFormPlaneStrain
-! USE GlobalData, ONLY: VoigtFormUniaxialStrainFull
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: GetVoigtVector_
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-! REAL(DFP), PARAMETER :: v6(6) = [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, &
-!                                  5.0_DFP, 6.0_DFP]
-! TYPE(VoigtRank2Tensor_) :: obj
-!
-! obj = VoigtRank2Tensor(v6, StressTypeVoigt)
-!
-! ! Test 1: 3D form writes 6 entries
-! BLOCK
-!   REAL(DFP) :: ans(6)
-!   INTEGER(I4B) :: tsize
-!
-!   CALL GetVoigtVector_(obj, VoigtForm3D, ans, tsize)
-!   CALL OK(tsize .EQ. 6, "3D: tsize")
-!   CALL OK(MAXVAL(ABS(ans - v6)) .LT. tol, "3D: values")
-! END BLOCK
-!
-! ! Test 2: plane strain writes [11,22,12], the rest of ans is untouched
-! BLOCK
-!   REAL(DFP) :: ans(6)
-!   INTEGER(I4B) :: tsize
-!
-!   ans = -1.0_DFP
-!   CALL GetVoigtVector_(obj, VoigtFormPlaneStrain, ans, tsize)
-!   CALL OK(tsize .EQ. 3, "plane strain: tsize")
-!   CALL OK(MAXVAL(ABS(ans(1:3) - [1.0_DFP, 2.0_DFP, 4.0_DFP])) .LT. tol, &
-!           "plane strain: values")
-!   CALL OK(ALL(ans(4:6) .EQ. -1.0_DFP), "plane strain: rest untouched")
-! END BLOCK
-!
-! ! Test 3: axisymmetric writes [11,22,12,33]
-! BLOCK
-!   REAL(DFP) :: ans(4)
-!   INTEGER(I4B) :: tsize
-!
-!   CALL GetVoigtVector_(obj, VoigtFormAxisymmetric, ans, tsize)
-!   CALL OK(tsize .EQ. 4, "axisymmetric: tsize")
-!   CALL OK(MAXVAL(ABS(ans - [1.0_DFP, 2.0_DFP, 4.0_DFP, 3.0_DFP])) &
-!           .LT. tol, "axisymmetric: values")
-! END BLOCK
-!
-! ! Test 4: uniaxial strain full writes the normal components [11,22,33]
-! BLOCK
-!   REAL(DFP) :: ans(3)
-!   INTEGER(I4B) :: tsize
-!
-!   CALL GetVoigtVector_(obj, VoigtFormUniaxialStrainFull, ans, tsize)
-!   CALL OK(tsize .EQ. 3, "uniaxial strain full: tsize")
-!   CALL OK(MAXVAL(ABS(ans - [1.0_DFP, 2.0_DFP, 3.0_DFP])) .LT. tol, &
-!           "uniaxial strain full: values")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|VoigtRank2Tensor/examples/GetVoigtVector__test_1.F90)
+! - [test 2](|base|VoigtRank2Tensor/examples/GetVoigtVector__test_2.F90)
 !
 ! See also: [[GetVoigtVector]], [[VoigtSize]]
 
@@ -1164,40 +684,15 @@ END INTERFACE GetVoigtVector_
 ! date: 2026-11-17
 ! summary: Trace of a [[VoigtRank2Tensor_]]
 !
-! Same value for stress-like and strain-like tensors (VoigtTrace of V).
+! Returns the trace of `obj`, from [[VoigtTrace]] of `obj%V`.
+! Stress-like and strain-like tensors give the same value.
 !
 ! Returns:
 !   ans : REAL(DFP) - trace
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StrainTypeVoigt
-! USE GlobalData, ONLY: StressTypeVoigt
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: Trace
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-14_DFP
-! REAL(DFP), PARAMETER :: v(6) = [1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, &
-!                                 5.0_DFP, 6.0_DFP]
-!
-! ! Test 1: stress-like and strain-like tensors have the same trace
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: sig, eps
-!
-!   sig = VoigtRank2Tensor(v, StressTypeVoigt)
-!   eps = VoigtRank2Tensor(v, StrainTypeVoigt)
-!   CALL OK(ABS(Trace(sig) - 6.0_DFP) .LT. tol, "Trace: stress")
-!   CALL OK(ABS(Trace(eps) - 6.0_DFP) .LT. tol, "Trace: strain")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|VoigtRank2Tensor/examples/Trace_test_1.F90)
 !
 ! See also: [[VoigtTrace]]
 
@@ -1218,45 +713,18 @@ END INTERFACE Trace
 ! date: 2026-11-17
 ! summary: Deviatoric part of a [[VoigtRank2Tensor_]]
 !
-! The mean of the normal components is removed (VoigtDev of V). The shear
-! entries, the Voigt type and the scale are kept, so the deviator of an
-! engineering strain is again an engineering strain.
+! Returns the deviatoric part of `obj`, from [[VoigtDev]] of `obj%V`.
+! It removes the mean of the normal components.
+!
+! The result keeps the shear entries, the Voigt type and the scale. So
+! the deviator of an engineering strain is again an engineering strain.
 !
 ! Returns:
 !   ans : TYPE(VoigtRank2Tensor_) - deviatoric part
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StrainTypeVoigt
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: Dev
-! USE VoigtRank2Tensor_Method, ONLY: Trace
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-14_DFP
-!
-! ! Test 1: the mean is removed, the shear entries and the Voigt type are
-! ! kept (an engineering strain stays an engineering strain)
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: eps, e
-!   REAL(DFP) :: expected(6)
-!
-!   eps = VoigtRank2Tensor([1.0_DFP, 2.0_DFP, 6.0_DFP, 4.0_DFP, 5.0_DFP, &
-!                           7.0_DFP], StrainTypeVoigt)
-!   e = Dev(eps)
-!   expected = [-2.0_DFP, -1.0_DFP, 3.0_DFP, 4.0_DFP, 5.0_DFP, 7.0_DFP]
-!   CALL OK(MAXVAL(ABS(e%V - expected)) .LT. tol, "Dev: values")
-!   CALL OK(ABS(Trace(e)) .LT. tol, "Dev: trace is zero")
-!   CALL OK(e%VoigtType .EQ. StrainTypeVoigt, "Dev: Voigt type is kept")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|VoigtRank2Tensor/examples/Dev_test_1.F90)
 !
 ! See also: [[VoigtDev]], [[Trace]]
 
@@ -1277,10 +745,13 @@ END INTERFACE Dev
 ! date: 2026-11-17
 ! summary: Frobenius norm of a [[VoigtRank2Tensor_]]
 !
-! The shear entries are converted to tensor components with the scale of
-! the tensor (1 for stress, 1/2 for an engineering strain), then
-! VoigtStressNorm is used. So a stress and the same tensor written as an
-! engineering strain have the same norm.
+! Returns the Frobenius norm of `obj`. The routine converts the shear
+! entries to tensor components with the scale of the tensor (1 for
+! stress, 1/2 for an engineering strain). Then it uses
+! [[VoigtStressNorm]].
+!
+! So a stress and the same tensor written as an engineering strain have
+! the same norm.
 !
 ! Returns:
 !   ans : REAL(DFP) - norm of the tensor
@@ -1290,41 +761,7 @@ END INTERFACE Dev
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StrainTypeVoigt
-! USE GlobalData, ONLY: StressTypeVoigt
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: FrobeniusNorm
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-13_DFP
-!
-! ! Test 1: stress-like tensor, shear entries are tensor components
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: sig
-!
-!   sig = VoigtRank2Tensor([1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, 5.0_DFP, &
-!                           6.0_DFP], StressTypeVoigt)
-!   CALL OK(ABS(FrobeniusNorm(sig) - SQRT(168.0_DFP)) .LT. tol, &
-!           "FrobeniusNorm: stress")
-! END BLOCK
-!
-! ! Test 2: the same tensor as an engineering strain gives the same norm
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: eps
-!
-!   eps = VoigtRank2Tensor([1.0_DFP, 2.0_DFP, 3.0_DFP, 8.0_DFP, 10.0_DFP, &
-!                           12.0_DFP], StrainTypeVoigt)
-!   CALL OK(ABS(FrobeniusNorm(eps) - SQRT(168.0_DFP)) .LT. tol, &
-!           "FrobeniusNorm: engineering strain")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|VoigtRank2Tensor/examples/FrobeniusNorm_test_1.F90)
 !
 ! See also: [[VoigtStressNorm]]
 
@@ -1345,62 +782,17 @@ END INTERFACE FrobeniusNorm
 ! date: 2026-11-17
 ! summary: Eigenvalues and eigenvectors of a [[VoigtRank2Tensor_]]
 !
-! The shear entries are converted to tensor components with the scale of
-! the tensor, then VoigtSymEigen is used (cyclic Jacobi, PURE, relative
-! tolerance). The eigenvalues are in descending order. The argument names
-! follow Eigen of Rank2Tensor_.
+! Returns the eigenvalues `WR` and the unit eigenvectors `QR` of `obj`.
+! The routine converts the shear entries to tensor components with the
+! scale of the tensor. Then it uses [[VoigtSymEigen]], a PURE cyclic
+! Jacobi method with a relative tolerance.
+!
+! The eigenvalues are in descending order. The argument names follow
+! `Eigen` of `Rank2Tensor_`.
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: I4B
-! USE GlobalData, ONLY: StrainTypeVoigt
-! USE GlobalData, ONLY: StressTypeVoigt
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: Eigen
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-12_DFP
-!
-! ! Test 1: diagonal stress, eigenvalues in descending order
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: sig
-!   REAL(DFP) :: QR(3, 3), WR(3)
-!
-!   sig = VoigtRank2Tensor([1.0_DFP, 3.0_DFP, 2.0_DFP, 0.0_DFP, 0.0_DFP, &
-!                           0.0_DFP], StressTypeVoigt)
-!   CALL Eigen(obj=sig, QR=QR, WR=WR)
-!   CALL OK(MAXVAL(ABS(WR - [3.0_DFP, 2.0_DFP, 1.0_DFP])) .LT. tol, &
-!           "Eigen: values")
-!   CALL OK(ABS(ABS(QR(2, 1)) - 1.0_DFP) .LT. tol, &
-!           "Eigen: first vector is e2")
-! END BLOCK
-!
-! ! Test 2: an engineering strain has the eigenvalues of the strain tensor
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: sig, eps
-!   REAL(DFP) :: QR1(3, 3), WR1(3), QR2(3, 3), WR2(3)
-!   INTEGER(I4B) :: ii
-!
-!   sig = VoigtRank2Tensor([4.0_DFP, 1.0_DFP, 2.0_DFP, 0.5_DFP, 0.3_DFP, &
-!                           0.2_DFP], StressTypeVoigt)
-!   eps = VoigtRank2Tensor([4.0_DFP, 1.0_DFP, 2.0_DFP, 1.0_DFP, 0.6_DFP, &
-!                           0.4_DFP], StrainTypeVoigt)
-!   CALL Eigen(obj=sig, QR=QR1, WR=WR1)
-!   CALL Eigen(obj=eps, QR=QR2, WR=WR2)
-!   CALL OK(MAXVAL(ABS(WR1 - WR2)) .LT. tol, "Eigen: strain, values")
-!   DO ii = 1, 3
-!     CALL OK(ABS(ABS(DOT_PRODUCT(QR1(:, ii), QR2(:, ii))) - 1.0_DFP) &
-!             .LT. tol, "Eigen: strain, vectors")
-!   END DO
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|VoigtRank2Tensor/examples/Eigen_test_1.F90)
 !
 ! See also: [[VoigtSymEigen]]
 
@@ -1423,62 +815,20 @@ END INTERFACE Eigen
 ! date: 2026-11-17
 ! summary: Dyadic product of two [[VoigtRank2Tensor_]] in Voigt form
 !
-! Both tensors are converted to tensor shear components with their
-! scale, then VoigtOuter is used. The result C(6, 6) is the rank 4 tensor
-! A otimes B in the convention of MaterialJacobian_: it maps an
-! engineering strain to a stress, C eps = A (B : eps).
+! Returns the dyadic product of `obj1` and `obj2` as a 6x6 matrix.
+! The routine converts the shear entries of both tensors to tensor
+! components with their scale. Then it uses [[VoigtOuter]].
+!
+! The result `C(6, 6)` is the rank 4 tensor A otimes B in the
+! convention of `MaterialJacobian_`. It maps an engineering strain to a
+! stress: `C eps = A (B : eps)`.
 !
 ! Returns:
 !   ans : REAL(DFP), SHAPE(6, 6) - A otimes B in Voigt form
 !
 ! Examples
 !
-!```fortran
-! PROGRAM main
-! USE BaseType, ONLY: VoigtRank2Tensor_
-! USE GlobalData, ONLY: DFP
-! USE GlobalData, ONLY: StrainTypeVoigt
-! USE GlobalData, ONLY: StressTypeVoigt
-! USE MaterialJacobian_Method, ONLY: Rank4IdentityOtimesIdentity
-! USE Test_Method, ONLY: OK
-! USE VoigtRank2Tensor_Method, ONLY: Otimes
-! USE VoigtRank2Tensor_Method, ONLY: VoigtRank2Tensor
-! USE VoigtUtility, ONLY: VoigtIdentity
-! IMPLICIT NONE
-!
-! REAL(DFP), PARAMETER :: tol = 1.0E-14_DFP
-!
-! ! Test 1: I otimes I
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: eye
-!
-!   eye = VoigtRank2Tensor(VoigtIdentity(), StressTypeVoigt)
-!   CALL OK(MAXVAL(ABS(Otimes(eye, eye) - Rank4IdentityOtimesIdentity())) &
-!           .LT. tol, "Otimes: I otimes I")
-! END BLOCK
-!
-! ! Test 2: (a otimes b) : eps = a (b : eps) for an engineering strain eps,
-! ! also when b is given as an engineering strain
-! BLOCK
-!   TYPE(VoigtRank2Tensor_) :: a, b, bEng
-!   REAL(DFP) :: eps(6), bDotEps
-!
-!   a = VoigtRank2Tensor([1.0_DFP, 2.0_DFP, 3.0_DFP, 4.0_DFP, 5.0_DFP, &
-!                         6.0_DFP], StressTypeVoigt)
-!   b = VoigtRank2Tensor([6.0_DFP, 5.0_DFP, 4.0_DFP, 3.0_DFP, 2.0_DFP, &
-!                         1.0_DFP], StressTypeVoigt)
-!   bEng = VoigtRank2Tensor([6.0_DFP, 5.0_DFP, 4.0_DFP, 6.0_DFP, 4.0_DFP, &
-!                            2.0_DFP], StrainTypeVoigt)
-!   eps = [0.1_DFP, 0.2_DFP, 0.3_DFP, 0.4_DFP, 0.5_DFP, 0.6_DFP]
-!   bDotEps = DOT_PRODUCT(b%V, eps)
-!   CALL OK(MAXVAL(ABS(MATMUL(Otimes(a, b), eps) - a%V * bDotEps)) &
-!           .LT. tol, "Otimes: (a otimes b) : eps")
-!   CALL OK(MAXVAL(ABS(Otimes(a, bEng) - Otimes(a, b))) .LT. tol, &
-!           "Otimes: b as an engineering strain")
-! END BLOCK
-!
-! END PROGRAM main
-!```
+! - [test 1](|base|VoigtRank2Tensor/examples/Otimes_test_1.F90)
 !
 ! See also: [[VoigtOuter]]
 

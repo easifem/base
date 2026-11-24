@@ -16,7 +16,12 @@
 !
 
 SUBMODULE(ElemshapeData_HminHmaxMethods) Methods
-USE BaseMethod
+USE BaseType, ONLY: TypeFEVariableScalar
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+USE EigenUtility, ONLY: SymEigenValuesUpto3
+USE FEVariable_Method, ONLY: QuadratureVariable
+USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
 
@@ -25,34 +30,28 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetHminHmax1
-INTEGER(I4B) :: ii, nips, nsd
-REAL(DFP), ALLOCATABLE :: G(:, :), w(:)
-!! shape is (nsd, nsd, nips), it contains inverse of FFT
-REAL(DFP) :: areal
+INTEGER(I4B) :: ii, nips
+REAL(DFP), ALLOCATABLE :: w(:)
+!! w: eigenvalues of TRANSPOSE(J) * J, shape (xidim)
 !!
 !! Main
 !!
 nips = SIZE(obj%N, 2)
-nsd = obj%nsd
 !!
-CALL Reallocate(G, nsd, nsd)
-CALL Reallocate(w, nsd)
 CALL Reallocate(hmax, nips, hmin, nips)
 !!
-!! FFT and G
+!! TRANSPOSE(J) * J is xidim x xidim. It is regular when the map is
+!! regular, also for xidim < nsd. Its eigenvalues are the squared
+!! singular values of J.
 !!
 DO ii = 1, nips
-  !!
-  CALL Inv(invA=G, A=MATMUL(obj%jacobian(:, :, ii), &
-    & TRANSPOSE(obj%jacobian(:, :, ii))))
-  !!
-  w = SymEigenValuesUpto3(G)
-  !!
-  hmax(ii) = 2.0_DFP / SQRT(MINVAL(w))
-  hmin(ii) = 2.0_DFP / SQRT(MAXVAL(w))
+  w = SymEigenValuesUpto3(MATMUL(TRANSPOSE(obj%jacobian(:, :, ii)), &
+                                 obj%jacobian(:, :, ii)))
+  hmax(ii) = 2.0_DFP * SQRT(MAXVAL(w))
+  hmin(ii) = 2.0_DFP * SQRT(MINVAL(w))
 END DO
 !!
-DEALLOCATE (w, G)
+IF (ALLOCATED(w)) DEALLOCATE (w)
 !!
 END PROCEDURE elemsd_GetHminHmax1
 
@@ -61,19 +60,17 @@ END PROCEDURE elemsd_GetHminHmax1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetHminHmax2
-INTEGER(I4B) :: ii, nips, nsd
+INTEGER(I4B) :: ii, nips
 REAL(DFP), ALLOCATABLE :: w(:)
-!! shape is (nsd, nsd, nips), it contains inverse of FFT
+!! eigenvalues of G(:, :, ii)
 !!
 !! Main
 !!
 nips = SIZE(obj%N, 2)
-nsd = obj%nsd
 !!
-CALL Reallocate(w, nsd)
 CALL Reallocate(hmax, nips, hmin, nips)
 !!
-!! FFT and G
+!! eigenvalues of the given G at each point
 !!
 DO ii = 1, nips
   w = SymEigenValuesUpto3(G(:, :, ii))
@@ -81,7 +78,7 @@ DO ii = 1, nips
   hmin(ii) = 2.0_DFP / SQRT(MAXVAL(w))
 END DO
 !!
-DEALLOCATE (w)
+IF (ALLOCATED(w)) DEALLOCATE (w)
 !!
 END PROCEDURE elemsd_GetHminHmax2
 

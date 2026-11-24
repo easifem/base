@@ -16,7 +16,7 @@
 !
 
 !> author: Vikas Sharma, Ph. D.
-! date: 13 Jul 2021
+! date: 2021-07-13
 ! summary: Input output related methods
 
 SUBMODULE(CSRSparsity_Method) IOMethods

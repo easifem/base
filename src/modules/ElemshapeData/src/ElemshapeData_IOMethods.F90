@@ -15,80 +15,132 @@
 ! along with this program.  If not, see <https: //www.gnu.org/licenses/>
 !
 
+!> author: Vikas Sharma, Ph. D.
+! date: 2021-03-04
+! summary: Input and output methods of ElemShapeData_
+!
+! Display element shape data, or encode it as markdown.
+
 MODULE ElemshapeData_IOMethods
-USE BaseType, ONLY: ElemshapeData_, STElemShapeData_
-
-USE GlobalData, ONLY: I4B, DFP, LGT
-
+USE BaseType, ONLY: ElemshapeData_
+USE BaseType, ONLY: STElemShapeData_
+USE GlobalData, ONLY: DFP
+USE GlobalData, ONLY: I4B
+USE GlobalData, ONLY: LGT
 USE String_Class, ONLY: String
-
 IMPLICIT NONE
+
 PRIVATE
 
 PUBLIC :: Display
 PUBLIC :: ElemshapeData_MdEncode
 PUBLIC :: MdEncode
-PUBLIC :: ElemshapeData_ReactEncode
 
 !----------------------------------------------------------------------------
-!                                                         Display@IOMethods
+!                                                             Display@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
+! date: 2021-03-04
+! summary: Display the content of ElemShapeData_
+!
+! Writes the content of `obj` to the unit `unitNo`.
+! The default unit is the standard output.
+!
+! The output holds these items in order.
+!
+! 1. The message `msg`.
+! 2. The sizes `nsd`, `xidim`, `nns` and `nips`.
+! 3. The arrays `N`, `dNdXi`, `dNdXt`, `NLaplacian`, `jacobian`, `js`,
+!    `ws`, `thickness`, `coord` and `normal`.
+!
+! For an array that is not allocated, it writes `NOT ALLOCATED`.
+!
+! If `obj` is an `STElemShapeData_`, the output ends with the time
+! data `jt`, `wt`, `nnt`, `T`, `dTdTheta`, `dNTdt` and `dNTdXt`.
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/Display_test_1.F90)
+! - [test 3](|base|ElemshapeData/examples/Display_test_3.F90)
+! `NLaplacian` and `nnt`
+!
+! See also: [[elemsd_display_2]]
 
 INTERFACE Display
   MODULE SUBROUTINE elemsd_display_1(obj, msg, unitNo)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     CHARACTER(*), INTENT(IN) :: msg
+    !! message written first
     INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+    !! output unit; default is the standard output
   END SUBROUTINE elemsd_display_1
 END INTERFACE Display
 
 !----------------------------------------------------------------------------
-!                                          ElemshapeData_MdEncode@IOMethods
+!                                              ElemshapeData_MdEncode@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
+! date: 2021-03-04
+! summary: Markdown encoding of ElemShapeData_
+!
+! Returns the content of `obj` as markdown text.
+!
+! - `N`, `NLaplacian`, `js`, `ws`, `thickness`, `coord` and `normal`
+!   each get one table.
+! - `dNdXi`, `dNdXt` and `jacobian` get one table per quadrature
+!   point.
+!
+! An array that is not allocated appears as `Not ALLOCATED`.
+!
+! The space-time data of an `STElemShapeData_` is not encoded.
+!
+! Examples
+!
+! - [test 1](|base|ElemshapeData/examples/MdEncode_test_1.F90)
+! - [test 2](|base|ElemshapeData/examples/MdEncode_test_2.F90)
+! table titles and `Not ALLOCATED` messages
+! - [test 3](|base|ElemshapeData/examples/MdEncode_test_3.F90)
+! `ws`, `coord` and `NLaplacian` tables
 
 INTERFACE MdEncode
   MODULE FUNCTION ElemshapeData_MdEncode(obj) RESULT(ans)
     CLASS(ElemshapeData_), INTENT(IN) :: obj
+    !! element shape data
     TYPE(String) :: ans
+    !! encoded text
   END FUNCTION ElemshapeData_MdEncode
 END INTERFACE MdEncode
 
 !----------------------------------------------------------------------------
-!                                       ElemshapeData_ReactEncode@IOMethods
+!                                                             Display@Methods
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
-
-INTERFACE
-  MODULE FUNCTION ElemshapeData_ReactEncode(obj) RESULT(ans)
-    CLASS(ElemshapeData_), INTENT(IN) :: obj
-    TYPE(String) :: ans
-  END FUNCTION ElemshapeData_ReactEncode
-END INTERFACE
-
-!----------------------------------------------------------------------------
-!                                                          Display@IOMethods
-!----------------------------------------------------------------------------
-
-!> author: Vikas Sharma, Ph. D.
-! date: 4 March 2021
-! summary: Display the content of [[elemshapedata_]] and [[stelemshapedata_]]
+! date: 2021-03-04
+! summary: Display the content of space-time shape data
+!
+! Displays every element of `obj`, one time point after the other.
+! It writes each element like [[elemsd_display_1]] does, including
+! the time data.
+! The message of element `ii` is `msg` followed by `(ii): `.
+!
+! Examples
+!
+! - [test 2](|base|ElemshapeData/examples/Display_test_2.F90)
+!
+! See also: [[elemsd_display_1]]
 
 INTERFACE Display
   MODULE SUBROUTINE elemsd_display_2(obj, msg, unitNo)
     CLASS(STElemshapeData_), INTENT(IN) :: obj(:)
+    !! space-time shape data at each time point
     CHARACTER(*), INTENT(IN) :: msg
+    !! message written first
     INTEGER(I4B), INTENT(IN), OPTIONAL :: unitNo
+    !! output unit; default is the standard output
   END SUBROUTINE elemsd_display_2
 END INTERFACE Display
 

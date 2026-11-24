@@ -475,8 +475,9 @@ CASE (00)
 CASE (01, 10, 11)
   ans = feopt%vector
 
-! matrix: scalar matrix, matrix scalar, matrix matrix
-CASE (02, 20, 22)
+! matrix: scalar matrix, matrix scalar, matrix matrix,
+! vector matrix, matrix vector
+CASE (02, 20, 22, 12, 21)
   ans = feopt%matrix
 
 END SELECT

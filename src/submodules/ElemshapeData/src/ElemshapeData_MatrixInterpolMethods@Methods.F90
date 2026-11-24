@@ -16,13 +16,15 @@
 !
 
 SUBMODULE(ElemshapeData_MatrixInterpolMethods) Methods
+USE BaseType, ONLY: TypeFEVariableConstant
+USE BaseType, ONLY: TypeFEVariableMatrix
+USE BaseType, ONLY: TypeFEVariableOpt
+USE BaseType, ONLY: TypeFEVariableSpace
+USE BaseType, ONLY: TypeFEVariableSpaceTime
+USE BaseType, ONLY: math => TypeMathOpt
+USE FEVariable_Method, ONLY: FEVariableGetInterpolation_ => GetInterpolation_
+USE FEVariable_Method, ONLY: FEVariableSize => Size
 USE ReallocateUtility, ONLY: Reallocate
-USE FEVariable_Method, ONLY: FEVariableSize => Size, &
-                             FEVariableGetInterpolation_ => GetInterpolation_
-USE BaseType, ONLY: TypeFEVariableMatrix, TypeFEVariableConstant, &
-                    TypeFEVariableSpace, TypeFEVariableSpaceTime, &
-                    TypeFEVariableOpt
-
 IMPLICIT NONE
 CONTAINS
 
@@ -31,8 +33,6 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation1
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
 INTEGER(I4B) :: dim1, dim2, dim3
 
 dim1 = SIZE(val, 1)
@@ -40,7 +40,7 @@ dim2 = SIZE(val, 2)
 dim3 = obj%nips
 CALL Reallocate(ans, dim1, dim2, dim3)
 CALL GetInterpolation_(obj=obj, val=val, ans=ans, dim1=dim1, dim2=dim2, &
-                       dim3=dim3, scale=one, addContribution=no)
+                       dim3=dim3, scale=math%one, addContribution=math%no)
 END PROCEDURE GetInterpolation1
 
 !----------------------------------------------------------------------------
@@ -48,14 +48,11 @@ END PROCEDURE GetInterpolation1
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_1
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
-
 dim1 = SIZE(val, 1)
 dim2 = SIZE(val, 2)
 dim3 = obj%nips
 CALL GetInterpolation_(obj=obj, val=val, ans=ans, dim1=dim1, dim2=dim2, &
-                       dim3=dim3, scale=one, addContribution=no)
+                       dim3=dim3, scale=math%one, addContribution=math%no)
 END PROCEDURE GetInterpolation_1
 
 !----------------------------------------------------------------------------
@@ -77,7 +74,8 @@ minNNS = MIN(valNNS, obj%nns)
 DO ips = 1, dim3
   DO ii = 1, minNNS
     ans(1:dim1, 1:dim2, ips) = ans(1:dim1, 1:dim2, ips) + &
-                              scale * val(1:dim1, 1:dim2, ii) * obj%N(ii, ips)
+                               scale * val(1:dim1, 1:dim2, ii) * &
+                               obj%N(ii, ips)
   END DO
 END DO
 END PROCEDURE GetInterpolation_1a
@@ -87,8 +85,6 @@ END PROCEDURE GetInterpolation_1a
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation2
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
 INTEGER(I4B) :: dim1, dim2, dim3
 
 dim1 = SIZE(val, 1)
@@ -96,7 +92,7 @@ dim2 = SIZE(val, 2)
 dim3 = obj%nips
 CALL Reallocate(ans, dim1, dim2, dim3)
 CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
-                       dim3=dim3, scale=one, addContribution=no)
+                       dim3=dim3, scale=math%one, addContribution=math%no)
 END PROCEDURE GetInterpolation2
 
 !----------------------------------------------------------------------------
@@ -104,14 +100,11 @@ END PROCEDURE GetInterpolation2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_2
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
-
 dim1 = SIZE(val, 1)
 dim2 = SIZE(val, 2)
 dim3 = obj%nips
 CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
-                       dim3=dim3, scale=one, addContribution=no)
+                       dim3=dim3, scale=math%one, addContribution=math%no)
 END PROCEDURE GetInterpolation_2
 
 !----------------------------------------------------------------------------
@@ -119,7 +112,6 @@ END PROCEDURE GetInterpolation_2
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_2a
-LOGICAL(LGT), PARAMETER :: yes = .TRUE.
 INTEGER(I4B) :: minNNT, valNNT, aa
 REAL(DFP) :: myscale
 
@@ -136,7 +128,7 @@ DO aa = 1, minNNT
   myscale = obj%T(aa) * scale
   CALL GetInterpolation_(obj=obj, ans=ans, val=val(:, :, :, aa), &
                          dim1=dim1, dim2=dim2, dim3=dim3, scale=myscale, &
-                         addContribution=yes)
+                         addContribution=math%yes)
 END DO
 END PROCEDURE GetInterpolation_2a
 
@@ -145,19 +137,18 @@ END PROCEDURE GetInterpolation_2a
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation3
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
-
 INTEGER(I4B) :: dim1, dim2, dim3, dim4
 
 dim1 = SIZE(val, 1)
 dim2 = SIZE(val, 2)
-dim3 = obj(1)%nips
+dim3 = 0
 dim4 = SIZE(obj)
+IF (dim4 .GT. 0) dim3 = obj(1)%nips
 
 CALL Reallocate(ans, dim1, dim2, dim3, dim4)
 CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
-                       dim3=dim3, dim4=dim4, scale=one, addContribution=no)
+                       dim3=dim3, dim4=dim4, scale=math%one, &
+                       addContribution=math%no)
 END PROCEDURE GetInterpolation3
 
 !----------------------------------------------------------------------------
@@ -165,16 +156,15 @@ END PROCEDURE GetInterpolation3
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_3
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
-
 dim1 = SIZE(val, 1)
 dim2 = SIZE(val, 2)
-dim3 = obj(1)%nips
+dim3 = 0
 dim4 = SIZE(obj)
+IF (dim4 .GT. 0) dim3 = obj(1)%nips
 
 CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
-                       dim3=dim3, dim4=dim4, scale=one, addContribution=no)
+                       dim3=dim3, dim4=dim4, scale=math%one, &
+                       addContribution=math%no)
 END PROCEDURE GetInterpolation_3
 
 !----------------------------------------------------------------------------
@@ -201,8 +191,6 @@ END PROCEDURE GetInterpolation_3a
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation4
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
 INTEGER(I4B) :: dim1, dim2, dim3
 
 dim1 = FEVariableSize(val, 1)
@@ -211,7 +199,10 @@ dim3 = obj%nips
 
 CALL Reallocate(ans, dim1, dim2, dim3)
 CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
-                       dim3=dim3, scale=one, addContribution=no)
+                       dim3=dim3, scale=math%one, addContribution=math%no)
+IF (dim1 .EQ. 0 .AND. dim2 .EQ. 0 .AND. dim3 .EQ. 0) THEN
+  CALL Reallocate(ans, 0, 0, 0)
+END IF
 END PROCEDURE GetInterpolation4
 
 !----------------------------------------------------------------------------
@@ -219,11 +210,8 @@ END PROCEDURE GetInterpolation4
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_4
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
-
 CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
-                       dim3=dim3, scale=one, addContribution=no)
+                       dim3=dim3, scale=math%one, addContribution=math%no)
 END PROCEDURE GetInterpolation_4
 
 !----------------------------------------------------------------------------
@@ -232,12 +220,16 @@ END PROCEDURE GetInterpolation_4
 
 MODULE PROCEDURE GetInterpolation_4a
 INTEGER(I4B) :: timeIndx0
+
+dim1 = 0
+dim2 = 0
+dim3 = 0
 timeIndx0 = 1_I4B
 IF (PRESENT(timeIndx)) timeIndx0 = timeIndx
 
 SELECT CASE (val%vartype)
 CASE (TypeFEVariableOpt%constant)
-  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableMatrix, &
+  CALL FEVariableGetInterpolation_(obj=val, RANK=TypeFEVariableMatrix, &
                                    vartype=TypeFEVariableConstant, &
                                    N=obj%N, nns=obj%nns, nips=obj%nips, &
                                    scale=scale, &
@@ -245,7 +237,7 @@ CASE (TypeFEVariableOpt%constant)
                                    ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
 
 CASE (TypeFEVariableOpt%space)
-  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableMatrix, &
+  CALL FEVariableGetInterpolation_(obj=val, RANK=TypeFEVariableMatrix, &
                                    vartype=TypeFEVariableSpace, &
                                    N=obj%N, nns=obj%nns, nips=obj%nips, &
                                    scale=scale, &
@@ -253,8 +245,9 @@ CASE (TypeFEVariableOpt%space)
                                    ans=ans, dim1=dim1, dim2=dim2, dim3=dim3)
 
 CASE (TypeFEVariableOpt%spacetime)
-  SELECT TYPE (obj); TYPE IS (STElemShapeData_)
-    CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableMatrix, &
+  SELECT TYPE (obj)
+  TYPE IS (STElemShapeData_)
+    CALL FEVariableGetInterpolation_(obj=val, RANK=TypeFEVariableMatrix, &
                                      vartype=TypeFEVariableSpaceTime, &
                                      N=obj%N, nns=obj%nns, nips=obj%nips, &
                                      T=obj%T, nnt=obj%nnt, &
@@ -264,7 +257,6 @@ CASE (TypeFEVariableOpt%spacetime)
                                      dim3=dim3, timeIndx=timeIndx0)
 
   END SELECT
-
 END SELECT
 END PROCEDURE GetInterpolation_4a
 
@@ -273,9 +265,11 @@ END PROCEDURE GetInterpolation_4a
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_4b
+nrow = 0
+ncol = 0
 SELECT CASE (val%vartype)
 CASE (TypeFEVariableOpt%constant)
-  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableMatrix, &
+  CALL FEVariableGetInterpolation_(obj=val, RANK=TypeFEVariableMatrix, &
                                    vartype=TypeFEVariableConstant, &
                                    N=obj%N, nns=obj%nns, &
                                    spaceIndx=spaceIndx, &
@@ -285,7 +279,7 @@ CASE (TypeFEVariableOpt%constant)
                                    ans=ans, nrow=nrow, ncol=ncol)
 
 CASE (TypeFEVariableOpt%space)
-  CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableMatrix, &
+  CALL FEVariableGetInterpolation_(obj=val, RANK=TypeFEVariableMatrix, &
                                    vartype=TypeFEVariableSpace, &
                                    N=obj%N, nns=obj%nns, &
                                    spaceIndx=spaceIndx, &
@@ -295,8 +289,10 @@ CASE (TypeFEVariableOpt%space)
                                    ans=ans, nrow=nrow, ncol=ncol)
 
 CASE (TypeFEVariableOpt%spacetime)
-  SELECT TYPE (obj); TYPE IS (STElemShapeData_)
-    CALL FEVariableGetInterpolation_(obj=val, rank=TypeFEVariableMatrix, &
+  SELECT TYPE (obj)
+  TYPE IS (STElemShapeData_)
+    CALL FEVariableGetInterpolation_(obj=val, &
+                                     RANK=TypeFEVariableMatrix, &
                                      vartype=TypeFEVariableSpaceTime, &
                                      N=obj%N, nns=obj%nns, &
                                      spaceIndx=spaceIndx, &
@@ -305,9 +301,7 @@ CASE (TypeFEVariableOpt%spacetime)
                                      scale=scale, &
                                      addContribution=addContribution, &
                                      ans=ans, nrow=nrow, ncol=ncol)
-
   END SELECT
-
 END SELECT
 END PROCEDURE GetInterpolation_4b
 
@@ -317,17 +311,21 @@ END PROCEDURE GetInterpolation_4b
 
 MODULE PROCEDURE GetInterpolation5
 INTEGER(I4B) :: dim1, dim2, dim3, dim4
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
 
 dim1 = FEVariableSIZE(val, 1)
 dim2 = FEVariableSIZE(val, 2)
-dim3 = obj(1)%nips
+dim3 = 0
 dim4 = SIZE(obj)
+IF (dim4 .GT. 0) dim3 = obj(1)%nips
 
 CALL Reallocate(ans, dim1, dim2, dim3, dim4)
-CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
-                       dim3=dim3, dim4=dim4, scale=one, addContribution=no)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, &
+                       dim2=dim2, dim3=dim3, dim4=dim4, scale=math%one, &
+                       addContribution=math%no)
+IF (dim4 .GT. 0 .AND. dim1 .EQ. 0 .AND. dim2 .EQ. 0 &
+    .AND. dim3 .EQ. 0) THEN
+  CALL Reallocate(ans, 0, 0, 0, dim4)
+END IF
 END PROCEDURE GetInterpolation5
 
 !----------------------------------------------------------------------------
@@ -335,11 +333,9 @@ END PROCEDURE GetInterpolation5
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE GetInterpolation_5
-REAL(DFP), PARAMETER :: one = 1.0_DFP
-LOGICAL(LGT), PARAMETER :: no = .FALSE.
-
-CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, dim2=dim2, &
-                       dim3=dim3, dim4=dim4, scale=one, addContribution=no)
+CALL GetInterpolation_(obj=obj, ans=ans, val=val, dim1=dim1, &
+                       dim2=dim2, dim3=dim3, dim4=dim4, scale=math%one, &
+                       addContribution=math%no)
 END PROCEDURE GetInterpolation_5
 
 !----------------------------------------------------------------------------
@@ -355,8 +351,9 @@ dim3 = 0
 dim4 = SIZE(obj)
 DO ipt = 1, dim4
   CALL GetInterpolation_(obj=obj(ipt), ans=ans(:, :, :, ipt), &
-                         val=val, dim1=dim1, dim2=dim2, dim3=dim3, &
-                         scale=scale, addContribution=addContribution, &
+                         val=val, dim1=dim1, dim2=dim2, &
+                         dim3=dim3, scale=scale, &
+                         addContribution=addContribution, &
                          timeIndx=ipt)
 END DO
 END PROCEDURE GetInterpolation_5a

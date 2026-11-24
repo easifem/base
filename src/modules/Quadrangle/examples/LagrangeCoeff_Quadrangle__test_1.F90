@@ -3,12 +3,12 @@
 ! summary: Checked example for QuadrangleInterpolationUtility.
 
 PROGRAM main
+USE BaseType, ONLY: poly => TypePolynomialOpt
 USE GlobalData, ONLY: DFP
 USE GlobalData, ONLY: I4B
-USE GlobalData, ONLY: poly
 USE QuadrangleInterpolationUtility, ONLY: LagrangeCoeff_Quadrangle_
-USE ReferenceQuadrangle_Method, ONLY: RefCoord_Quadrangle
 USE QuadrangleInterpolationUtility, ONLY: LagrangeDegree_Quadrangle
+USE ReferenceQuadrangle_Method, ONLY: RefCoord_Quadrangle
 USE Test_Method, ONLY: OK
 IMPLICIT NONE
 REAL(DFP) :: nodes(2,4),c(4,4),v(4,4)

@@ -136,14 +136,14 @@ CASE (Constant)
 
 CASE (Space, Time)
 
-  DO CONCURRENT(kk=1:obj%s(3))
+  ans = 0.0_DFP
+
+  DO kk = 1, obj%s(3)
     DO jj = 1, obj%s(2)
       DO ii = 1, obj%s(1)
-
         ans(ii, jj) = ans(ii, jj) &
                       + obj%val(Get1DIndexFortran(i=ii, j=jj, k=kk, &
                                  dim1=obj%s(1), dim2=obj%s(2), dim3=obj%s(3)))
-
       END DO
     END DO
   END DO
@@ -152,14 +152,16 @@ CASE (Space, Time)
 
 CASE (SpaceTime)
 
-  DO CONCURRENT(kk=1:obj%s(3), ll=1:obj%s(4))
+  ans = 0.0_DFP
 
-    DO jj = 1, obj%s(2)
-      DO ii = 1, obj%s(1)
-        ans(ii, jj) = ans(ii, jj) + obj%val(Get1DIndexFortran( &
-                                            i=ii, j=jj, k=kk, l=ll, &
-                  dim1=obj%s(1), dim2=obj%s(2), dim3=obj%s(3), dim4=obj%s(4)))
-
+  DO ll = 1, obj%s(4)
+    DO kk = 1, obj%s(3)
+      DO jj = 1, obj%s(2)
+        DO ii = 1, obj%s(1)
+          ans(ii, jj) = ans(ii, jj) + obj%val(Get1DIndexFortran( &
+                        i=ii, j=jj, k=kk, l=ll, dim1=obj%s(1), &
+                        dim2=obj%s(2), dim3=obj%s(3), dim4=obj%s(4)))
+        END DO
       END DO
     END DO
   END DO

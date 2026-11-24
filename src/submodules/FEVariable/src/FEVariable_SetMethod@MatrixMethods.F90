@@ -48,6 +48,7 @@ ELSE
   END DO
 END IF
 obj%varType = fevaropt%constant
+obj%tshape = 2
 END PROCEDURE obj_Set7
 
 !----------------------------------------------------------------------------
@@ -81,6 +82,7 @@ ELSE
   END DO
 END IF
 obj%varType = fevaropt%space
+obj%tshape = 3
 END PROCEDURE obj_Set8
 
 !----------------------------------------------------------------------------
@@ -118,6 +120,7 @@ ELSE
   END DO
 END IF
 obj%varType = fevaropt%SpaceTime
+obj%tshape = 4
 END PROCEDURE obj_Set9
 
 !----------------------------------------------------------------------------
@@ -152,6 +155,7 @@ ELSE
 END IF
 
 obj%varType = fevaropt%time
+obj%tshape = 3
 END PROCEDURE obj_Set12
 
 !----------------------------------------------------------------------------

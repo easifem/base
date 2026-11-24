@@ -12,9 +12,8 @@ routines. For coding conventions, see the `easifem-dev` plugin
 | `cmake/addX.cmake` | One file per external package: an option, find/link, and a compile macro |
 | `src/modules/` | Module interfaces, one directory per topic |
 | `src/submodules/` | Implementations, with the same directory names |
-| `doc/formal.md` | Project file for the `formal` doc generator (`src_dir` list) |
 | `docs/` | Generated API docs (`api/`) and hand-written pages. Gitignored |
-| `ford.md` | Older FORD config (Utility only) |
+| `ford.md` | FORD project file read by the `formal` doc generator (`src_dir` list) |
 | `python/`, `setup/` | Legacy build drivers and per-OS environment setup |
 | `fortitude.toml` | Linter config: C,S rules, 78-column lines |
 
@@ -147,7 +146,7 @@ GlobalData ─┬─> PENF/FACE/BeFoR64 ─> String_Class
 | Example/test programs | `src/modules/<Dir>/examples/` |
 | External package wiring | `cmake/add<Pkg>.cmake`, root `CMakeLists.txt` |
 | Compile-time sizes (`MAX_*`, `REFELEM_MAX_*`) | root `CMakeLists.txt` cache variables |
-| What gets documented | `src_dir` in `doc/formal.md` |
+| What gets documented | `src_dir` in `ford.md` |
 
 ## Gotchas
 
@@ -155,7 +154,6 @@ GlobalData ─┬─> PENF/FACE/BeFoR64 ─> String_Class
   directory's `CMakeLists.txt`, and a new directory must be added to
   `src/{modules,submodules}/CMakeLists.txt`. Several unregistered files
   already exist and are never compiled (for example
-  `ElemshapeData_DG*Methods.F90` and
   `GE_Lapack_Method@*Methods.F90`).
 - **`.F90` include fragments.** Files inside include subfolders look like
   sources, but they are preprocessor templates that run between
