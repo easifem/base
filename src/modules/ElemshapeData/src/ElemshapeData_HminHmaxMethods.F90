@@ -40,12 +40,15 @@ PUBLIC :: GetHminHmax
 !
 ! For each quadrature point, the routine does the following.
 !
-! 1. Builds `G = inverse(J * TRANSPOSE(J))` from the Jacobian `J` of `obj`.
-! 2. Finds the eigenvalues of `G`.
-! 3. Sets `hmax = 2 / SQRT(MIN(eigenvalues))`.
-! 4. Sets `hmin = 2 / SQRT(MAX(eigenvalues))`.
+! 1. Builds `C = TRANSPOSE(J) * J` from the Jacobian `J` of `obj`.
+!    `C` has shape `(xidim, xidim)`.
+! 2. Finds the eigenvalues of `C`.
+! 3. Sets `hmax = 2 * SQRT(MAX(eigenvalues))`.
+! 4. Sets `hmin = 2 * SQRT(MIN(eigenvalues))`.
 !
 ! The routine reallocates `hmax` and `hmin` to size `nips`.
+! It also works for elements with `xidim < nsd`. Examples are a line
+! in 2D or 3D, a surface in 3D, and facet shape data.
 !
 ! @note
 ! The factor 2 is the edge length of the biunit reference element
@@ -57,6 +60,7 @@ PUBLIC :: GetHminHmax
 ! Examples
 !
 ! - [test 1](|base|ElemshapeData/examples/GetHminHmax_test_1.F90)
+! - [test 5](|base|ElemshapeData/examples/GetHminHmax_test_5.F90)
 !
 ! See also: [[elemsd_GetHminHmax2]], [[elemsd_GetHminHmax3]]
 

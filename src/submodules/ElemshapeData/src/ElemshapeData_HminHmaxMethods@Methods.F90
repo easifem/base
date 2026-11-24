@@ -21,7 +21,6 @@ USE BaseType, ONLY: TypeFEVariableSpace
 USE BaseType, ONLY: TypeFEVariableSpaceTime
 USE EigenUtility, ONLY: SymEigenValuesUpto3
 USE FEVariable_Method, ONLY: QuadratureVariable
-USE InvUtility, ONLY: Inv
 USE ReallocateUtility, ONLY: Reallocate
 IMPLICIT NONE
 CONTAINS
@@ -31,33 +30,27 @@ CONTAINS
 !----------------------------------------------------------------------------
 
 MODULE PROCEDURE elemsd_GetHminHmax1
-INTEGER(I4B) :: ii, nips, nsd
-REAL(DFP), ALLOCATABLE :: G(:, :), w(:)
-!! G: inverse of J * TRANSPOSE(J) at one point, shape (nsd, nsd)
-!! w: eigenvalues of G
+INTEGER(I4B) :: ii, nips
+REAL(DFP), ALLOCATABLE :: w(:)
+!! w: eigenvalues of TRANSPOSE(J) * J, shape (xidim)
 !!
 !! Main
 !!
 nips = SIZE(obj%N, 2)
-nsd = obj%nsd
 !!
-CALL Reallocate(G, nsd, nsd)
 CALL Reallocate(hmax, nips, hmin, nips)
 !!
-!! FFT and G
+!! TRANSPOSE(J) * J is xidim x xidim. It is regular when the map is
+!! regular, also for xidim < nsd. Its eigenvalues are the squared
+!! singular values of J.
 !!
 DO ii = 1, nips
-  !!
-  CALL Inv(invA=G, A=MATMUL(obj%jacobian(:, :, ii), &
-    & TRANSPOSE(obj%jacobian(:, :, ii))))
-  !!
-  w = SymEigenValuesUpto3(G)
-  !!
-  hmax(ii) = 2.0_DFP / SQRT(MINVAL(w))
-  hmin(ii) = 2.0_DFP / SQRT(MAXVAL(w))
+  w = SymEigenValuesUpto3(MATMUL(TRANSPOSE(obj%jacobian(:, :, ii)), &
+                                 obj%jacobian(:, :, ii)))
+  hmax(ii) = 2.0_DFP * SQRT(MAXVAL(w))
+  hmin(ii) = 2.0_DFP * SQRT(MINVAL(w))
 END DO
 !!
-DEALLOCATE (G)
 IF (ALLOCATED(w)) DEALLOCATE (w)
 !!
 END PROCEDURE elemsd_GetHminHmax1
