@@ -226,7 +226,7 @@ END PROCEDURE elemsd_GetDivergence_6
 
 MODULE PROCEDURE elemsd_GetDivergence_7
 REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :)
-INTEGER(I4B) :: ii, jj, s(2)
+INTEGER(I4B) :: ii, jj
 
 SELECT CASE (val%RANK)
 
@@ -238,8 +238,7 @@ CASE (TypeFEVariableOpt%vector)
   DEALLOCATE (r1)
 
 CASE (TypeFEVariableOpt%matrix)
-  s = SHAPE(val)
-  ALLOCATE (r2(s(1), obj%nips))
+  ALLOCATE (r2(val%s(1), obj%nips))
   CALL GetDivergence(obj=obj, ans=r2, val=val, &
                      nrow=ii, ncol=jj)
   ans = QuadratureVariable(r2, typeFEVariableVector, &
@@ -255,7 +254,7 @@ END PROCEDURE elemsd_GetDivergence_7
 
 MODULE PROCEDURE elemsd_GetDivergence_8
 REAL(DFP), ALLOCATABLE :: r1(:), r2(:, :), r3(:, :, :)
-INTEGER(I4B) :: ii, nipt, jj, s(2), maxnips, nrow, ncol, valRow
+INTEGER(I4B) :: ii, nipt, jj, maxnips, nrow, ncol, valRow
 
 nipt = SIZE(obj)
 
@@ -291,8 +290,7 @@ CASE (TypeFEVariableOpt%matrix)
     IF (obj(jj)%nips .GT. maxnips) maxnips = obj(jj)%nips
   END DO
 
-  s = SHAPE(val)
-  valRow = s(1)
+  valRow = val%s(1)
 
   ALLOCATE (r2(valRow, maxnips), r3(valRow, maxnips, nipt))
   ! a time point with fewer quadrature points leaves zeros
