@@ -154,7 +154,6 @@ GlobalData ─┬─> PENF/FACE/BeFoR64 ─> String_Class
   directory's `CMakeLists.txt`, and a new directory must be added to
   `src/{modules,submodules}/CMakeLists.txt`. Several unregistered files
   already exist and are never compiled (for example
-  `ElemshapeData_DG*Methods.F90` and
   `GE_Lapack_Method@*Methods.F90`).
 - **`.F90` include fragments.** Files inside include subfolders look like
   sources, but they are preprocessor templates that run between
