@@ -438,46 +438,162 @@ INTEGER(I4B), PARAMETER, PUBLIC :: MAX_RANK_FEVARIABLE = 6
 !----------------------------------------------------------------------------
 
 !> author: Vikas Sharma, Ph. D.
-! date: 5 March 2022
-! summary: Math class
+! date: 2022-03-05
+! summary: Named mathematical constants
+!
+! `MathOpt_` collects common constants under readable names. Use them
+! through the named constant `TypeMathOpt`. A short local name keeps
+! the code readable:
+!
+! ```fortran
+! USE BaseType, ONLY: math => TypeMathOpt
+! q = math%sqrt_three_by_two * normS
+! ```
+!
+! Real constants have no suffix. Integer constants end in `_i`.
+! Fractions use `_by_`, so `sqrt_two_by_three` is $\sqrt{2/3}$.
+!
+! Changes:
+!   - 2026-11-27: Add real and integer constants up to ten, thirds and
+!     square roots. Compute `pi` and `e` with intrinsics for full
+!     precision.
 
 TYPE :: MathOpt_
   REAL(DFP) :: zero = 0.0_DFP
+    !! 0.0
   REAL(DFP) :: half = 0.5_DFP
+    !! 0.5
   REAL(DFP) :: minus_half = -0.5_DFP
+    !! -0.5
   REAL(DFP) :: one = 1.0_DFP
+    !! 1.0
   REAL(DFP) :: minus_one = -1.0_DFP
+    !! -1.0
   REAL(DFP) :: two = 2.0_DFP
+    !! 2.0
   REAL(DFP) :: minus_two = -2.0_DFP
+    !! -2.0
   REAL(DFP) :: three = 3.0_DFP
+    !! 3.0
   REAL(DFP) :: minus_three = -3.0_DFP
-  REAL(DFP) :: pi = 3.14159265359_DFP
-  REAL(DFP) :: two_pi = 2.0_DFP * 3.14159265359_DFP
-  REAL(DFP) :: pi_by_two = 0.5_DFP * 3.14159265359_DFP
-  REAL(DFP) :: pi_by_four = 0.25_DFP * 3.14159265359_DFP
-  REAL(DFP) :: e = 2.718281828459045_DFP
+    !! -3.0
+  REAL(DFP) :: four = 4.0_DFP
+    !! 4.0
+  REAL(DFP) :: minus_four = -4.0_DFP
+    !! -4.0
+  REAL(DFP) :: five = 5.0_DFP
+    !! 5.0
+  REAL(DFP) :: minus_five = -5.0_DFP
+    !! -5.0
+  REAL(DFP) :: six = 6.0_DFP
+    !! 6.0
+  REAL(DFP) :: minus_six = -6.0_DFP
+    !! -6.0
+  REAL(DFP) :: seven = 7.0_DFP
+    !! 7.0
+  REAL(DFP) :: minus_seven = -7.0_DFP
+    !! -7.0
+  REAL(DFP) :: eight = 8.0_DFP
+    !! 8.0
+  REAL(DFP) :: minus_eight = -8.0_DFP
+    !! -8.0
+  REAL(DFP) :: nine = 9.0_DFP
+    !! 9.0
+  REAL(DFP) :: minus_nine = -9.0_DFP
+    !! -9.0
+  REAL(DFP) :: ten = 10.0_DFP
+    !! 10.0
+  REAL(DFP) :: minus_ten = -10.0_DFP
+    !! -10.0
+  REAL(DFP) :: one_by_three = 1.0_DFP / 3.0_DFP
+    !! 1/3, used in the volumetric part, `tr(A) / 3`
+  REAL(DFP) :: one_by_four = 1.0_DFP / 4.0_DFP
+    !! 1/4
+  REAL(DFP) :: two_by_three = 2.0_DFP / 3.0_DFP
+    !! 2/3
+  REAL(DFP) :: sqrt_two = SQRT(2.0_DFP)
+    !! $\sqrt{2}$
+  REAL(DFP) :: sqrt_three = SQRT(3.0_DFP)
+    !! $\sqrt{3}$
+  REAL(DFP) :: sqrt_two_by_three = SQRT(2.0_DFP / 3.0_DFP)
+    !! $\sqrt{2/3}$, used in J2 radial return
+  REAL(DFP) :: sqrt_three_by_two = SQRT(3.0_DFP / 2.0_DFP)
+    !! $\sqrt{3/2}$, von Mises stress $q = \sqrt{3/2}\,\|s\|$
+  REAL(DFP) :: one_by_sqrt_two = 1.0_DFP / SQRT(2.0_DFP)
+    !! $1/\sqrt{2}$, used in the Mandel notation
+  REAL(DFP) :: one_by_sqrt_three = 1.0_DFP / SQRT(3.0_DFP)
+    !! $1/\sqrt{3}$, used in Drucker-Prager models
+  REAL(DFP) :: pi = ACOS(-1.0_DFP)
+    !! $\pi$
+  REAL(DFP) :: two_pi = 2.0_DFP * ACOS(-1.0_DFP)
+    !! $2\pi$
+  REAL(DFP) :: pi_by_two = 0.5_DFP * ACOS(-1.0_DFP)
+    !! $\pi/2$
+  REAL(DFP) :: pi_by_four = 0.25_DFP * ACOS(-1.0_DFP)
+    !! $\pi/4$
+  REAL(DFP) :: e = EXP(1.0_DFP)
+    !! Euler's number $e$
   REAL(DFP), DIMENSION(3, 3) :: eye3 = RESHAPE([ &
                                                1.0_DFP, 0.0_DFP, 0.0_DFP, &
                                                0.0_DFP, 1.0_DFP, 0.0_DFP, &
                                                0.0_DFP, 0.0_DFP, 1.0_DFP], &
                                                [3, 3])
+    !! 3 x 3 identity matrix
   REAL(DFP), DIMENSION(2, 2) :: eye2 = RESHAPE([ &
                                                1.0_DFP, 0.0_DFP, &
                                                0.0_DFP, 1.0_DFP], &
                                                [2, 2])
+    !! 2 x 2 identity matrix
   COMPLEX(DFPC) :: i = (0.0_DFP, 1.0_DFP)
+    !! Imaginary unit
   COMPLEX(DFPC) :: j = (0.0_DFP, 1.0_DFP)
+    !! Imaginary unit, same as `i`
   LOGICAL(LGT) :: yes = .TRUE.
+    !! `.TRUE.`
   LOGICAL(LGT) :: no = .FALSE.
+    !! `.FALSE.`
   INTEGER(I4B) :: zero_i = 0_I4B
+    !! 0
   INTEGER(I4B) :: one_i = 1_I4B
+    !! 1
   INTEGER(I4B) :: minus_one_i = -1_I4B
+    !! -1
   INTEGER(I4B) :: two_i = 2_I4B
+    !! 2
   INTEGER(I4B) :: minus_two_i = -2_I4B
+    !! -2
   INTEGER(I4B) :: three_i = 3_I4B
+    !! 3
   INTEGER(I4B) :: minus_three_i = -3_I4B
+    !! -3
   INTEGER(I4B) :: four_i = 4_I4B
+    !! 4
   INTEGER(I4B) :: minus_four_i = -4_I4B
+    !! -4
+  INTEGER(I4B) :: five_i = 5_I4B
+    !! 5
+  INTEGER(I4B) :: minus_five_i = -5_I4B
+    !! -5
+  INTEGER(I4B) :: six_i = 6_I4B
+    !! 6
+  INTEGER(I4B) :: minus_six_i = -6_I4B
+    !! -6
+  INTEGER(I4B) :: seven_i = 7_I4B
+    !! 7
+  INTEGER(I4B) :: minus_seven_i = -7_I4B
+    !! -7
+  INTEGER(I4B) :: eight_i = 8_I4B
+    !! 8
+  INTEGER(I4B) :: minus_eight_i = -8_I4B
+    !! -8
+  INTEGER(I4B) :: nine_i = 9_I4B
+    !! 9
+  INTEGER(I4B) :: minus_nine_i = -9_I4B
+    !! -9
+  INTEGER(I4B) :: ten_i = 10_I4B
+    !! 10
+  INTEGER(I4B) :: minus_ten_i = -10_I4B
+    !! -10
 END TYPE MathOpt_
 
 TYPE(MathOpt_), PARAMETER :: TypeMathOpt = MathOpt_()
